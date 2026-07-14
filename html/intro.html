@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소개 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">Introduction</div>
+      <div class="prose">
+        <p class="lead">이 사이트는 NH농협은행에 적용할 "AI 에이전트"를 어떻게 만들지 정리해놓은 자료예요. AI 에이전트가 뭔지 모르셔도 괜찮아요. 천천히 설명해드릴게요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>AI 에이전트가 뭐예요?</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">쉽게 말하면</div>
+          <div class="box-row-value">은행 직원처럼 고객과 대화하면서 일을 처리해주는 AI예요. 예를 들어 "대출 이자 얼마나 나와?"라고 물으면 필요한 정보를 차례로 물어보고, 계산해서 답을 알려줘요. 사람이 창구에서 상담받는 것과 비슷한데, 그걸 앱 안에서 채팅으로 하는 거예요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">왜 필요해요?</div>
+          <div class="box-row-value muted">지금까지는 고객이 메뉴를 직접 찾아 들어가서 정보를 입력해야 했어요. AI 에이전트를 쓰면 고객이 그냥 말하듯 물어보기만 하면 AI가 알아서 안내해줘요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">이 사업은 뭐예요?</div>
+          <div class="box-row-value muted">NH농협은행이 올원뱅크 앱에 이런 AI 에이전트를 여러 개 만들어 넣는 사업이에요. 2026년 8월에 본격적으로 시작되고, 셉템은 그 전에(7월 한 달) 미리 화면과 대화 흐름을 설계해두는 일을 맡았어요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>이 사이트에서 무엇을 볼 수 있나요?</h2>
+      </div>
+      <div class="prose">
+        <p>왼쪽 메뉴를 보시면 5개의 큰 카테고리가 있어요. 순서대로 보시면 하나의 AI 에이전트가 "왜 필요한지"부터 "실제로 어떤 화면으로 나오는지"까지 쭉 이어서 이해할 수 있어요.</p>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">왼쪽 메뉴 — 5단계로 구성돼 있어요</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>① Agent Profile (소개)</strong> — 이 AI가 누구인지, 무슨 일을 하는지 한 페이지로 요약해놓은 자료예요. 명함 같은 거예요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>② Agent Task Design (설계)</strong> — 이 AI가 실제로 어떤 순서로 고객과 대화하고, 어떤 상황에서 어떻게 반응하는지 자세히 적어놓은 자료예요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>③ Agent UX Design (디자인 기준)</strong> — 화면에 쓰일 색깔, 글씨체, 버튼 모양 같은 디자인 규칙이에요. (이 부분은 디자인팀이 별도로 작업해요)</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>④ Agent Wireframe (화면 그림)</strong> — 실제 휴대폰 화면이 어떻게 생겼는지 그려놓은 자료예요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>⑤ Agent Prototype (체험판)</strong> — 나중에는 실제로 눌러보면서 체험할 수 있는 화면도 추가될 거예요.</div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">어떤 AI 에이전트들이 있나요?</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>금융비서</strong> — 예금·적금·대출 같은 상품을 추천해주고, 대출 이자 같은 걸 계산해줘요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>전세대출</strong> — 전세 계약을 준비할 때 대출 한도부터 전세 사기 위험까지 도와줘요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>소비자보호</strong> — 보이스피싱이나 사기를 당했을 때 빠르게 도와주고, 미리 예방 정보도 알려줘요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>종합자산관리</strong> — 내 자산을 한눈에 보여주고, 더 나은 방향으로 조정하는 걸 도와줘요.</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>처음 보시는 분께</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>이렇게 둘러보세요</div>
+        <div class="note-row"><div class="note-row-dot"></div>먼저 <strong>Methodology(방법론)</strong> 페이지를 읽어보세요. 이 자료들을 왜 이런 순서로 만들었는지 설명해드려요.</div>
+        <div class="note-row"><div class="note-row-dot"></div>그다음 관심 있는 AI(예: 금융비서)를 하나 골라서, 왼쪽 메뉴에서 그 이름으로 된 항목들을 위에서부터 하나씩 눌러보세요.</div>
+        <div class="note-row"><div class="note-row-dot"></div>모르는 용어가 나와도 괜찮아요. 각 페이지 맨 위에 무엇에 대한 자료인지 한 줄로 설명해놨어요.</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">AI 에이전트란?</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">이 사이트 구성</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">처음 보시는 분께</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

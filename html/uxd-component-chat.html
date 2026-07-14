@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">Chat</div>
+    <div class="prose"><p class="lead">Agent와 사용자가 주고받는 대화의 기본 단위예요. 사용자는 우측 Primary Green 버블, Agent는 좌측 흰 버블로 표시하고, 타임스탬프·묶음 메시지·시스템 메시지·리치 콘텐츠로 실제 대화처럼 자연스러운 흐름을 만들어요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="ch-usage"><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in" style="display:flex;justify-content:center;"><span class="ksys">오늘</span></div><div class="mo-eitem in bub user" data-delay="400">전세보증금이 얼마인지 알려줘</div><div class="mo-eitem in" data-delay="900"><span class="ktime right">오후 2:14</span></div><div class="mo-eitem in" data-delay="1400"><div class="bub agent"><span class="kstatus" style="padding-top:0;">계산을 준비하고 있어요<span class="dots"><i></i><i></i><i></i></span></span></div></div><div class="mo-eitem in" data-delay="2400"><div class="bub agent">전세보증금 3억원 기준으로 확인해 드릴게요.</div><div class="bub agent" style="margin-top:4px;">예상 한도는 2억 4,000만원이에요.</div><div class="bub agent" style="margin-top:4px;">금리는 연 3.9% 수준이에요.</div></div><div class="mo-eitem in" data-delay="3100"><span class="ktime left">오후 2:14</span></div><div class="mo-eitem in mo-ecard" data-delay="3700"><div class="t">예상 한도</div><div class="d">전세보증금 3억원 기준 2억 4,000만원이에요.</div></div><div class="mo-eitem in chips" data-delay="4300"><span class="chip-el gr">한도 조회</span><span class="chip-el">조건 변경</span></div><div class="mo-eitem in" style="display:flex;justify-content:center;" data-delay="4900"><span class="ksys">맞춤상품 Agent로 전환됐어요</span></div></div></div><p class="usenote" style="margin:16px 0 0;">하루의 첫 대화는 시스템 메시지(오늘)로 구분해요. 사용자 메시지는 Primary Green 버블로 우측 정렬하고, Agent는 답을 준비하는 동안 Typing으로 대기를 알린 뒤 여러 문장을 촘촘하게 묶어(Grouped) 응답해요. 근거 수치는 버블 없이 카드(Rich Content)로 보여주고, 다음 행동은 Quick Reply Chip으로 제안해요. Agent가 바뀌면 시스템 메시지로 전환을 알려요.</p></section><section class="lf" id="ch-user"><div class="lf-h"><h3>User Bubble <span class="en">사용자 말풍선</span></h3></div><p class="usenote">사용자 입력을 담는 버블이에요. 우측 정렬, Primary Green(#19973C) 배경에 흰 텍스트, radius 16(우상단 4)을 사용해요. 최대 너비는 화면의 80%까지만 늘어나고, 그 이상은 자동 줄바꿈돼요.</p><div class="mo-screen"><div class="bub user">천만원 예금 단리 vs 복리 비교해줘</div><div class="bub user">전세자금대출 한도랑 금리도 같이 알려줘</div></div></section><section class="lf" id="ch-agent"><div class="lf-h"><h3>Agent Bubble <span class="en">Agent 말풍선</span></h3></div><p class="usenote">Agent 응답을 담는 흰 버블이에요. 좌측 정렬, 흰 배경(#fff)에 보더 #E1E1E1, radius 16(좌상단 4)을 사용해요. 답을 준비하는 동안 브랜드 인디케이터가 반짝이며 상황에 맞는 문구로 바뀌다가, 준비가 끝나면 버블로 전환돼요. 표·차트 등 리치 콘텐츠는 버블 없이 Card로 배치해요.</p><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in mo-status" data-delay="0"><span class="mo-spark"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="nhsparkCB" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#12732E"/><stop offset=".55" stop-color="#19973C"/><stop offset="1" stop-color="#7BD88F"/></linearGradient></defs><path d="M12 1 C12.6 6.2 17.8 11.4 23 12 C17.8 12.6 12.6 17.8 12 23 C11.4 17.8 6.2 12.6 1 12 C6.2 11.4 11.4 6.2 12 1 Z" fill="url(#nhsparkCB)"/></svg></span><span class="mo-stxt-wrap"><span class="mo-stxt s1">정보를 찾고 있어요</span><span class="mo-stxt s2">계산을 준비하고 있어요</span></span></div><div class="mo-eitem in bub agent" data-delay="1600">연 3.85% 기준으로 비교해 드릴게요.</div></div></div></section><section class="lf" id="ch-typing"><div class="lf-h"><h3>Typing <span class="en">입력 중</span></h3></div><p class="usenote">처리 대기를 알리는 상태 표현이에요. Agent 버블과 같은 흰 배경·좌측 정렬 안에서 상태 문구와 점 3개가 1.2초 주기로 통통 튀며 대기를 표시해요. 무한 대기로 방치하지 않고, 준비가 끝나면 즉시 실제 응답으로 바뀌어요.</p><div class="mo-screen"><div class="bub agent"><span class="kstatus" style="padding-top:0;">계산을 준비하고 있어요<span class="dots"><i></i><i></i><i></i></span></span></div></div></section><section class="lf" id="ch-time"><div class="lf-h"><h3>Timestamp <span class="en">시간 표시</span></h3></div><p class="usenote">메시지가 전송된 시간이에요. font-size 11 · font-5 색상으로 옅게 표시하고, 사용자 버블은 우측 아래, Agent 버블은 좌측 아래에 붙여요. 같은 분에 연달아 보낸 메시지는 그룹 마지막에만 표시해 화면을 정돈해요.</p><div class="mo-screen"><div class="bub user">신청 진행해 주세요</div><span class="ktime right">오후 2:16</span></div></section><section class="lf" id="ch-group"><div class="lf-h"><h3>Grouped Messages <span class="en">묶음 메시지</span></h3></div><p class="usenote">Agent가 여러 메시지를 연달아 보낼 때 여백을 4px로 촘촘하게 묶어 하나의 응답처럼 보이게 해요. 문장을 짧게 나눠 보낼 때 실제 대화처럼 리듬감을 주고, 시간은 그룹 마지막 메시지 아래에만 붙여요.</p><div class="mo-screen"><div class="bub agent">전세보증금 3억원 기준으로 확인해 드릴게요.</div><div class="bub agent" style="margin-top:-6px;">예상 한도는 2억 4,000만원이에요.</div><div class="bub agent" style="margin-top:-6px;">금리는 연 3.9% 수준이에요.</div><span class="ktime left">오후 2:14</span></div></section><section class="lf" id="ch-system"><div class="lf-h"><h3>System Message <span class="en">시스템 메시지</span></h3></div><p class="usenote">특정 발화자 없이 상태 변화를 알리는 중립 메시지예요. font-5 색상 텍스트를 옅은 배경(bg-container)의 캡슐 형태로 중앙 정렬해 날짜 구분, Agent 전환 안내 등에 사용해요. 대화의 주인공이 아니므로 버블보다 눈에 덜 띄게 처리해요.</p><div class="mo-screen"><span class="ksys">오늘</span><span class="ksys">맞춤상품 Agent로 전환됐어요</span></div></section><section class="lf" id="ch-rich"><div class="lf-h"><h3>Rich Content <span class="en">리치 콘텐츠</span></h3></div><p class="usenote">한도·금리 같은 근거 수치나 표는 말풍선 대신 Card로 보여줘요. 버블의 대화체 텍스트와 달리, 구조화된 정보는 배경 없이 카드 형태로 배치해 가독성을 높이고 버블과 시각적으로 구분해요.</p><div class="mo-screen"><div class="mo-ecard"><div class="t">예상 한도</div><div class="d">전세보증금 3억원 기준 2억 4,000만원이에요.</div></div></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="ch-user" href="#ch-user" onclick="setActiveToc(this)">User Bubble</a>
+      <a class="toc-link" data-target="ch-agent" href="#ch-agent" onclick="setActiveToc(this)">Agent Bubble</a>
+      <a class="toc-link" data-target="ch-typing" href="#ch-typing" onclick="setActiveToc(this)">Typing</a>
+      <a class="toc-link" data-target="ch-time" href="#ch-time" onclick="setActiveToc(this)">Timestamp</a>
+      <a class="toc-link" data-target="ch-group" href="#ch-group" onclick="setActiveToc(this)">Grouped Messages</a>
+      <a class="toc-link" data-target="ch-system" href="#ch-system" onclick="setActiveToc(this)">System Message</a>
+      <a class="toc-link" data-target="ch-rich" href="#ch-rich" onclick="setActiveToc(this)">Rich Content</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

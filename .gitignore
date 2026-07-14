@@ -1,0 +1,5 @@
+# Local Netlify folder
+.netlify
+
+# Local SVN working-copy metadata (not needed in git)
+.svn

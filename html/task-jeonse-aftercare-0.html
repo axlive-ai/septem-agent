@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사후관리 · 사용자 케이스 정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">사후관리 · 사용자 케이스 정의</div>
+      <div class="prose">
+        <p class="lead">계약 이후 행정 절차 안내 Sub Agent가 마주하는 사용자 케이스를 정의해요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>Case A · 계약 직후 진입</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">전세 계약을 막 체결한 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">깡통전세방지 단계 완료 · 계약 완료 표시</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">입주일·확정일자 신청 여부부터 친절하게 안내해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-2">
+        <h2>Case B · 입주 전 알림 확인</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">입주 예정일이 다가와 알림으로 진입한 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">D-day 알림 클릭 진입</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">임박한 절차를 강조해 "오늘 이사 끝나셨나요?" 식으로 적시 제안해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-3">
+        <h2>Case C · 등기 변동 알림 확인</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">등기부 변동 알림으로 진입한 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">등기 변동 이벤트 발생 후 알림 클릭</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">변동 내용을 즉시 보여주고 필요한 조치를 안내해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-4">
+        <h2>Case D · 보증보험 리마인드</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">보증보험 가입을 잊고 있는 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">확정일자 완료 후 보증보험 미가입 상태 장기 지속</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">리마인드 메시지로 가입을 다시 권장해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-5">
+        <h2>케이스별 변형 포인트</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">화면 설계 시 고려 사항</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case A는 슬롯 0개 상태에서 시작 — 풀 플로우 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case B는 중간 상태에서 시작 — 이어하기 카드 UI 별도 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case C는 최근 이력 참조 UI 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case D는 맥락이 사전에 채워진 상태로 시작 — 프리필 로직 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Case A · 계약 직후 진입</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Case B · 입주 전 알림 확인</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Case C · 등기 변동 알림 확인</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">Case D · 보증보험 리마인드</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">케이스별 변형 포인트</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

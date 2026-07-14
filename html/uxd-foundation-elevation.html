@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elevation — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">Elevation</div>
+    <div class="prose"><p class="lead">표면이 떠 있는 정도를 그림자로 표현하는 위계 체계예요. 정보의 층위를 나타낼 때만 사용하며, 3단계(Level 1~3)로 제한해 일관성을 유지해요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="el-scale"><div class="lf-h"><h3>Elevation scale</h3></div><p class="usenote">그림자는 떠 있는 정도에 따라 <b>3단계</b>로 제한해요. 카드는 Level 1, 플로팅·스티키 푸터는 Level 2, 바텀시트·다이얼로그는 Level 3을 적용해요.</p><div class="el-scale"><div class="el-h"><span>Variable Name</span><span>Usage</span><span>Box-shadow</span><span>Visual</span></div><div class="el-r"><span class="el-nm">Elevation/1</span><span class="el-use">Card</span><span class="el-sh">0 1px 2px rgba(17,17,17,.06)</span><span class="el-vis"><span class="el-card" style="box-shadow:0 1px 2px rgba(17,17,17,.06)"></span></span></div><div class="el-r"><span class="el-nm">Elevation/2</span><span class="el-use">Floating · Sticky Footer</span><span class="el-sh">0 4px 12px rgba(17,17,17,.08)</span><span class="el-vis"><span class="el-card" style="box-shadow:0 4px 12px rgba(17,17,17,.08)"></span></span></div><div class="el-r"><span class="el-nm">Elevation/3</span><span class="el-use">Bottom Sheet · Dialog</span><span class="el-sh">0 12px 28px rgba(17,17,17,.14)</span><span class="el-vis"><span class="el-card" style="box-shadow:0 12px 28px rgba(17,17,17,.14)"></span></span></div></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="el-scale" href="#el-scale" onclick="setActiveToc(this)">Elevation scale</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

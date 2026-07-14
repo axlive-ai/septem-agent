@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모닝브리핑 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">모닝브리핑</div>
+      <div class="prose">
+        <p class="lead">국내외 뉴스·경제기관 지표 등을 자산·부채와 연결해 개인화 리포트를 제공하는 Sub Agent예요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>Agent 개요</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">목적</div>
+          <div class="box-row-value">국내외 뉴스·리포트와 고객 관심 자산 정보를 반영한 종합 뉴스 피드와 개인화 큐레이션 리포트를 제공해요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">추진 배경</div>
+          <div class="box-row-value muted">현행 매일 1회 수기 브리핑 방식의 한계가 있었고, 실시간 시황 정보 확인이 어려워 즉각적 활용이 제한된 구조를 개선할 필요가 있었어요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">대상 고객</div>
+          <div class="box-row-value muted">WM 시스템 대상 고객 — 자산 현황 및 시황 정보에 관심 있는 투자 고객</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">화면 형태</div>
+          <div class="box-row-value muted">WM 시스템 + 올원뱅크 내 일일 리포트 화면</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>역할 및 기능 범위</h2>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">주요 기능</div>
+        <div class="list-row"><div class="list-row-dot"></div>국내외 뉴스·기관 공시자료·증권사 분석 리포트·거시경제 지표 수집</div><div class="list-row"><div class="list-row-dot"></div>고객 포트폴리오 데이터로 관심자산 키워드 추출 (Rule-based)</div><div class="list-row"><div class="list-row-dot"></div>Multi-RAG 참고하여 개인화 리포트 생성 (자산 민감도·과거 영향도·과거 리포트)</div><div class="list-row"><div class="list-row-dot"></div>완성된 리포트를 대면(WM) 또는 핵심 요약으로 고객에게 제공</div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">서비스 흐름</div>
+        <div class="list-row"><div class="list-row-dot"></div>자산현황 브리핑 — 지난 1주간 고객 포트폴리오 변동 사항</div><div class="list-row"><div class="list-row-dot"></div>이슈 브리핑 — 지난 1주간 고객 보유/관심자산 영향 뉴스·이슈</div><div class="list-row"><div class="list-row-dot"></div>영향 분석 — 상기 사항으로 인한 영향도 세부 분석</div><div class="list-row"><div class="list-row-dot"></div>향후 주요일정 — 다음 1주간 예정된 주요 경제 이벤트 정리</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 관계</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node">
+      <div class="rel-box rel-box-prev">종합자산관리 AI</div>
+      <div class="rel-label">매일 자동 실행</div>
+    </div>
+    <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-current">모닝브리핑</div>
+      <div class="rel-label">현재 Agent</div>
+    </div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-next">포트폴리오 진단 / 포트폴리오 설계</div>
+      <div class="rel-label">브리핑 확인 후</div>
+    </div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>핵심 인터랙션 포인트</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">UX 핵심 포인트</div>
+          <div class="box-row-value">
+            <div class="tag-wrap"><span class="tag-chip">리포트 카드 레이아웃</span><span class="tag-chip">키워드 하이라이트</span><span class="tag-chip">대면·비대면 화면 차이</span></div>
+          </div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">UX 라이팅 톤</div>
+          <div class="box-row-value muted">전문적이고 신뢰할 수 있는 분석가 어조예요. 핵심 정보를 간결하게 전달하고, 고객 포트폴리오와의 연관성을 명확히 표현해요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>제약 및 특이사항</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          제약 및 개발 협의 필요
+        </div>
+        <div class="note-row"><div class="note-row-dot"></div>RAG 및 리포트 항목 종류·내용·구성할 데이터 pool 개발 과정에서 결정</div><div class="note-row"><div class="note-row-dot"></div>생성 주기 및 전달 대상 고객 기준 정의 필요</div><div class="note-row"><div class="note-row-dot"></div>투자 권유 규정 준수 — 리포트 내 확정 수익 표현 금지</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Agent 개요</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">역할 및 기능 범위</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 관계</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">핵심 인터랙션 포인트</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">제약 및 특이사항</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

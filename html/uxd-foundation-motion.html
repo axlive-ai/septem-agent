@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motion — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">Motion</div>
+    <div class="prose"><p class="lead">AI는 처리 과정이 눈에 보이지 않기 때문에 모션으로 현재 상태를 전달해요. 대기·생성·등장부터 강조·완료까지 Agent 응답의 각 순간에 맞는 움직임을, 농협 디자인 시스템 컴포넌트에 그대로 적용해요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="mo-thinking"><div class="lf-h"><h3>Thinking</h3></div><p class="usenote">Agent가 응답을 준비하는 대기 상태 동안 무엇을 하고 있는지 상태 문구로 알려줘요. 브랜드 인디케이터가 반짝이고, 문구는 상황에 맞게 바뀌어요(예: 정보를 찾고 있어요 · 계산을 준비하고 있어요).</p><div class='mo-screen'><div class='bub user'>자유적금으로 1억원 모으려면?</div><div class='mo-status'><span class='mo-spark'><svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='nhspark' x1='2' y1='2' x2='22' y2='22' gradientUnits='userSpaceOnUse'><stop stop-color='#12732E'/><stop offset='.55' stop-color='#19973C'/><stop offset='1' stop-color='#7BD88F'/></linearGradient></defs><path d='M12 1 C12.6 6.2 17.8 11.4 23 12 C17.8 12.6 12.6 17.8 12 23 C11.4 17.8 6.2 12.6 1 12 C6.2 11.4 11.4 6.2 12 1 Z' fill='url(#nhspark)'/></svg></span><span class='mo-stxt-wrap'><span class='mo-stxt s1'>정보를 찾고 있어요</span><span class='mo-stxt s2'>계산을 준비하고 있어요</span></span></div></div></section><section class="lf" id="mo-steps"><div class="lf-h"><h3>Steps</h3></div><p class="usenote">여러 단계를 거치는 작업은 지금 어느 단계인지 순서대로 보여줘요. 완료된 단계는 체크, 진행 중인 단계는 스피너로 표시해요.</p><div class='mo-demo2'><button class='mo-play' onclick='motionSteps(this)'><span class='ic'>↻</span> 다시 보기</button><div class='mo-screen'><div class='mo-steps'><div class='mo-step done'><span class='mo-sdot'></span><span class='mo-stext'>약관·상품 정보 검색</span></div><div class='mo-step done'><span class='mo-sdot'></span><span class='mo-stext'>예상 금리 계산</span></div><div class='mo-step done'><span class='mo-sdot'></span><span class='mo-stext'>결과 정리</span></div></div></div></div></section><section class="lf" id="mo-skeleton"><div class="lf-h"><h3>Skeleton</h3></div><p class="usenote">불러올 카드·목록의 자리를 스켈레톤으로 미리 잡아 두고 은은한 shimmer로 로딩 중임을 알려요. 화면 레이아웃이 튀지 않아요.</p><div class='mo-screen'><div class='card mo-skelcard'><div class='sk sk-hd'></div><div class='sk sk-row'></div><div class='sk sk-row'></div><div class='sk sk-row w60'></div></div></div></section><section class="lf" id="mo-streaming"><div class="lf-h"><h3>Streaming</h3></div><p class="usenote">답변이 한 번에 뜨지 않고 실시간으로 흘러나오게 해 지금 생성 중임을 전달해요. 끝에 깜빡이는 커서로 진행 상태를 보여줘요.</p><div class='mo-demo2'><button class='mo-play' onclick='motionStream(this)'><span class='ic'>↻</span> 다시 보기</button><div class='mo-screen'><div class='bub user'>전세대출 한도 알려줘</div><div class='bub agent'><span class='mo-txt' data-full='전세자금대출 한도를 조회했어요. 최대 2억 4,000만원까지 가능해요.'>전세자금대출 한도를 조회했어요. 최대 2억 4,000만원까지 가능해요.</span><i class='mo-caret'></i></div></div></div></section><section class="lf" id="mo-entrance"><div class="lf-h"><h3>Entrance</h3></div><p class="usenote">완성된 메시지·카드·추천 칩은 아래에서 살짝 올라오며 순차적으로 등장해요. 한꺼번에 튀지 않도록 짧은 시차(약 120ms)를 둬요.</p><div class='mo-demo2'><button class='mo-play' onclick='motionEnter(this)'><span class='ic'>↻</span> 다시 보기</button><div class='mo-screen'><div class='mo-eitem in bub agent'>추천 상품을 찾았어요.</div><div class='mo-eitem in card mo-fullcard'><div class='hd'>전세안심대출</div><div class='row'><span>최대 한도</span><b>2억 4,000만원</b></div><div class='row'><span>금리</span><b>연 3.9%</b></div></div><div class='mo-eitem in chips'><span class='chip-el gr'>한도 조회</span><span class='chip-el'>서류 안내</span><span class='chip-el'>상담 연결</span></div></div></div></section><section class="lf" id="mo-count"><div class="lf-h"><h3>Count-up</h3></div><p class="usenote">한도·금액 같은 핵심 수치는 0에서 목표값까지 빠르게 올라가며 주목시켜요. 결과를 강조하는 대표 모션이에요.</p><div class='mo-demo2'><button class='mo-play' onclick='motionCount(this)'><span class='ic'>↻</span> 다시 보기</button><div class='mo-screen'><div class='card mo-fullcard'><div class='hd'>전세대출 예상 한도</div><div class='mo-amt'><b class='mo-num' data-to='240000000'>240,000,000</b><span>원</span></div></div></div></div></section><section class="lf" id="mo-success"><div class="lf-h"><h3>Success</h3></div><p class="usenote">신청·완료 같은 작업이 끝나면 체크가 그려지며 성공을 명확히 알려요.</p><div class='mo-demo2'><button class='mo-play' onclick='motionSuccess(this)'><span class='ic'>↻</span> 다시 보기</button><div class='mo-screen mo-succ go'><span class='mo-check'><svg viewBox='0 0 52 52'><circle class='c' cx='26' cy='26' r='24'/><path class='k' d='M15 27 L23 35 L38 19'/></svg></span><div class='mo-succ-t'>신청이 완료되었어요</div></div></div></section><section class="lf" id="mo-error"><div class="lf-h"><h3>Error</h3></div><p class="usenote">응답에 실패하면 오류 메시지가 살짝 흔들리며 나타나 주의를 끌고, 곧바로 다시 시도할 수 있게 안내해요.</p><div class='mo-demo2'><button class='mo-play' onclick='motionError(this)'><span class='ic'>↻</span> 다시 보기</button><div class='mo-screen'><div class='mo-err go'><div class='mo-errbub'><span class='mo-errico'>!</span>답변을 불러오지 못했어요</div><span class='chip-el'>다시 시도</span></div></div></div></section><section class="lf" id="mo-voice"><div class="lf-h"><h3>Voice</h3></div><p class="usenote">음성 입력을 받는 동안 파형이 실시간으로 움직여 듣고 있음을 알려줘요.</p><div class='mo-screen'><div class='voice'><span class='mic'>&#9679;</span><span class='wave'><i></i><i></i><i></i><i></i><i></i></span><span class='mo-vtxt'>듣고 있어요</span></div></div></section><section class="lf" id="mo-tokens"><div class="lf-h"><h3>Tokens</h3></div><p class="usenote">위 모든 모션이 공유하는 기준 값, 즉 모션 토큰이에요.</p><div class='mo-tokens'><div class='tk'><span>전환</span><b>150ms</b></div><div class='tk'><span>진입</span><b>200ms</b></div><div class='tk'><span>강조</span><b>300ms</b></div><div class='tk'><span>Easing</span><b>cubic-bezier(.2, 0, 0, 1)</b></div><div class='tk'><span>Typing</span><b>1.2s loop</b></div></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="mo-thinking" href="#mo-thinking" onclick="setActiveToc(this)">Thinking</a>
+      <a class="toc-link" data-target="mo-steps" href="#mo-steps" onclick="setActiveToc(this)">Steps</a>
+      <a class="toc-link" data-target="mo-skeleton" href="#mo-skeleton" onclick="setActiveToc(this)">Skeleton</a>
+      <a class="toc-link" data-target="mo-streaming" href="#mo-streaming" onclick="setActiveToc(this)">Streaming</a>
+      <a class="toc-link" data-target="mo-entrance" href="#mo-entrance" onclick="setActiveToc(this)">Entrance</a>
+      <a class="toc-link" data-target="mo-count" href="#mo-count" onclick="setActiveToc(this)">Count-up</a>
+      <a class="toc-link" data-target="mo-success" href="#mo-success" onclick="setActiveToc(this)">Success</a>
+      <a class="toc-link" data-target="mo-error" href="#mo-error" onclick="setActiveToc(this)">Error</a>
+      <a class="toc-link" data-target="mo-voice" href="#mo-voice" onclick="setActiveToc(this)">Voice</a>
+      <a class="toc-link" data-target="mo-tokens" href="#mo-tokens" onclick="setActiveToc(this)">Tokens</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

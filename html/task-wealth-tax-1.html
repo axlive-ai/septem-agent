@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>절세 · 대화흐름정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">절세 · 대화흐름정의</div>
+      <div class="prose">
+        <p class="lead">금융소득종합과세 상한 알림과 과세이연 상품 제안 흐름을 정의해요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>대화 흐름 요약</h2>
+      </div>
+      <div class="prose">
+        <p>사용자 케이스 정의에서 다룬 Case A~D가 이 흐름의 어느 지점에서 시작되는지부터 확인해요.</p>
+      </div>
+      <table class="data-table">
+        <thead><tr><th style="width:160px;">케이스</th><th style="width:140px;">진입 지점</th><th>시작 상태</th></tr></thead>
+        <tbody><tr>
+            <td><strong>Case A</strong><br><span style="color:var(--text-3); font-size:13px;">첫 확인</span></td>
+            <td><span class="range-tag">기준금액 설명</span></td>
+            <td>차근차근 안내</td>
+          </tr><tr>
+            <td><strong>Case B</strong><br><span style="color:var(--text-3); font-size:13px;">데이터 누락</span></td>
+            <td><span class="range-tag">직접 입력 요청</span></td>
+            <td>추정치 안내 병행</td>
+          </tr><tr>
+            <td><strong>Case C</strong><br><span style="color:var(--text-3); font-size:13px;">상품 보유</span></td>
+            <td><span class="range-tag">추가 한도 제안</span></td>
+            <td>신규 상품 우선</td>
+          </tr><tr>
+            <td><strong>Case D</strong><br><span style="color:var(--text-3); font-size:13px;">포트폴리오 연계</span></td>
+            <td><span class="range-tag">통합 실행 제안</span></td>
+            <td>리밸런싱+절세 함께</td>
+          </tr></tbody>
+      </table>
+      <div class="box" style="margin-top:16px;">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">알림<span class="rel-sub">상한 도달</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">세금 계산</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">상품 제안</div></div></div>
+      </div>
+      <div class="box box-last">
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:16px;">상품 제안 분기</div>
+        <div class="branch-diagram">
+          <div class="branch-source"><div class="branch-source-box">절세 전략 도출<span class="branch-sub">외부 Solution</span></div></div>
+          <div class="branch-connector"></div>
+          <div class="branch-targets"><div class="branch-target-row"><div class="branch-target-box">ISA 가입</div><div class="branch-target-desc">비과세 한도 활용</div></div><div class="branch-target-row"><div class="branch-target-box">IRP 가입</div><div class="branch-target-desc">세액공제 활용</div></div><div class="branch-target-row"><div class="branch-target-box">연금저축 가입</div><div class="branch-target-desc">장기 절세 활용</div></div></div>
+        </div>
+      </div>
+
+      
+      <div class="prose" id="doc-sec-2">
+        <h2>Flow 1 · 절세 시뮬레이션 및 상품 제안</h2>
+      </div>
+      <div class="box box-last">
+        
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:85%;">금융소득종합과세 기준에 가까워지고 있어요. 절세 방법을 안내해드릴게요.</div>
+          <div style="background:var(--blue-bg); border-radius:10px; padding:12px 16px; font-size:15px; color:#1B4FA0; max-width:85%;">ISA 가입으로 약 47만원 절세 효과가 예상돼요.</div>
+          <div style="display:flex; gap:6px;">
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; background:var(--blue); color:#fff; font-weight:600;">ISA 가입하기</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 발화 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">UTT-01</div><div class="box-row-value muted">"금융소득종합과세 기준에 가까워지고 있어요." — 예상 세액 + 절세 솔루션</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>UI 컴포넌트 매핑</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">절세 안내 컴포넌트</div>
+        <div class="list-row"><div class="list-row-dot"></div>세금 시뮬레이션 카드 — '예상' 명시</div><div class="list-row"><div class="list-row-dot"></div>과세이연 상품 카드 — ISA/IRP/연금저축 연계</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">대화 흐름 요약</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Flow 1 · 절세 시뮬레이션 및 상품 제안</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 발화 정의</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">UI 컴포넌트 매핑</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

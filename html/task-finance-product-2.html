@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>맞춤상품안내 · 업무 설계서 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">맞춤상품안내 · 업무 설계서</div>
+      <div class="prose">
+        <p class="lead">ML 추천 결과를 활용해 니즈 수집부터 가입까지 지원하는 업무를 정의해요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>업무 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">업무명</div><div class="box-row-value muted">상품 안내 — 니즈를 수집하고 맞춤 상품을 추천·비교·가입까지 연결해요.</div></div><div class="box-row"><div class="box-row-label">업무 유형</div><div class="box-row-value muted">추천형 (슬롯 필링 + 검색·랭킹)</div></div><div class="box-row"><div class="box-row-label">수행 주체</div><div class="box-row-value muted">Agent(니즈 수집·상품 검색·추천) + 고객(조건 입력·선택)</div></div><div class="box-row"><div class="box-row-label">완료 조건</div><div class="box-row-value muted">고객이 추천 상품을 확인하고 가입·비교·종료 중 하나를 선택</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>업무 흐름</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">진입<span class="rel-sub">fo-start</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">니즈 수집<span class="rel-sub">3슬롯</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">추천·가입<span class="rel-sub">자동</span></div></div></div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">분기 처리</div>
+        <div class="list-row"><div class="list-row-dot"></div>가입 선택 → 상품 가입 프로세스 이동</div><div class="list-row"><div class="list-row-dot"></div>비교 요청 → 비교표 표시</div><div class="list-row"><div class="list-row-dot"></div>결과 없음 → 조건 완화 제안</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>업무 단계별 상세</h2>
+      </div>
+      <div class="task-head-bar">
+        <span class="task-card-num">업무 1</span><span class="task-card-title">니즈 슬롯 수집 (목표기간·예치금액·우대조건)</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>슬롯 순서대로 수집, 건너뛰기 불가</div><div class="task-col-item cond"><div class="task-col-dot"></div>유효값 입력 즉시 다음 슬롯 자동 진행</div><div class="task-col-item cond"><div class="task-col-dot"></div>허용 범위: 목표기간 1~120개월 · 예치금액 1만원 이상</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>슬롯 진행 카드 — 완료·활성·대기 3단계</div><div class="task-col-item ui"><div class="task-col-dot"></div>슬롯별 빠른 선택 Chip 제공</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>범위 외 입력 → 허용 범위 안내 후 재수집</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-head-bar spaced">
+        <span class="task-card-num">업무 2</span><span class="task-card-title">상품 검색 및 추천</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>슬롯 3개 완료 즉시 자동 검색</div><div class="task-col-item cond"><div class="task-col-dot"></div>조건 매칭 상품 최대 5개 추출, 1순위 강조</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>1순위 추천 카드 — 금리 강조(빨강 Bold)</div><div class="task-col-item ui"><div class="task-col-dot"></div>2순위 이하 카드 — 축소 표시</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>검색 결과 없음 → 조건 완화 제안 + 조정 Chip</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-card box-last">
+        <div class="task-card-head"><span class="task-card-num">업무 3</span><span class="task-card-title">비교 및 가입 연결</span></div>
+        <div class="task-card-body">
+          <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>고객 요청 시 2개 이상 상품 비교표 생성</div><div class="task-col-item cond"><div class="task-col-dot"></div>가입 선택 시 즉시 가입 프로세스 연결</div></div>
+          <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>상품 비교표 — 금리 행 하이라이트</div><div class="task-col-item ui"><div class="task-col-dot"></div>가입하기 버튼 — Primary</div></div>
+          <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>투자 상품의 경우 투자 권유 규정 준수 — 확정 수익률 표현 금지</div></div>
+        </div>
+      </div>
+
+      
+
+      <div class="prose" id="doc-sec-4">
+        <h2>엣지 케이스</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>개발 협의 필요</div>
+        <div class="note-row"><div class="note-row-dot"></div>ML 추천결과 연계 데이터 수신 방법 정의 필요 (API 활용)</div><div class="note-row"><div class="note-row-dot"></div>상품설명서·약관 등 지식베이스 최신화 체계 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">업무 정의</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">업무 흐름</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">업무 단계별 상세</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">엣지 케이스</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

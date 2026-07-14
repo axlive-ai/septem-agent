@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>금융비서 Master · 업무 설계서 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">금융비서 Master · 업무 설계서</div>
+      <div class="prose">
+        <p class="lead">AI 금융비서가 의도를 파악하고 Sub Agent를 오케스트레이션하는 업무를 정의해요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>업무 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">업무명</div><div class="box-row-value muted">의도 파악 및 Sub Agent 오케스트레이션</div></div><div class="box-row"><div class="box-row-label">업무 유형</div><div class="box-row-value muted">의도 분류형 — 발화 분석 후 적합한 Sub Agent로 라우팅</div></div><div class="box-row"><div class="box-row-label">수행 주체</div><div class="box-row-value muted">Agent(의도 분석·라우팅) + 고객(발화·선택)</div></div><div class="box-row"><div class="box-row-label">완료 조건</div><div class="box-row-value muted">Sub Agent 연결 완료 또는 직접 답변 제공</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>업무 흐름</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">진입<span class="rel-sub">fo-start</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">의도 분석<span class="rel-sub">Agent</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">Sub Agent 연결<span class="rel-sub">자동</span></div></div></div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">분기 처리</div>
+        <div class="list-row"><div class="list-row-dot"></div>상품 추천 의도 → 맞춤 상품 안내 연결</div><div class="list-row"><div class="list-row-dot"></div>계산 의도 → AI 금융계산기 연결</div><div class="list-row"><div class="list-row-dot"></div>의도 불명확 → 재질문 후 Chip 강제 유도</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>업무 단계별 상세</h2>
+      </div>
+      <div class="task-head-bar">
+        <span class="task-card-num">업무 1</span><span class="task-card-title">의도 분석</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>고객 발화의 키워드·맥락 분석</div><div class="task-col-item cond"><div class="task-col-dot"></div>4가지 대분류(예금·대출·투자·보험) 매핑</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>서비스 유형 선택 Chip 제공</div><div class="task-col-item ui"><div class="task-col-dot"></div>자유 입력 분석 결과를 즉시 분류</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>의도 불명확 시 재질문, 2회 이상 시 Chip 강제</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-card box-last">
+        <div class="task-card-head"><span class="task-card-num">업무 2</span><span class="task-card-title">Sub Agent 연결 및 컨텍스트 전달</span></div>
+        <div class="task-card-body">
+          <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>분류된 의도에 맞는 Sub Agent 즉시 호출</div><div class="task-col-item cond"><div class="task-col-dot"></div>고객 발화 맥락(슬롯 일부) 함께 전달</div></div>
+          <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>전환 안내 말풍선 표시 — "잠깐 계산기로 전환할게요!"</div></div>
+          <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>Sub Agent 응답 실패 시 Master로 즉시 복귀</div></div>
+        </div>
+      </div>
+
+      
+
+      <div class="prose" id="doc-sec-4">
+        <h2>엣지 케이스</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>개발 협의 필요</div>
+        <div class="note-row"><div class="note-row-dot"></div>Sub Agent 간 전환 시 컨텍스트(슬롯 상태) 전달 데이터 포맷 정의 필요</div><div class="note-row"><div class="note-row-dot"></div>의도 분류 모델의 정확도 기준(임계값) 협의 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">업무 정의</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">업무 흐름</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">업무 단계별 상세</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">엣지 케이스</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

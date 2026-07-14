@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>웰컴대화 · 사용자 케이스 정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">웰컴대화 · 사용자 케이스 정의</div>
+      <div class="prose">
+        <p class="lead">전체 Agent 공통으로 적용되는 웰컴 케이스를 정의해요. 모든 Agent의 사용자 케이스 정의서가 이 문서를 기준으로 구체화돼요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>Case A · 첫 방문</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">AI Agent를 처음 이용하는 고객이에요. 서비스 경험이 없어요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">AI 이용 이력 없음 · 온보딩 미완료 상태 · 첫 GNB AI 버튼 클릭</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">AI 소개 + 서비스 안내 중심. 컨텍스트 카드 없이 "무엇을 도와드릴까요?"로 시작해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-2">
+        <h2>Case B · 진행 중 이탈</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">대화나 슬롯 입력 중 화면을 벗어났거나 앱을 종료한 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">24시간 이내 미완료 세션 존재 · 일부 슬롯만 입력된 상태</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">이어하기 카드로 중단 시점 상태를 보여주고, "이어서 진행할까요?" 칩을 제공해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-3">
+        <h2>Case C · 완료 후 재방문</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">이전에 서비스를 완료한 경험이 있는 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">7일 이내 동일 Agent 이용 이력 · 최근 결과 데이터 존재</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">"지난번 [이용내용] 도와드렸었죠" 형태로 최근 이력을 참조해 인사해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-4">
+        <h2>Case D · 특정 경로 진입</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">알림, 추천, 다른 Agent에서 특정 맥락으로 자동 전환된 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">푸시 알림 클릭 · 다른 Agent에서 의도 감지 후 전환</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">맥락을 그대로 이어받아 "알려드린 내용 확인하러 오셨군요!" 식으로 즉시 반응해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-5">
+        <h2>케이스별 변형 포인트</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">화면 설계 시 고려 사항</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case A는 슬롯 0개 상태에서 시작 — 풀 플로우 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case B는 중간 상태에서 시작 — 이어하기 카드 UI 별도 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case C는 최근 이력 참조 UI 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case D는 맥락이 사전에 채워진 상태로 시작 — 프리필 로직 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Case A · 첫 방문</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Case B · 진행 중 이탈</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Case C · 완료 후 재방문</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">Case D · 특정 경로 진입</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">케이스별 변형 포인트</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

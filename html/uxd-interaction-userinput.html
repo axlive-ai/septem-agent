@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Input — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">User Input</div>
+    <div class="prose"><p class="lead">사용자가 Agent에게 정보를 전달하는 다섯 가지 입력 방식이에요. 상황에 맞는 방식을 조합해 자연스럽게 답할 수 있도록 해요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="ui-usage"><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in bub agent" data-delay="0">전세 계약 형태를 선택해 주세요.</div><div class="mo-eitem in chips" data-delay="400"><span class="chip-el">전세</span><span class="chip-el">월세</span><span class="chip-el">매매</span></div><div class="mo-eitem in bub user" data-delay="1000">전세</div><div class="mo-eitem in bub agent" data-delay="1700">임대차계약서 사본을 첨부해 주세요.</div><div class="mo-eitem in upl" data-delay="2300"><div class="fn"><span>계약서.pdf</span><span>72%</span></div><div class="track"><div class="bar"></div></div></div><div class="mo-eitem in bub agent" data-delay="3600">첨부가 완료됐어요, 감사합니다.</div><div class="mo-eitem in bub agent" data-delay="4300">궁금한 점이 있으면 편하게 물어보세요.</div><div class="mo-eitem in bub user" data-delay="5200">이자율이 얼마예요?</div><div class="mo-eitem in" data-delay="5900"><div class="tinput">전세자금대출 한도도 알려줘<span class="caret"></span></div></div></div></div><p class="usenote" style="margin:16px 0 0;">하나의 응답을 여러 입력 방식으로 자연스럽게 이어가는 예시예요. 선택형 질문은 Chip으로 답하고, 서류가 필요하면 Upload로 전환하고, 자유롭게 물을 땐 Text로 직접 입력해요. 방식이 바뀌어도 대화의 흐름은 끊기지 않아요.</p></section><section class="lf" id="ui-text"><div class="lf-h"><h3>Text <span class="en">텍스트</span></h3></div><p class="usenote">자유 텍스트 입력이에요. 자연어 질문·값을 직접 입력해요. 슬롯이 비면 Agent가 추가 질문으로 보완해요.</p><div class="ix-exwrap"><div class="tinput">천만원 예금 이자 알려줘<span class="caret"></span></div></div></section><section class="lf" id="ui-voice"><div class="lf-h"><h3>Voice <span class="en">음성</span></h3></div><p class="usenote">말로 질문·값을 입력해요. 인식 상태를 파형으로 표시해 지금 듣고 있음을 알려줘요.</p><div class="ix-exwrap"><div class="voice"><span class="mic">&#9679;</span><span class="wave"><i></i><i></i><i></i><i></i><i></i></span><span style="font-size:12px;color:var(--font-4)">듣는 중…</span></div></div></section><section class="lf" id="ui-chip"><div class="lf-h"><h3>Chip <span class="en">칩</span></h3></div><p class="usenote">예상 답변·옵션을 칩으로 제시해 탭 한 번으로 입력해요. 예측 가능한 보기를 3~6개로 제한해요.</p><div class="ix-exwrap"><div class="chips"><span class="chip-el on">전세</span><span class="chip-el">월세</span><span class="chip-el">매매</span></div></div></section><section class="lf" id="ui-button"><div class="lf-h"><h3>Button <span class="en">버튼</span></h3></div><p class="usenote">실행·확인 등 분명한 동작을 버튼으로 받아요. 핵심 동작은 Primary 1개로 강조해요.</p><div class="ix-exwrap"><div class="btns"><span class="bt pri sm">신청</span><span class="bt ter sm">취소</span></div></div></section><section class="lf" id="ui-upload"><div class="lf-h"><h3>Upload <span class="en">첨부</span></h3></div><p class="usenote">등본·계약서 등 문서나 이미지를 첨부해요. 진행률과 결과를 실시간으로 보여줘요.</p><div class="ix-exwrap"><div class="upl"><div class="fn"><span>계약서.pdf</span><span>72%</span></div><div class="track"><div class="bar"></div></div></div></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="ui-text" href="#ui-text" onclick="setActiveToc(this)">Text</a>
+      <a class="toc-link" data-target="ui-voice" href="#ui-voice" onclick="setActiveToc(this)">Voice</a>
+      <a class="toc-link" data-target="ui-chip" href="#ui-chip" onclick="setActiveToc(this)">Chip</a>
+      <a class="toc-link" data-target="ui-button" href="#ui-button" onclick="setActiveToc(this)">Button</a>
+      <a class="toc-link" data-target="ui-upload" href="#ui-upload" onclick="setActiveToc(this)">Upload</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

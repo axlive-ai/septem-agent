@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI전세대출 Master · 업무 설계서 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">AI전세대출 Master · 업무 설계서</div>
+      <div class="prose">
+        <p class="lead">전세 여정 5단계를 오케스트레이션하는 업무를 정의해요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>업무 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">업무명</div><div class="box-row-value muted">전세 여정 단계 파악 및 Sub Agent 오케스트레이션</div></div><div class="box-row"><div class="box-row-label">업무 유형</div><div class="box-row-value muted">여정 관리형 — 5단계(준비·탐색·계약·실행·입주) 순서 관리</div></div><div class="box-row"><div class="box-row-label">수행 주체</div><div class="box-row-value muted">Agent(단계 판별·라우팅) + 고객(발화·선택)</div></div><div class="box-row"><div class="box-row-label">완료 조건</div><div class="box-row-value muted">적합한 단계의 Sub Agent 연결 완료</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>업무 흐름</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">진입<span class="rel-sub">fo-start</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">단계 판별<span class="rel-sub">Agent</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">Sub 연결<span class="rel-sub">자동</span></div></div></div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">분기 처리</div>
+        <div class="list-row"><div class="list-row-dot"></div>준비 → 보증추천</div><div class="list-row"><div class="list-row-dot"></div>탐색 → 매물탐색</div><div class="list-row"><div class="list-row-dot"></div>계약 → 깡통전세방지</div><div class="list-row"><div class="list-row-dot"></div>실행·입주 → 대화형질의응답 / 사후관리</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>업무 단계별 상세</h2>
+      </div>
+      <div class="task-head-bar">
+        <span class="task-card-num">업무 1</span><span class="task-card-title">여정 단계 판별</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>고객 이력·진입 경로로 현재 단계 자동 판별</div><div class="task-col-item cond"><div class="task-col-dot"></div>준비→보증→매물→안전→계약→사후 6단계</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>현재 단계 표시 카드</div><div class="task-col-item ui"><div class="task-col-dot"></div>다음 단계 안내</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 여정 단계 확인</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">전세 준비 중이시군요! 현재 어느 단계에 계신가요?</div>
+                    <div class="snap-bubble-agent">✓ 보증 한도 확인 · 매물 탐색 진행 중 · 안전 진단 대기</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-chips"><span class="snap-chip on">이어서 매물 탐색</span><span class="snap-chip">처음부터</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>여정 단계 카드</strong>고객이 현재 어느 단계에 있는지 보여줘요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>이어하기 제안</strong>중단된 단계부터 이어서 진행할 수 있어요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>단계 불명확 시 처음부터 진행</div><div class="task-col-item exc"><div class="task-col-dot"></div>이탈 이력 있으면 이어하기 제안</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>전세 여정 중간에 이탈했다 돌아온 경우</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 이탈 후 재진입</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">지난번에 매물 탐색 중이셨어요. 이어서 진행할까요?</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">네, 이어서요</span><span class="snap-chip">처음부터 할게요</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>이어하기 제안</strong>이탈 이력이 있으면 중단 지점부터 이어할 수 있어요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>선택 제공</strong>이어하기 또는 처음부터 선택할 수 있어요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-head-bar spaced">
+        <span class="task-card-num">업무 2</span><span class="task-card-title">Sub Agent 연결</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>단계에 맞는 Sub Agent로 즉시 연결</div><div class="task-col-item cond"><div class="task-col-dot"></div>이전 단계 데이터 함께 전달</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>전환 발화 + 다음 단계 안내</div><div class="task-col-item ui"><div class="task-col-dot"></div>Sub Agent 첫 화면으로 자연스럽게 이동</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — Sub Agent 연결</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">매물 탐색 Agent로 연결할게요!</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-bubble-agent">보증 한도 3억원을 기준으로 매물을 찾아드릴게요.</div></div>
+                    <div class="snap-chips"><span class="snap-chip on">서울</span><span class="snap-chip">경기</span><span class="snap-chip">직접 입력</span></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>맥락 연결</strong>이전 단계에서 확인한 보증 한도를 그대로 전달해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>자연스러운 전환</strong>연결 즉시 다음 Sub Agent 화면이 시작돼요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>연결 실패 시 재시도</div><div class="task-col-item exc"><div class="task-col-dot"></div>데이터 전달 오류 시 재입력 안내</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>Sub Agent 연결 중 오류</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 연결 오류</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">잠깐, 연결에 문제가 생겼어요.</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">다시 시도</span><span class="snap-chip">고객센터</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>오류 안내</strong>연결 실패 시 고객에게 명확히 알려요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>대안 제공</strong>재시도 또는 고객센터로 안내해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="prose" id="doc-sec-4">
+        <h2>엣지 케이스</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>개발 협의 필요</div>
+        <div class="note-row"><div class="note-row-dot"></div>단계 간 컨텍스트(예산·매물정보) 전달 데이터 포맷 정의 필요</div><div class="note-row"><div class="note-row-dot"></div>여정 네비게이션 UI의 단계 완료 기준 정의 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">업무 정의</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">업무 흐름</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">업무 단계별 상세</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">엣지 케이스</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

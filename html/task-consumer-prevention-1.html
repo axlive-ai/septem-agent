@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>금융사기 예방 · 대화흐름정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">금융사기 예방 · 대화흐름정의</div>
+      <div class="prose">
+        <p class="lead">고객 프로파일 기반으로 맞춤형 예방 정보를 제공하는 흐름을 정의해요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>대화 흐름 요약</h2>
+      </div>
+      <div class="prose">
+        <p>사용자 케이스 정의에서 다룬 Case A~D가 이 흐름의 어느 지점에서 시작되는지부터 확인해요.</p>
+      </div>
+      <table class="data-table">
+        <thead><tr><th style="width:160px;">케이스</th><th style="width:140px;">진입 지점</th><th>시작 상태</th></tr></thead>
+        <tbody><tr>
+            <td><strong>Case A</strong><br><span style="color:var(--text-3); font-size:13px;">첫 노출</span></td>
+            <td><span class="range-tag">신규 매핑</span></td>
+            <td>대표 사기 유형 소개</td>
+          </tr><tr>
+            <td><strong>Case B</strong><br><span style="color:var(--text-3); font-size:13px;">재노출</span></td>
+            <td><span class="range-tag">표현 변경</span></td>
+            <td>다른 사례로 재구성</td>
+          </tr><tr>
+            <td><strong>Case C</strong><br><span style="color:var(--text-3); font-size:13px;">재방문</span></td>
+            <td><span class="range-tag">추가 정보</span></td>
+            <td>새 사기 유형 우선 제공</td>
+          </tr><tr>
+            <td><strong>Case D</strong><br><span style="color:var(--text-3); font-size:13px;">위험 신호</span></td>
+            <td><span class="range-tag">즉시 긴급 전환</span></td>
+            <td>소비자보호 Master로 연결</td>
+          </tr></tbody>
+      </table>
+      <div class="box" style="margin-top:16px;">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">진입</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">프로파일 매칭</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">맞춤 안내</div></div></div>
+      </div>
+      <div class="box box-last">
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:16px;">고객군 매칭 분기</div>
+        <div class="branch-diagram">
+          <div class="branch-source"><div class="branch-source-box">프로파일 매칭<span class="branch-sub">연령·직업·지역</span></div></div>
+          <div class="branch-connector"></div>
+          <div class="branch-targets"><div class="branch-target-row"><div class="branch-target-box">고령층·지방</div><div class="branch-target-desc">가족 사칭 메신저 피싱 주의</div></div><div class="branch-target-row"><div class="branch-target-box">청년층</div><div class="branch-target-desc">투자 사기 주의</div></div><div class="branch-target-row"><div class="branch-target-box">자영업자</div><div class="branch-target-desc">대출 사기 주의</div></div></div>
+        </div>
+      </div>
+
+      
+      <div class="prose" id="doc-sec-2">
+        <h2>Flow 1 · 맞춤형 예방 정보 제공</h2>
+      </div>
+      <div class="box box-last">
+        
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:85%;">최근 가족 사칭 메신저 피싱이 증가하고 있어요. 자녀나 가족이 급하게 돈을 요구하면 꼭 전화로 확인하세요!</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 발화 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">UTT-01</div><div class="box-row-value muted">"[사기유형] 주의하세요! [예방행동]" — 생성형 AI로 고객별 맞춤 생성</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>UI 컴포넌트 매핑</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">맞춤 안내 컴포넌트</div>
+        <div class="list-row"><div class="list-row-dot"></div>맞춤형 예방 정보 카드 — 고객군별 동적 생성</div><div class="list-row"><div class="list-row-dot"></div>메인 플로팅 배너 — 상시 노출</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">대화 흐름 요약</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Flow 1 · 맞춤형 예방 정보 제공</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 발화 정의</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">UI 컴포넌트 매핑</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

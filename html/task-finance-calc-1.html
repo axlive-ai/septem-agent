@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI금융계산기 · 대화흐름정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">AI금융계산기 · 대화흐름정의</div>
+      <div class="prose">
+        <p class="lead">대화 흐름 요약부터 케이스별 실제 대화, 발화 정의, UI 컴포넌트 매핑까지 한 문서에서 확인해요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>대화 흐름 요약</h2>
+      </div>
+      <div class="prose">
+        <p>사용자 케이스 정의에서 다룬 Case A~D가 이 흐름의 어느 지점에서 시작되는지부터 확인해요. 케이스에 따라 진입 지점과 시작 상태가 달라져요.</p>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:160px;">케이스</th>
+            <th style="width:140px;">진입 지점</th>
+            <th>시작 상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Case A</strong><br><span style="color:var(--text-3); font-size:13px;">첫 방문</span></td>
+            <td><span class="range-tag">Flow 1 처음부터</span></td>
+            <td>슬롯 0개 상태. 계산 유형 선택부터 풀 플로우로 시작해요.</td>
+          </tr>
+          <tr>
+            <td><strong>Case B</strong><br><span style="color:var(--text-3); font-size:13px;">진행 중 이탈</span></td>
+            <td><span class="range-tag">Flow 2 중간</span></td>
+            <td>이어하기 카드로 중단된 슬롯 위치부터 재개해요. (예: 2-3 상환기간부터)</td>
+          </tr>
+          <tr>
+            <td><strong>Case C</strong><br><span style="color:var(--text-3); font-size:13px;">완료 후 재방문</span></td>
+            <td><span class="range-tag">Flow 1 단축</span></td>
+            <td>최근 계산 이력을 참조해 "같은 계산 도와드릴까요?" 확인 후 Flow 2로 단축 진입해요.</td>
+          </tr>
+          <tr>
+            <td><strong>Case D</strong><br><span style="color:var(--text-3); font-size:13px;">특정 경로 진입</span></td>
+            <td><span class="range-tag">Flow 2 프리필</span></td>
+            <td>계산 유형과 일부 슬롯(예: 금리)이 사전에 채워진 상태로 Flow 2부터 시작해요.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="box" style="margin-top: 16px;">
+        <div class="rel-flow">
+          <div class="rel-node"><div class="rel-box rel-box-prev">진입</div><div class="rel-label">유형 선택</div></div>
+          <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+          <div class="rel-node"><div class="rel-box rel-box-current">Flow 2<span class="rel-sub">슬롯 수집</span></div><div class="rel-label">대출금액→금리→기간→방식</div></div>
+          <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+          <div class="rel-node"><div class="rel-box rel-box-next">결과 제공</div><div class="rel-label">계산 완료</div></div>
+          <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+          <div class="rel-node"><div class="rel-box rel-box-next">Flow 3</div><div class="rel-label">후속 분기</div></div>
+        </div>
+        <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-3); line-height: 1.7;">
+          <strong style="color: var(--text-1);">케이스 진입점</strong> &nbsp;&nbsp;
+          <span style="color: var(--blue); font-weight: 600;">A·C</span>는 진입 단계에서 시작 ·
+          <span style="color: var(--blue); font-weight: 600;">B·D</span>는 Flow 2 중간에서 시작
+        </div>
+      </div>
+      <div class="box">
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:16px;">Flow 1 분기 — 계산 유형별 슬롯 시작점</div>
+        <div class="branch-diagram">
+          <div class="branch-source">
+            <div class="branch-source-box">유형 선택<span class="branch-sub">고객 입력</span></div>
+          </div>
+          <div class="branch-connector"></div>
+          <div class="branch-targets">
+            <div class="branch-target-row"><div class="branch-target-box">대출이자</div><div class="branch-target-desc">대출금액 → 금리 → 기간 → 방식</div></div>
+            <div class="branch-target-row"><div class="branch-target-box">전세이자</div><div class="branch-target-desc">전세금 → 대출비율 → 금리 → 기간</div></div>
+            <div class="branch-target-row"><div class="branch-target-box">적금만기</div><div class="branch-target-desc">월납입액 → 기간 → 금리</div></div>
+            <div class="branch-target-row"><div class="branch-target-box">DSR</div><div class="branch-target-desc">연소득 → 기존부채 → 신규대출</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="box box-last">
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:16px;">Flow 3 후속 분기 — 결과 확인 후 다음 행동</div>
+        <div class="branch-diagram">
+          <div class="branch-source">
+            <div class="branch-source-box">결과 확인<span class="branch-sub">고객 선택</span></div>
+          </div>
+          <div class="branch-connector"></div>
+          <div class="branch-targets">
+            <div class="branch-target-row"><div class="branch-target-box">재계산</div><div class="branch-target-desc">변경 슬롯만 교체 후 결과 재표시</div></div>
+            <div class="branch-target-row"><div class="branch-target-box">상품추천</div><div class="branch-target-desc">맞춤 상품 안내 Agent로 전환</div></div>
+            <div class="branch-target-row"><div class="branch-target-box">다른 계산</div><div class="branch-target-desc">슬롯 초기화 후 Flow 1로 복귀</div></div>
+            <div class="branch-target-row"><div class="branch-target-box">종료</div><div class="branch-target-desc">대화 종료</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>Flow 1 · 진입 및 계산 유형 선택</h2>
+      </div>
+      <div class="box">
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:14px;">Case 1-A · 칩 선택 — 정상</div>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:24px;">
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">안녕하세요! 어떤 계산을 도와드릴까요?</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; background:var(--blue); color:#fff; font-weight:600;">대출이자</span>
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">전세이자</span>
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">적금만기</span>
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">DSR</span>
+          </div>
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:60%; align-self:flex-end;">대출이자</div>
+        </div>
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:14px;">Case 1-C · 의도 불명확 → 재질문</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">안녕하세요! 어떤 계산을 도와드릴까요?</div>
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:60%; align-self:flex-end;">계산 좀 해줘</div>
+          <div style="background:#FFF0F0; border-radius:10px; padding:12px 16px; font-size:15px; color:#A23B3B; max-width:80%;">대출이자 / 전세이자 / 적금만기 / DSR 중 어떤 계산을 원하세요?</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Flow 2 · 슬롯 순차 수집</h2>
+      </div>
+      <div class="box">
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:14px;">Case 2-A · 4개 슬롯 정상 수집 (대출이자 기준)</div>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">먼저 <strong>대출 금액</strong>을 알려주세요.</div>
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:40%; align-self:flex-end;">3억</div>
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">3억원이군요. 다음으로 <strong>연 금리</strong>를 입력해주세요.</div>
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:40%; align-self:flex-end;">4.5%</div>
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;"><strong>상환 기간</strong>은 얼마나 되나요?</div>
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:40%; align-self:flex-end;">30년</div>
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">입력이 완료됐어요. 계산할게요!</div>
+        </div>
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:14px;">Case 2-B · 범위 초과 입력</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">먼저 <strong>대출 금액</strong>을 알려주세요.</div>
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:40%; align-self:flex-end;">200억</div>
+          <div style="background:#FFF0F0; border-radius:10px; padding:12px 16px; font-size:15px; color:#A23B3B; max-width:80%;">계산 가능한 금액은 최대 100억원이에요. 100억원 이하로 다시 입력해주세요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>Flow 3 · 결과 제공 후 후속 분기</h2>
+      </div>
+      <div class="box">
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:var(--blue-bg); border-radius:14px; padding:18px 20px;">
+            <div style="font-size:12px; color:#5A8FE0; margin-bottom:4px;">월 상환액</div>
+            <div style="font-size:24px; font-weight:700; color:#1B4FA0; margin-bottom:10px;">1,520,060원</div>
+            <div style="font-size:13px; color:#1B4FA0; line-height:1.8;">대출 금액 3억원 · 연 금리 4.5% · 상환 기간 30년<br>총 이자 247,221,600원 · 총 상환액 547,221,600원</div>
+          </div>
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">조건을 바꿔서 다시 계산해볼까요? 아니면 이 조건으로 대출 상품을 찾아드릴까요?</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">금리 바꾸기</span>
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">기간 바꾸기</span>
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">대출 상품 추천</span>
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">다른 계산</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>Agent 발화 정의</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">UTT-01</div><div class="box-row-value muted">"안녕하세요! 어떤 계산을 도와드릴까요?" — 진입 시 최초 1회</div></div>
+        <div class="box-row"><div class="box-row-label">UTT-02</div><div class="box-row-value muted">"대출이자 / 전세이자 / 적금만기 / DSR 중 어떤 계산을 원하세요?" — 유형 불명확 시 재질문</div></div>
+        <div class="box-row"><div class="box-row-label">UTT-04~07</div><div class="box-row-value muted">슬롯 1~4 순차 질문 — "먼저 대출 금액을 알려주세요." 등</div></div>
+        <div class="box-row"><div class="box-row-label">UTT-08</div><div class="box-row-value muted">"입력이 완료됐어요. 계산할게요!" — 계산 완료 직후</div></div>
+        <div class="box-row"><div class="box-row-label">UTT-09</div><div class="box-row-value muted">"조건을 바꿔서 다시 계산해볼까요? 아니면 대출 상품을 찾아드릴까요?" — 결과 후 분기 제안</div></div>
+        <div class="box-row"><div class="box-row-label">UTT-11</div><div class="box-row-value muted">"저는 금융 계산만 도와드릴 수 있어요. [슬롯명]을 입력해주시면 계속 계산할게요!" — 주제 이탈 시</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-6">
+        <h2>UI 컴포넌트 매핑</h2>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">Flow 1 · 진입</div>
+        <div class="list-row"><div class="list-row-dot"></div>Agent 말풍선(Welcome) — 진입 시 자동 표시</div>
+        <div class="list-row"><div class="list-row-dot"></div>빠른 선택 Chip — 계산 유형 4종, 자유 입력 병행</div>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">Flow 2 · 슬롯 수집</div>
+        <div class="list-row"><div class="list-row-dot"></div>슬롯 진행 카드 — 완료·활성·대기 3단계 상태 표시</div>
+        <div class="list-row"><div class="list-row-dot"></div>슬롯별 빠른 선택 Chip + 텍스트 입력창</div>
+        <div class="list-row"><div class="list-row-dot"></div>오류 말풍선 — 범위 초과·비숫자·주제 이탈 시</div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">Flow 3 · 결과</div>
+        <div class="list-row"><div class="list-row-dot"></div>결과 카드 — 월 상환액 강조 + 상세 조건</div>
+        <div class="list-row"><div class="list-row-dot"></div>후속 제안 Chip — 재계산·상품추천·다른계산·종료</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">대화 흐름 요약</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Flow 1 · 진입</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Flow 2 · 슬롯 수집</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">Flow 3 · 결과·분기</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">Agent 발화 정의</a>
+      <a class="toc-link" data-target="doc-sec-6" href="#doc-sec-6" onclick="setActiveToc(this)">UI 컴포넌트 매핑</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

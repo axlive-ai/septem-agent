@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>절세 · 업무 설계서 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">절세 · 업무 설계서</div>
+      <div class="prose">
+        <p class="lead">금융소득과 세부담을 반영해 절세 방향과 솔루션을 제안하는 업무를 정의해요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>업무 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">업무명</div><div class="box-row-value muted">절세 안내 — 금융소득종합과세 상한 알림 및 과세이연 상품 제안</div></div><div class="box-row"><div class="box-row-label">업무 유형</div><div class="box-row-value muted">절세안내형 — 외부 Solution 기반 세금 계산 + LLM 해석</div></div><div class="box-row"><div class="box-row-label">수행 주체</div><div class="box-row-value muted">Agent(소득 확인·결과 해석) + 외부 Solution(세액 계산)</div></div><div class="box-row"><div class="box-row-label">완료 조건</div><div class="box-row-value muted">절세 전략 확인 후 과세이연 상품 선택 또는 보류</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>업무 흐름</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">소득 확인<span class="rel-sub">fo-start</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">세액 계산<span class="rel-sub">외부 Solution</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">전략 도출<span class="rel-sub">LLM</span></div></div></div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">분기 처리</div>
+        <div class="list-row"><div class="list-row-dot"></div>과세이연 상품 선택 → 가입 화면 연결</div><div class="list-row"><div class="list-row-dot"></div>보류 → 리마인더 설정</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>업무 단계별 상세</h2>
+      </div>
+      <div class="task-head-bar">
+        <span class="task-card-num">업무 1</span><span class="task-card-title">소득 데이터 확인</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>마이데이터 기반 금융소득 자동 수집</div><div class="task-col-item cond"><div class="task-col-dot"></div>2,000만원 초과 여부 즉시 확인</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>소득 현황 카드</div><div class="task-col-item ui"><div class="task-col-dot"></div>초과 여부 강조 표시</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 소득 현황</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">금융소득 현황을 확인했어요.</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">올해 금융소득 2,340만원 · 종합과세 기준(2,000만원) 초과!</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">절세 전략 보기</span><span class="snap-chip">상세 내역</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>소득 카드</strong>올해 금융소득을 결과 카드로 보여줘요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>초과 알림</strong>종합과세 기준 초과 시 즉시 알리고 절세 전략으로 연결해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>일부 소득 누락 시 직접 입력 요청</div><div class="task-col-item exc"><div class="task-col-dot"></div>데이터 조회 실패 시 수동 입력</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>소득 데이터 일부 누락</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 데이터 누락 시 직접 입력</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">일부 소득 데이터를 가져오지 못했어요. 직접 입력해주세요.</div></div>
+                    <div class="snap-bubble-agent">이자소득 입력중 · 배당소득 대기</div>
+                    <div class="snap-input-bar"><div class="snap-input-field">금액을 입력하세요</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>누락 안내</strong>가져오지 못한 소득 항목을 직접 입력받아요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>수동 입력</strong>이자소득·배당소득을 직접 입력할 수 있어요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-head-bar spaced">
+        <span class="task-card-num">업무 2</span><span class="task-card-title">세액·건보료 계산</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>금융소득 기반 추가 세액·건강보험료 산출</div><div class="task-col-item cond"><div class="task-col-dot"></div>과세이연 상품 한도 계산</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>세액 계산 결과 카드</div><div class="task-col-item ui"><div class="task-col-dot"></div>절감 가능 금액 표시</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 세액 계산</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">추가로 납부해야 할 세금을 계산했어요.</div>
+                    <div class="snap-bubble-agent">추가 세액 약 68만원 · 건강보험료 인상 월 +3.2만원 · 절감 가능 금액 최대 45만원</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-chips"><span class="snap-chip on">절세 전략 보기</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>세액 계산</strong>추가 세액과 건보료 인상분을 함께 보여줘요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>절감 가능액</strong>절세 전략으로 줄일 수 있는 금액도 표시해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>계산 오류 시 재시도</div><div class="task-col-item exc"><div class="task-col-dot"></div>극단값 검증</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>계산 결과가 예상보다 크게 높은 경우</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 세액 높을 때 설명</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">세액이 예상보다 높게 나왔어요. 지금 바로 절세 전략을 세우시면 줄일 수 있어요.</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">절세 전략 보기</span><span class="snap-chip">전문가 상담</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>세액 높음 안내</strong>세액이 크게 나왔을 때 절세 전략을 즉시 제안해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>전문가 연결</strong>복잡한 경우 세무사 상담으로 연결해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-head-bar spaced">
+        <span class="task-card-num">업무 3</span><span class="task-card-title">절세 전략 제안</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>ISA·IRP·연금저축 한도 기반 절세 전략</div><div class="task-col-item cond"><div class="task-col-dot"></div>우선순위별 실행 제안</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>절세 상품 추천 카드</div><div class="task-col-item ui"><div class="task-col-dot"></div>예상 절감 금액</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 절세 전략</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">이 방법으로 세금을 줄일 수 있어요!</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">ISA 계좌 활용 -23만원</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-bubble-agent">IRP 추가 납입 -15만원</div></div>
+                    <div class="snap-chips"><span class="snap-chip on">ISA 가입하기</span><span class="snap-chip">더 알아보기</span></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>절세 전략</strong>우선순위별로 절세 방법을 제안하고 예상 절감액을 보여줘요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>즉시 실행</strong>추천 상품 가입 페이지로 바로 이동해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>이미 한도 가입 시 다음 상품 제안</div><div class="task-col-item exc"><div class="task-col-dot"></div>포트폴리오 연계 제안</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>모든 절세 상품에 이미 가입한 경우</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 모두 가입한 경우</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">이미 모든 절세 상품을 활용하고 계세요! 포트폴리오 리밸런싱을 고려해보세요.</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-chips"><span class="snap-chip on">포트폴리오 설계</span><span class="snap-chip">전문가 상담</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>완전 활용 안내</strong>모든 절세 상품 가입 시 그 다음 단계를 제안해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>리밸런싱 연결</strong>포트폴리오 설계로 추가 최적화를 유도해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="prose" id="doc-sec-4">
+        <h2>엣지 케이스</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>개발 협의 필요</div>
+        <div class="note-row"><div class="note-row-dot"></div>Solution이 LLM에게 보내는 값 정의 및 해석할 보조 RAG 구성</div><div class="note-row"><div class="note-row-dot"></div>세금 절감 보장 표현 금지 — 세무사 상담 권고 문구 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">업무 정의</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">업무 흐름</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">업무 단계별 상세</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">엣지 케이스</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

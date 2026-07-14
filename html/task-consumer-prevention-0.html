@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>금융사기 예방 · 사용자 케이스 정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">금융사기 예방 · 사용자 케이스 정의</div>
+      <div class="prose">
+        <p class="lead">고객 프로파일 기반 맞춤형 예방 안내 Sub Agent가 마주하는 사용자 케이스를 정의해요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>Case A · 취약 고객군 첫 노출</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">취약 사기 유형 매핑이 처음 적용되는 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">고령층·지방 거주 등 취약 프로파일 신규 매핑</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">해당 고객군의 대표 사기 유형을 친절하게 소개해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-2">
+        <h2>Case B · 예방 정보 무시 후 재노출</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">이전 예방 정보를 확인하지 않은 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">이전 노출 이력 존재 · 미확인 상태</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">다른 표현·사례로 재구성해 다시 노출해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-3">
+        <h2>Case C · 예방 정보 확인 후 재방문</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">이전에 예방 정보를 확인한 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">확인 완료 이력 존재</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">새로운 사기 유형이나 추가 정보를 우선 제공해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-4">
+        <h2>Case D · 실제 피해 위험 신호 감지</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">안내 중 실제 위험 신호가 감지된 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">예방 안내 중 피해 의심 발화 감지</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">즉시 피싱탐지 또는 소비자보호 Master로 긴급 전환해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-5">
+        <h2>케이스별 변형 포인트</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">화면 설계 시 고려 사항</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case A는 슬롯 0개 상태에서 시작 — 풀 플로우 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case B는 중간 상태에서 시작 — 이어하기 카드 UI 별도 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case C는 최근 이력 참조 UI 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case D는 맥락이 사전에 채워진 상태로 시작 — 프리필 로직 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Case A · 취약 고객군 첫 노출</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Case B · 예방 정보 무시 후 재노출</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Case C · 예방 정보 확인 후 재방문</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">Case D · 실제 피해 위험 신호 감지</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">케이스별 변형 포인트</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

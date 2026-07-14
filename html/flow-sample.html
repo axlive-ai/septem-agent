@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>플로우차트 샘플 모음 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: none; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; box-sizing: border-box; }
+.doc-body { flex: 1; min-width: 0; }
+
+/* ===== 이 샘플 파일에서만 쓰는 복합 흐름(분기/병합/루프) 커넥터 —
+   전체 흐름은 항상 가로(왼쪽→오른쪽)로 유지하고, 분기가 필요한 지점만
+   위/아래로 나뉘었다가 다시 합쳐지는 형태. 필요한 블록만 복사해서
+   실제 업무 설계서에 붙여넣고 라벨만 바꿔 쓰면 됨. ===== */
+
+.flow-canvas { padding: 24px 4px 28px; overflow-x: auto; }
+.flow-canvas .flow-row { padding: 0; overflow-x: visible; align-items: stretch; }
+.flow-canvas .flow-node { align-self: center; }
+
+/* 분기 전체(포크+갈래+병합)를 감싸는 테두리 박스 — 어디서부터 어디까지가
+   이 분기인지 한눈에 보이도록 묶어줘요. 중첩 깊이(data-depth, 0~4 순환)에
+   따라 배경색이 달라져서 분기 속의 분기도 구분하기 쉬워요. merge가 없는
+   (독립 종료) 분기는 점선 테두리로 "다시 합쳐지지 않는다"는 걸 표시해요. */
+.flow-branch-group {
+  display: flex; align-items: stretch; border-radius: 14px;
+  border: 1.5px solid var(--border-strong); padding: 10px 10px; margin: 3px 0;
+}
+.flow-branch-group.no-merge { border-style: dashed; }
+.flow-branch-group[data-depth="0"] { background: rgba(148,163,184,.08); }
+.flow-branch-group[data-depth="1"] { background: rgba(59,130,246,.07); }
+.flow-branch-group[data-depth="2"] { background: rgba(16,185,129,.07); }
+.flow-branch-group[data-depth="3"] { background: rgba(245,158,11,.08); }
+.flow-branch-group[data-depth="4"] { background: rgba(168,85,247,.07); }
+/* 박스가 중첩되면 안쪽 박스는 살짝 더 붙임 */
+.flow-branch-group .flow-branch-group { margin: 0; }
+
+/* 가로 흐름 중간에서 위/아래로 갈라지는 포크 — split(분기)과 join(병합)에
+   동일 모양을 좌우 반전(scaleX)해서 재사용. join은 파란색으로 강조해서
+   "여기서 다시 합쳐진다"는 걸 split과 구분되게 보여줘요. */
+.flow-hfork { position: relative; width: 26px; flex-shrink: 0; align-self: stretch; }
+.flow-hfork::before {
+  content: ""; position: absolute; top: 50%; left: 0; width: 13px; height: 2px;
+  background: var(--border-strong); transform: translateY(-50%);
+}
+.flow-hfork-t, .flow-hfork-b { position: absolute; left: 13px; width: 13px; }
+.flow-hfork-t { top: 0; height: 50%; border-left: 2px solid var(--border-strong); border-bottom: 2px solid var(--border-strong); border-bottom-left-radius: 10px; }
+.flow-hfork-b { bottom: 0; height: 50%; border-left: 2px solid var(--border-strong); border-top: 2px solid var(--border-strong); border-top-left-radius: 10px; }
+.flow-hfork.join { transform: scaleX(-1); }
+.flow-hfork.join::before { background: var(--blue); }
+.flow-hfork.join .flow-hfork-t, .flow-hfork.join .flow-hfork-b { border-color: var(--blue); }
+
+.flow-hsplit-rows { display: flex; flex-direction: column; justify-content: center; gap: 20px; flex-shrink: 0; }
+.flow-hsplit-row { display: flex; align-items: center; gap: 8px; }
+.flow-branch-tag { font-size: 11.5px; font-weight: 600; color: var(--text-2); background: var(--bg-soft); border-radius: 999px; padding: 3px 10px; flex-shrink: 0; }
+
+/* 반복/재시도 루프 — 가로로 흐르는 두 단계 아래쪽에 대괄호(⊐ 아래로 뒤집힌 모양)로
+   되돌아가는 경로를 표시 */
+.flow-hloop-wrap { position: relative; display: flex; align-items: center; gap: 8px; padding-bottom: 42px; }
+.flow-hloop-bracket {
+  position: absolute; left: 44px; right: 44px; bottom: 12px; height: 22px;
+  border-left: 2px solid var(--blue); border-right: 2px solid var(--blue); border-bottom: 2px solid var(--blue);
+  border-radius: 0 0 10px 10px;
+}
+.flow-hloop-bracket::after {
+  content: ""; position: absolute; top: -1px; left: -1px; transform: translateY(-100%);
+  border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid var(--blue);
+}
+.flow-hloop-label {
+  position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%);
+  font-size: 11.5px; color: var(--blue); font-weight: 600; white-space: nowrap;
+}
+
+.sample-block { border: 1px solid var(--border-strong); border-radius: 16px; padding: 32px 36px; margin-bottom: 40px; }
+.sample-block-title { font-size: 13px; font-weight: 700; color: var(--text-2); text-transform: uppercase; letter-spacing: .03em; margin-bottom: 20px; }
+
+/* ===== AX Planner — 자유 배치 드래그 캔버스: 팔레트에서 도형을 추가하고,
+   원하는 위치로 드래그해서 놓고, 핸들을 드래그해 다른 노드와 연결하는 방식.
+   가로/세로 방향 제약이 없어서 흐름을 어떤 방향으로도 이어 그릴 수 있음. ===== */
+.axp-block { width: 100%; box-sizing: border-box; }
+
+.axp-palette {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  padding: 10px; border: 1px solid var(--border-strong); border-radius: 10px;
+  background: var(--bg); margin: 4px 0 10px;
+}
+.axp-palette-sep { width: 1px; align-self: stretch; background: var(--border-strong); margin: 0 4px; }
+.axp-palette-hint { font-size: 11.5px; color: var(--text-2); margin-left: auto; white-space: nowrap; }
+
+.axp-canvas-wrap {
+  width: 100%; height: 50vh; box-sizing: border-box;
+  overflow: auto; border: 1px solid var(--border-strong); border-radius: 12px;
+  background: var(--bg-soft); margin: 4px 0 24px; position: relative;
+}
+.axp-canvas { position: relative; min-width: 100%; min-height: 100%; }
+.axp-canvas.connecting, .axp-canvas.connecting .axp-node-free { cursor: crosshair; }
+
+.axp-view-toggle { display: inline-flex; border: 1px solid var(--border-strong); border-radius: 8px; overflow: hidden; }
+.axp-view-toggle-btn {
+  border: none; background: var(--bg); color: var(--text-2); cursor: pointer;
+  font-size: 11.5px; font-weight: 600; padding: 6px 12px; text-transform: none; letter-spacing: 0;
+}
+.axp-view-toggle-btn + .axp-view-toggle-btn { border-left: 1px solid var(--border-strong); }
+.axp-view-toggle-btn.active { background: var(--blue); color: #fff; }
+.axp-mermaid { position: relative; display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 18px; box-sizing: border-box; }
+.axp-mermaid svg { max-width: 100%; }
+.axp-mermaid .axp-mermaid-empty { color: var(--text-3); font-size: 13.5px; text-align: center; padding: 30px 10px; }
+
+.axp-node-editable { outline: none; min-width: 12px; display: inline-block; }
+.axp-node-editable:focus { text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; }
+
+/* 노드 팔레트 스와치 — 실제 설계서 도형 표기법(.flow-shape.*)과 동일한 색을 그대로 재사용해서
+   AX Planner에서 만든 다이어그램이 실제 업무 설계서와 같은 시각 언어를 갖도록 함 */
+.axp-swatch, .axp-line-btn, .axp-action-btn {
+  border: none; cursor: pointer; font-size: 11.5px; font-weight: 600;
+  border-radius: 8px; padding: 6px 12px; transition: transform .12s, box-shadow .12s;
+  white-space: nowrap;
+}
+.axp-swatch:hover, .axp-line-btn:hover, .axp-action-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(15,23,42,.15); }
+.axp-swatch {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--bg); border: 1px solid var(--border-strong); color: var(--text-1);
+  padding: 5px 10px 5px 6px;
+}
+.axp-swatch-icon {
+  flex-shrink: 0; width: 30px; height: 18px; box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.axp-swatch-icon svg { width: 10px; height: 10px; }
+.axp-swatch-label { color: var(--text-1); font-weight: 600; }
+
+.axp-swatch-icon.start { border-radius: 999px; background: var(--blue); }
+.axp-swatch-icon.end { border-radius: 999px; background: var(--bg-soft); border: 1px solid var(--border-strong); }
+.axp-swatch-icon.process { border-radius: 5px; background: var(--blue); }
+.axp-swatch-icon.system { border-radius: 5px; background: var(--blue-bg); }
+.axp-swatch-icon.input { width: 26px; border-radius: 4px; background: var(--bg); border: 1px solid var(--border-strong); transform: skewX(-12deg); }
+.axp-swatch-icon.decision { width: 16px; height: 16px; border-radius: 3px; background: #fff; border: 2px solid var(--blue); transform: rotate(45deg); }
+.axp-swatch-icon.subprocess { border-radius: 5px; background: var(--bg); border: 1px solid var(--border-strong); }
+.axp-swatch-icon.subprocess::before, .axp-swatch-icon.subprocess::after { content: ""; position: absolute; top: 2px; bottom: 2px; width: 2px; background: var(--border-strong); }
+.axp-swatch-icon.subprocess::before { left: 4px; }
+.axp-swatch-icon.subprocess::after { right: 4px; }
+.axp-swatch-icon.screen { border-radius: 5px; background: var(--bg); border: 1px solid var(--border-strong); color: var(--blue); }
+.axp-swatch-icon.external { border-radius: 5px; background: var(--bg-soft); border: 1.5px dashed var(--border-strong); color: var(--text-3); }
+.axp-swatch-icon.exception { border-radius: 5px; background: #fff; border: 2px solid #F59E0B; color: #D97706; }
+.axp-swatch-icon.wait { border-radius: 4px 999px 999px 4px; background: var(--bg); border: 1px solid var(--border-strong); color: var(--text-3); }
+.axp-swatch-icon.connector { width: 18px; height: 18px; border-radius: 50%; background: var(--bg-soft); border: 1px solid var(--border-strong); color: var(--text-2); }
+.axp-swatch-icon.complete { border-radius: 999px; background: #E6FBF5; color: #04704F; }
+.axp-line-btn { border: 1px solid var(--border-strong); background: var(--bg); color: var(--text-2); }
+.axp-line-btn.active { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+.axp-action-btn { border: 1px solid var(--border-strong); background: var(--bg); color: var(--text-2); }
+.axp-action-btn.ghost { background: transparent; color: var(--text-3); border-style: dashed; box-shadow: none !important; transform: none !important; }
+
+/* 자유 배치 노드 — 절대 좌표로 캔버스 위 어디든 놓이고 드래그로 옮길 수 있음 */
+.axp-node-free { position: absolute; cursor: grab; user-select: none; }
+.axp-node-free.dragging { cursor: grabbing; z-index: 30; }
+.axp-node-free.active .flow-shape { box-shadow: 0 0 0 2px var(--blue); }
+.axp-node-free.active .flow-decision-mark { box-shadow: 0 0 0 2px var(--blue); }
+.axp-node-delete {
+  position: absolute; top: -8px; right: -8px; width: 18px; height: 18px; border-radius: 50%;
+  background: #DC2626; color: #fff; border: 2px solid var(--bg-soft); font-size: 11px; line-height: 14px;
+  text-align: center; cursor: pointer; display: none; padding: 0; z-index: 5;
+}
+.axp-node-free:hover .axp-node-delete { display: block; }
+.axp-connect-handle {
+  position: absolute; right: -8px; bottom: -8px; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--blue); border: 2px solid var(--bg-soft); cursor: crosshair; z-index: 5;
+}
+.axp-connect-handle::after {
+  content: ""; position: absolute; inset: -6px; border-radius: 50%;
+}
+/* 선택된 노드의 "현재 위치" 표시 점(.flow-node.active::after, app.css 공용)이
+   오른쪽 아래 연결 핸들(.axp-connect-handle)과 같은 파란색이라 헷갈리므로
+   이 페이지에서만 색을 다르게 오버라이드 */
+.axp-node-free.active::after { background: #F59E0B; }
+
+.axp-edge-svg { position: absolute; top: 0; left: 0; overflow: visible; pointer-events: none; }
+.axp-edge-svg .axp-edge-hit { stroke: transparent; stroke-width: 16; fill: none; pointer-events: stroke; cursor: pointer; }
+.axp-edge-svg .axp-edge-line { fill: none; stroke-width: 2.25; stroke: var(--blue); pointer-events: none; }
+.axp-edge-svg .axp-edge-line.dashed { stroke-dasharray: 7 6; }
+.axp-edge-svg .axp-edge-line.selected { stroke: #DC2626; }
+.axp-edge-svg .axp-edge-ghost { stroke: var(--text-3); stroke-width: 2; stroke-dasharray: 5 5; fill: none; }
+.axp-edge-label {
+  position: absolute; transform: translate(-50%, -50%); background: var(--bg-soft);
+  border: 1px solid var(--border-strong); border-radius: 999px; padding: 2px 9px;
+  font-size: 11px; font-weight: 700; cursor: text; outline: none; white-space: nowrap; min-width: 8px;
+  color: var(--text-2);
+}
+.axp-edge-label:empty::before { content: '+ 라벨'; color: var(--text-3); font-weight: 500; }
+.axp-edge-label:focus { border-color: var(--blue); color: var(--blue); }
+.axp-edge-toolbar {
+  position: absolute; display: flex; gap: 4px; background: var(--bg); border: 1px solid var(--border-strong);
+  border-radius: 8px; padding: 4px; box-shadow: 0 4px 12px rgba(15,23,42,.15); transform: translate(-50%, 0); z-index: 10;
+}
+.axp-edge-toolbar button { border: none; background: transparent; cursor: pointer; font-size: 11px; font-weight: 600; color: var(--text-2); border-radius: 6px; padding: 4px 8px; }
+.axp-edge-toolbar button:hover { background: var(--bg-soft); }
+.axp-edge-toolbar button.active { background: var(--blue-bg); color: var(--blue); }
+.axp-edge-toolbar button.axp-edge-del { color: #DC2626; }
+
+.axp-mini-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  padding: 8px 10px; border: 1.5px dashed var(--border-strong); border-radius: 10px; background: var(--bg);
+}
+@keyframes axpToolbarPulse {
+  0% { box-shadow: 0 0 0 0 rgba(37,99,235,.35); }
+  70% { box-shadow: 0 0 0 8px rgba(37,99,235,0); }
+  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+}
+.axp-mini-toolbar.just-appeared { animation: axpToolbarPulse .9s ease-out 1; }
+
+.axp-screen-section { margin-top: 24px; }
+.axp-screen-title { font-size: 13px; font-weight: 700; color: var(--text-2); text-transform: uppercase; letter-spacing: .03em; margin-bottom: 12px; }
+.axp-screen-node-label { text-transform: none; font-weight: 500; color: var(--blue); letter-spacing: 0; margin-left: 6px; }
+.axp-screen-builder { border: 1px solid var(--border-strong); border-radius: 12px; padding: 20px; background: var(--bg-soft); }
+.axp-screen-empty { color: var(--text-3); font-size: 13.5px; text-align: center; padding: 30px 10px; }
+.axp-option-row { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: 8px; background: var(--bg); margin-bottom: 8px; }
+.axp-option-row-fields { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.axp-option-row-fields input[type="text"] { border: 1px solid var(--border-strong); border-radius: 6px; padding: 7px 9px; font-size: 12.5px; background: var(--bg); color: var(--text-1); width: 100%; box-sizing: border-box; }
+.axp-option-kind-label { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .02em; }
+.axp-option-remove { border: none; background: transparent; color: var(--text-3); cursor: pointer; font-size: 15px; flex-shrink: 0; line-height: 1; padding: 4px; }
+.axp-option-remove:hover { color: #DC2626; }
+.axp-add-option-row { display: flex; gap: 8px; margin: 4px 0 20px; flex-wrap: wrap; }
+.axp-add-option-btn { border: 1px dashed var(--border-strong); background: transparent; color: var(--text-2); font-size: 12.5px; font-weight: 600; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+.axp-add-option-btn:hover { border-color: var(--blue); color: var(--blue); }
+.axp-screen-preview-wrap { display: flex; justify-content: center; }
+
+/* 단계 클릭 → 하단 상세 표시 (전체 흐름과 동일하게 uxd.js의 selectFlowStep 재사용) */
+.flow-detail { border: 1px solid var(--border-strong); border-radius: 12px; padding: 18px 22px; margin-top: 18px; background: var(--bg-soft); }
+.flow-detail-title { font-size: 13.5px; font-weight: 700; color: var(--text-1); margin-bottom: 6px; }
+.flow-detail-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+    <div class="prose" id="sec-0b"><h2>⓪ AX Planner</h2><p>팔레트에서 도형을 추가하고, 원하는 위치로 자유롭게 드래그해서 놓고, 각 노드의 파란 점을 다른 노드로 드래그하면 연결선이 생겨요. 가로·세로 방향 제약 없이 원하는 모양으로 흐름을 그릴 수 있고, 각 노드를 클릭하면 화면 목업까지 붙여볼 수 있어요.</p></div>
+    <div class="sample-block axp-block">
+      <div class="sample-block-title" style="display:flex; align-items:center; justify-content:space-between;">
+        <span>AX PLANNER</span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div class="axp-view-toggle" id="axpMermaidDirToggle" style="display:none;">
+            <button type="button" id="axpDirLR" class="axp-view-toggle-btn active">가로</button>
+            <button type="button" id="axpDirTD" class="axp-view-toggle-btn">세로</button>
+          </div>
+          <div class="axp-view-toggle">
+            <button type="button" id="axpViewCanvasBtn" class="axp-view-toggle-btn active">캔버스</button>
+            <button type="button" id="axpViewMermaidBtn" class="axp-view-toggle-btn">Mermaid 보기</button>
+          </div>
+          <button type="button" id="axpResetBtn" class="axp-action-btn ghost" style="text-transform:none; letter-spacing:0; font-size:12px;">전체 초기화</button>
+        </div>
+      </div>
+
+      <div id="axpPalette" class="axp-palette"></div>
+
+      <div id="axpCanvasWrap" class="axp-canvas-wrap">
+        <div id="axpCanvas" class="axp-canvas"></div>
+      </div>
+      <div id="axpMermaidWrap" class="axp-canvas-wrap" style="display:none;">
+        <div id="axpMermaid" class="axp-mermaid"></div>
+      </div>
+
+      <div class="axp-screen-section">
+        <div class="axp-screen-title">화면 구성<span id="axpScreenNodeLabel" class="axp-screen-node-label"></span></div>
+        <div id="axpScreenBuilder" class="axp-screen-builder">
+          <div class="axp-screen-empty">캔버스에서 노드를 클릭하면 이곳에서 화면을 구성할 수 있어요.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+<script>
+(function(){
+  var canvasWrapEl = document.getElementById('axpCanvasWrap');
+  var canvasEl = document.getElementById('axpCanvas');
+  var paletteEl = document.getElementById('axpPalette');
+  var mermaidWrapEl = document.getElementById('axpMermaidWrap');
+  var mermaidEl = document.getElementById('axpMermaid');
+  var viewCanvasBtn = document.getElementById('axpViewCanvasBtn');
+  var viewMermaidBtn = document.getElementById('axpViewMermaidBtn');
+  var mermaidDirToggle = document.getElementById('axpMermaidDirToggle');
+  var dirLRBtn = document.getElementById('axpDirLR');
+  var dirTDBtn = document.getElementById('axpDirTD');
+  var screenBuilderEl = document.getElementById('axpScreenBuilder');
+  var screenNodeLabelEl = document.getElementById('axpScreenNodeLabel');
+  var resetBtn = document.getElementById('axpResetBtn');
+  if (!canvasEl) return;
+
+  var svgNS = 'http://www.w3.org/2000/svg';
+
+  if (window.mermaid){
+    mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', flowchart: { curve: 'basis' } });
+  }
+  var currentView = 'canvas';
+  var mermaidDirection = 'LR';
+  var mmIdMap = {};
+
+  // Mermaid 노드도 캔버스/팔레트와 같은 시각 언어(색·굵기)를 갖도록 도형별 classDef 정의
+  var SHAPE_CLASSDEF = {
+    start:      'fill:#3182F6,stroke:#3182F6,stroke-width:1.5px,color:#ffffff,font-weight:700',
+    end:        'fill:#F3F4F6,stroke:#9CA3AF,stroke-width:1.5px,color:#4B5563,font-weight:700',
+    process:    'fill:#3182F6,stroke:#1C64D6,stroke-width:1.5px,color:#ffffff,font-weight:700',
+    system:     'fill:#EBF2FE,stroke:#3182F6,stroke-width:1.5px,color:#185FA5,font-weight:700',
+    input:      'fill:#ffffff,stroke:#9CA3AF,stroke-width:1.5px,color:#1F2937,font-weight:700',
+    decision:   'fill:#EBF2FE,stroke:#3182F6,stroke-width:2.5px,color:#124C93,font-weight:700',
+    subprocess: 'fill:#ffffff,stroke:#6B7280,stroke-width:1.75px,color:#1F2937,font-weight:700',
+    screen:     'fill:#ffffff,stroke:#3182F6,stroke-width:1.5px,color:#1F2937,font-weight:700',
+    external:   'fill:#F3F4F6,stroke:#9CA3AF,stroke-width:1.5px,color:#4B5563,font-weight:700,stroke-dasharray:5 3',
+    exception:  'fill:#FFF7ED,stroke:#F59E0B,stroke-width:2.5px,color:#B45309,font-weight:700',
+    wait:       'fill:#ffffff,stroke:#9CA3AF,stroke-width:1.5px,color:#4B5563,font-weight:700',
+    connector:  'fill:#F3F4F6,stroke:#6B7280,stroke-width:1.5px,color:#374151,font-weight:700',
+    complete:   'fill:#E6FBF5,stroke:#04704F,stroke-width:1.75px,color:#04704F,font-weight:700'
+  };
+
+  // 실제 업무 설계서 도형 표기법과 동일한 13종 — .flow-shape.* 클래스를 그대로 재사용해서
+  // 색·아이콘이 실제 설계서와 같아지도록 함
+  var SHAPE_DEFS = {
+    start:      { label: '시작', defaultText: '시작' },
+    end:        { label: '종료', defaultText: '종료' },
+    process:    { label: 'Agent 처리', defaultText: '처리' },
+    system:     { label: '시스템 처리', defaultText: '시스템 처리' },
+    input:      { label: '사용자 입력', defaultText: '사용자 입력' },
+    decision:   { label: '조건 분기', defaultText: '조건' },
+    subprocess: { label: '서브 프로세스', defaultText: '서브 프로세스' },
+    screen:     { label: '화면 참조', defaultText: '화면 참조' },
+    external:   { label: '외부 연동', defaultText: '외부 연동' },
+    exception:  { label: '예외 처리', defaultText: '예외 처리' },
+    wait:       { label: '대기', defaultText: '대기' },
+    connector:  { label: '연결자', defaultText: 'A' },
+    complete:   { label: '완료 조건', defaultText: '완료' }
+  };
+  var SHAPE_ORDER = ['start', 'end', 'process', 'system', 'input', 'decision', 'subprocess', 'screen', 'external', 'exception', 'wait', 'connector', 'complete'];
+
+  var EDITABLE_SPAN = '<span class="axp-node-editable" contenteditable="true" spellcheck="false"></span>';
+  var SHAPE_MARKUP = {
+    start: '<div class="flow-shape terminator">' + EDITABLE_SPAN + '</div>',
+    end: '<div class="flow-shape terminator muted">' + EDITABLE_SPAN + '</div>',
+    process: '<div class="flow-shape process">' + EDITABLE_SPAN + '</div>',
+    system: '<div class="flow-shape system">' + EDITABLE_SPAN + '</div>',
+    input: '<div class="flow-shape-input-wrap"><div class="flow-shape input">' + EDITABLE_SPAN + '</div></div>',
+    decision: '<div class="flow-decision-wrap"><div class="flow-decision-mark"></div><div class="flow-decision-text axp-node-editable" contenteditable="true" spellcheck="false"></div></div>',
+    subprocess: '<div class="flow-subprocess-wrap"><div class="flow-shape subprocess">' + EDITABLE_SPAN + '</div></div>',
+    screen: '<div class="flow-shape screen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>' + EDITABLE_SPAN + '</div>',
+    external: '<div class="flow-shape external"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h.79a4.5 4.5 0 1 1 0 9Z"/></svg>' + EDITABLE_SPAN + '</div>',
+    exception: '<div class="flow-shape exception"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>' + EDITABLE_SPAN + '</div>',
+    wait: '<div class="flow-shape wait"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' + EDITABLE_SPAN + '</div>',
+    connector: '<div class="flow-shape connector">' + EDITABLE_SPAN + '</div>',
+    complete: '<div class="flow-shape complete" style="display:inline-flex;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>' + EDITABLE_SPAN + '</div>'
+  };
+
+  var uid = 0;
+  function nextId(prefix){ uid++; return (prefix || 'axpn') + uid; }
+
+  // 자유 배치 그래프 모델 — 순서가 있는 steps/분기(arms) 구조를 버리고,
+  // 노드(x,y 좌표)와 노드 사이를 잇는 엣지(from/to/label/style)만으로 표현.
+  // 가로/세로/대각선 어떤 방향으로도 자유롭게 놓고 이을 수 있음.
+  var state = {
+    nodes: [],
+    edges: [],
+    selectedId: null,
+    selectedEdgeId: null
+  };
+
+  function findNode(id){
+    for (var i = 0; i < state.nodes.length; i++){ if (state.nodes[i].id === id) return state.nodes[i]; }
+    return null;
+  }
+
+  // ---------- 팔레트 (항상 보이는 도형 추가 바 — 클릭하면 캔버스에 노드가 놓이고, 드래그로 옮기면 됨) ----------
+  var placedCount = 0;
+  function addNodeAtDefault(shapeKey){
+    var col = placedCount % 6;
+    var row = Math.floor(placedCount / 6);
+    placedCount++;
+    var node = {
+      id: nextId(), shape: shapeKey, label: SHAPE_DEFS[shapeKey].defaultText,
+      x: 40 + col * 170, y: 30 + row * 110, screenLines: []
+    };
+    state.nodes.push(node);
+    state.selectedId = node.id;
+    state.selectedEdgeId = null;
+    render();
+    renderScreenBuilder();
+  }
+
+  var SWATCH_ICON_SVG = {
+    screen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+    external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h.79a4.5 4.5 0 1 1 0 9Z"/></svg>',
+    exception: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+    wait: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+    complete: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>'
+  };
+  function buildPalette(){
+    paletteEl.innerHTML = '';
+    SHAPE_ORDER.forEach(function(key){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'axp-swatch';
+      btn.innerHTML =
+        '<span class="axp-swatch-icon ' + key + '">' + (SWATCH_ICON_SVG[key] || '') + '</span>' +
+        '<span class="axp-swatch-label">' + SHAPE_DEFS[key].label + '</span>';
+      btn.addEventListener('click', function(){ addNodeAtDefault(key); });
+      paletteEl.appendChild(btn);
+    });
+    var hint = document.createElement('div');
+    hint.className = 'axp-palette-hint';
+    hint.textContent = '노드는 드래그로 위치를 옮기고, 오른쪽 아래 파란 점을 다른 노드로 드래그하면 연결돼요.';
+    paletteEl.appendChild(hint);
+  }
+
+  // ---------- 캔버스 크기를 실제 배치된 노드 범위에 맞춰 늘리기 (스크롤 가능하도록) ----------
+  function growCanvasToFit(){
+    var maxX = 0, maxY = 0;
+    state.nodes.forEach(function(n){ maxX = Math.max(maxX, n.x + 180); maxY = Math.max(maxY, n.y + 110); });
+    var w = Math.max(maxX + 100, canvasWrapEl.clientWidth || 0);
+    var h = Math.max(maxY + 100, canvasWrapEl.clientHeight || 0);
+    canvasEl.style.width = w + 'px';
+    canvasEl.style.height = h + 'px';
+  }
+
+  // ---------- 노드 엘리먼트 (자유 배치 + 드래그 이동 + 연결 핸들) ----------
+  var draggingNode = null;
+
+  function nodeEl(node){
+    var wrap = document.createElement('div');
+    wrap.className = 'axp-node-free flow-node clickable' + (state.selectedId === node.id ? ' active' : '');
+    wrap.style.left = node.x + 'px';
+    wrap.style.top = node.y + 'px';
+    wrap.setAttribute('data-node-id', node.id);
+
+    var tmp = document.createElement('div');
+    tmp.innerHTML = SHAPE_MARKUP[node.shape] || SHAPE_MARKUP.process;
+    var inner = tmp.firstElementChild;
+    inner.querySelector('.axp-node-editable').textContent = node.label;
+    wrap.appendChild(inner);
+
+    var editable = wrap.querySelector('.axp-node-editable');
+    editable.addEventListener('click', function(e){ e.stopPropagation(); });
+    editable.addEventListener('input', function(){
+      node.label = editable.textContent.trim() || SHAPE_DEFS[node.shape].defaultText;
+      if (state.selectedId === node.id) screenNodeLabelEl.textContent = '— ' + node.label;
+    });
+    editable.addEventListener('blur', function(){ node.label = editable.textContent.trim() || SHAPE_DEFS[node.shape].defaultText; drawEdges(); });
+    editable.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); editable.blur(); } });
+
+    var delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'axp-node-delete';
+    delBtn.textContent = '✕';
+    delBtn.addEventListener('mousedown', function(e){ e.stopPropagation(); });
+    delBtn.addEventListener('click', function(e){ e.stopPropagation(); deleteNode(node.id); });
+    wrap.appendChild(delBtn);
+
+    var handle = document.createElement('div');
+    handle.className = 'axp-connect-handle';
+    handle.title = '드래그해서 다른 노드와 연결';
+    handle.addEventListener('mousedown', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      startConnectDrag(node);
+    });
+    wrap.appendChild(handle);
+
+    wrap.addEventListener('click', function(e){
+      if (node._justDragged) return;
+      state.selectedId = node.id;
+      state.selectedEdgeId = null;
+      renderScreenBuilder();
+      screenBuilderEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (e.target === editable){
+        // 텍스트 편집 중 포커스가 날아가지 않도록 전체 재렌더링 없이 active 표시만 갱신
+        canvasEl.querySelectorAll('.axp-node-free.active').forEach(function(el){ el.classList.remove('active'); });
+        wrap.classList.add('active');
+      } else {
+        render();
+      }
+    });
+
+    wrap.addEventListener('mousedown', function(e){
+      if (e.target !== editable) e.preventDefault();
+      startNodeDrag(node, wrap, e);
+    });
+
+    return wrap;
+  }
+
+  function startNodeDrag(node, wrap, e){
+    var startX = e.clientX, startY = e.clientY;
+    var startNodeX = node.x, startNodeY = node.y;
+    var moved = false;
+    draggingNode = node;
+    wrap.classList.add('dragging');
+
+    function onMove(ev){
+      var dx = ev.clientX - startX, dy = ev.clientY - startY;
+      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) moved = true;
+      node.x = Math.max(0, startNodeX + dx);
+      node.y = Math.max(0, startNodeY + dy);
+      wrap.style.left = node.x + 'px';
+      wrap.style.top = node.y + 'px';
+      growCanvasToFit();
+      drawEdges();
+    }
+    function onUp(){
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      wrap.classList.remove('dragging');
+      draggingNode = null;
+      if (moved){
+        node._justDragged = true;
+        setTimeout(function(){ node._justDragged = false; }, 0);
+        drawEdges();
+      }
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  }
+
+  function deleteNode(id){
+    state.nodes = state.nodes.filter(function(n){ return n.id !== id; });
+    state.edges = state.edges.filter(function(e){ return e.from !== id && e.to !== id; });
+    if (state.selectedId === id) state.selectedId = null;
+    render();
+    renderScreenBuilder();
+  }
+
+  // ---------- 연결(엣지) 만들기 — 노드의 파란 핸들을 다른 노드로 드래그 ----------
+  var ghostPath = null;
+  function startConnectDrag(fromNode){
+    canvasEl.classList.add('connecting');
+    ensureEdgeSvg();
+    ghostPath = document.createElementNS(svgNS, 'path');
+    ghostPath.setAttribute('class', 'axp-edge-ghost');
+    edgeSvg.appendChild(ghostPath);
+
+    var fromEl = canvasEl.querySelector('[data-node-id="' + fromNode.id + '"]');
+    var canvasRect = canvasEl.getBoundingClientRect();
+    var fromRect = fromEl.getBoundingClientRect();
+    var startX = fromRect.left + fromRect.width / 2 - canvasRect.left;
+    var startY = fromRect.top + fromRect.height / 2 - canvasRect.top;
+
+    function onMove(ev){
+      var r = canvasEl.getBoundingClientRect();
+      var x = ev.clientX - r.left, y = ev.clientY - r.top;
+      ghostPath.setAttribute('d', 'M' + startX + ',' + startY + ' L' + x + ',' + y);
+    }
+    function onUp(ev){
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      canvasEl.classList.remove('connecting');
+      if (ghostPath) ghostPath.remove();
+      ghostPath = null;
+      var targetEl = document.elementFromPoint(ev.clientX, ev.clientY);
+      var targetNodeEl = targetEl ? targetEl.closest('.axp-node-free') : null;
+      if (targetNodeEl){
+        var toId = targetNodeEl.getAttribute('data-node-id');
+        if (toId && toId !== fromNode.id){
+          state.edges.push({ id: nextId('axpe'), from: fromNode.id, to: toId, label: '', style: 'solid' });
+          state.selectedEdgeId = null;
+          drawEdges();
+        }
+      }
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  }
+
+  function selectEdge(id){
+    state.selectedEdgeId = id;
+    state.selectedId = null;
+    render();
+    renderScreenBuilder();
+  }
+
+  function edgeToolbarEl(edge){
+    var bar = document.createElement('div');
+    bar.className = 'axp-edge-toolbar';
+    bar.addEventListener('mousedown', function(e){ e.stopPropagation(); });
+    [['solid', '실선'], ['dashed', '점선'], ['both', '양방향']].forEach(function(pair){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = pair[1];
+      if (edge.style === pair[0]) btn.className = 'active';
+      btn.addEventListener('click', function(e){ e.stopPropagation(); edge.style = pair[0]; drawEdges(); });
+      bar.appendChild(btn);
+    });
+    var del = document.createElement('button');
+    del.type = 'button';
+    del.className = 'axp-edge-del';
+    del.textContent = '삭제';
+    del.addEventListener('click', function(e){
+      e.stopPropagation();
+      state.edges = state.edges.filter(function(x){ return x.id !== edge.id; });
+      state.selectedEdgeId = null;
+      drawEdges();
+    });
+    bar.appendChild(del);
+    return bar;
+  }
+
+  // ---------- 엣지(연결선) 그리기 ----------
+  var edgeSvg = null;
+  function ensureEdgeSvg(){
+    if (edgeSvg && edgeSvg.parentElement === canvasEl) return;
+    edgeSvg = document.createElementNS(svgNS, 'svg');
+    edgeSvg.setAttribute('class', 'axp-edge-svg');
+    var defs = document.createElementNS(svgNS, 'defs');
+    defs.innerHTML =
+      '<marker id="axpArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--blue)"></path></marker>' +
+      '<marker id="axpArrowSel" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:#DC2626"></path></marker>';
+    edgeSvg.appendChild(defs);
+    canvasEl.insertBefore(edgeSvg, canvasEl.firstChild);
+  }
+
+  function drawEdges(){
+    growCanvasToFit();
+    ensureEdgeSvg();
+    edgeSvg.setAttribute('width', canvasEl.style.width);
+    edgeSvg.setAttribute('height', canvasEl.style.height);
+    Array.from(edgeSvg.querySelectorAll('.axp-edge-path-group')).forEach(function(g){ g.remove(); });
+    Array.from(canvasEl.querySelectorAll('.axp-edge-label, .axp-edge-toolbar')).forEach(function(el){ el.remove(); });
+
+    var canvasRect = canvasEl.getBoundingClientRect();
+
+    state.edges.forEach(function(edge){
+      var fromEl = canvasEl.querySelector('[data-node-id="' + edge.from + '"]');
+      var toEl = canvasEl.querySelector('[data-node-id="' + edge.to + '"]');
+      if (!fromEl || !toEl) return;
+      var fr = fromEl.getBoundingClientRect(), tr = toEl.getBoundingClientRect();
+      var fx = fr.left + fr.width / 2 - canvasRect.left, fy = fr.top + fr.height / 2 - canvasRect.top;
+      var tx = tr.left + tr.width / 2 - canvasRect.left, ty = tr.top + tr.height / 2 - canvasRect.top;
+      var dx = tx - fx, dy = ty - fy;
+      var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      var ux = dx / dist, uy = dy / dist;
+      var sx = fx + ux * (fr.width / 2 * 0.92), sy = fy + uy * (fr.height / 2 * 0.92);
+      var ex = tx - ux * (tr.width / 2 * 0.98), ey = ty - uy * (tr.height / 2 * 0.98);
+
+      var nx = -uy, ny = ux;
+      var bend = Math.min(36, dist * 0.22);
+      var c1x = sx + (ex - sx) * 0.33 + nx * bend, c1y = sy + (ey - sy) * 0.33 + ny * bend;
+      var c2x = sx + (ex - sx) * 0.66 + nx * bend, c2y = sy + (ey - sy) * 0.66 + ny * bend;
+      var d = 'M' + sx + ',' + sy + ' C' + c1x + ',' + c1y + ' ' + c2x + ',' + c2y + ' ' + ex + ',' + ey;
+
+      var isSelected = state.selectedEdgeId === edge.id;
+      var g = document.createElementNS(svgNS, 'g');
+      g.setAttribute('class', 'axp-edge-path-group');
+
+      var hit = document.createElementNS(svgNS, 'path');
+      hit.setAttribute('class', 'axp-edge-hit');
+      hit.setAttribute('d', d);
+      hit.addEventListener('click', function(e){ e.stopPropagation(); selectEdge(edge.id); });
+      g.appendChild(hit);
+
+      var line = document.createElementNS(svgNS, 'path');
+      line.setAttribute('class', 'axp-edge-line' + (edge.style === 'dashed' ? ' dashed' : '') + (isSelected ? ' selected' : ''));
+      line.setAttribute('d', d);
+      line.setAttribute('marker-end', 'url(#' + (isSelected ? 'axpArrowSel' : 'axpArrow') + ')');
+      if (edge.style === 'both') line.setAttribute('marker-start', 'url(#' + (isSelected ? 'axpArrowSel' : 'axpArrow') + ')');
+      g.appendChild(line);
+
+      edgeSvg.appendChild(g);
+
+      var mx = (sx + ex) / 2 + nx * bend * 0.5, my = (sy + ey) / 2 + ny * bend * 0.5;
+      var label = document.createElement('div');
+      label.className = 'axp-edge-label';
+      label.contentEditable = 'true';
+      label.spellcheck = false;
+      label.style.left = mx + 'px';
+      label.style.top = my + 'px';
+      label.textContent = edge.label || '';
+      label.addEventListener('mousedown', function(e){ e.stopPropagation(); });
+      label.addEventListener('click', function(e){ e.stopPropagation(); });
+      label.addEventListener('blur', function(){ edge.label = label.textContent.trim(); });
+      label.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); label.blur(); } });
+      canvasEl.appendChild(label);
+
+      if (isSelected){
+        var toolbar = edgeToolbarEl(edge);
+        toolbar.style.left = mx + 'px';
+        toolbar.style.top = (my - 36) + 'px';
+        canvasEl.appendChild(toolbar);
+      }
+    });
+  }
+
+  function render(){
+    canvasEl.innerHTML = '';
+    ensureEdgeSvg();
+    growCanvasToFit();
+    state.nodes.forEach(function(n){ canvasEl.appendChild(nodeEl(n)); });
+    drawEdges();
+  }
+
+  canvasEl.addEventListener('click', function(e){
+    if (e.target === canvasEl){
+      state.selectedEdgeId = null;
+      drawEdges();
+    }
+  });
+
+  // ---------- Mermaid 보기 (현재 노드/엣지를 mermaid flowchart 문법으로 변환해서 그리기) ----------
+  function mmEscape(text){
+    var t = String(text || '').replace(/"/g, "'").replace(/\n/g, ' ').trim();
+    return t || ' ';
+  }
+
+  function mmShape(node, id){
+    var label = mmEscape(node.label);
+    if (node.shape === 'start' || node.shape === 'end' || node.shape === 'complete') return id + '(["' + label + '"])';
+    if (node.shape === 'decision') return id + '{"' + label + '"}';
+    if (node.shape === 'input' || node.shape === 'external') return id + '[/"' + label + '"/]';
+    if (node.shape === 'connector') return id + '((("' + label + '")))';
+    if (node.shape === 'subprocess') return id + '[["' + label + '"]]';
+    return id + '["' + label + '"]';
+  }
+
+  function buildMermaidText(){
+    var lines = ['flowchart ' + mermaidDirection];
+    mmIdMap = {};
+    var idFor = {};
+    var counter = 0;
+    var usedShapes = {};
+    state.nodes.forEach(function(n){
+      counter++;
+      var mid = 'm' + counter;
+      idFor[n.id] = mid;
+      mmIdMap[mid] = n.id;
+      lines.push('  ' + mmShape(n, mid));
+      lines.push('  click ' + mid + ' call axpMermaidClick("' + mid + '")');
+      usedShapes[n.shape] = true;
+    });
+    state.edges.forEach(function(e){
+      var fromMid = idFor[e.from], toMid = idFor[e.to];
+      if (!fromMid || !toMid) return;
+      var label = e.label && e.label.trim() ? mmEscape(e.label) : '';
+      var seg;
+      if (e.style === 'dashed'){
+        seg = label ? (fromMid + ' -. ' + label + ' .-> ' + toMid) : (fromMid + ' -.-> ' + toMid);
+      } else if (e.style === 'both'){
+        seg = label ? (fromMid + ' <-->|' + label + '| ' + toMid) : (fromMid + ' <--> ' + toMid);
+      } else {
+        seg = label ? (fromMid + ' -->|' + label + '| ' + toMid) : (fromMid + ' --> ' + toMid);
+      }
+      lines.push('  ' + seg);
+    });
+    // 도형별 색/굵기 스타일 — 캔버스 팔레트와 같은 시각 언어로 통일해서 가독성을 높임
+    Object.keys(usedShapes).forEach(function(shapeKey){
+      var def = SHAPE_CLASSDEF[shapeKey] || SHAPE_CLASSDEF.process;
+      lines.push('  classDef ' + shapeKey + 'Style ' + def + ';');
+    });
+    state.nodes.forEach(function(n){
+      lines.push('  class ' + idFor[n.id] + ' ' + n.shape + 'Style;');
+    });
+    lines.push('  linkStyle default stroke:#3182F6,stroke-width:2px;');
+    return { text: lines.join('\n'), hasNodes: counter > 0 };
+  }
+
+  window.axpMermaidClick = function(mmId){
+    var realId = mmIdMap[mmId];
+    if (!realId) return;
+    state.selectedId = realId;
+    renderScreenBuilder();
+    screenBuilderEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
+
+  function renderMermaidView(){
+    if (!window.mermaid){
+      mermaidEl.innerHTML = '<div class="axp-mermaid-empty">Mermaid 라이브러리를 불러오지 못했어요.</div>';
+      return;
+    }
+    var built = buildMermaidText();
+    if (!built.hasNodes){
+      mermaidEl.innerHTML = '<div class="axp-mermaid-empty">캔버스에 도형을 추가하면 여기에 Mermaid 다이어그램이 그려져요.</div>';
+      return;
+    }
+    var renderId = 'axpMermaidSvg' + Date.now();
+    mermaid.render(renderId, built.text).then(function(result){
+      mermaidEl.innerHTML = result.svg;
+      if (result.bindFunctions) result.bindFunctions(mermaidEl);
+    }).catch(function(err){
+      mermaidEl.innerHTML = '<div class="axp-mermaid-empty">다이어그램을 그리는 중 오류가 발생했어요. (자유 배치 구조가 순환·중복 연결을 포함하면 발생할 수 있어요)</div>';
+      console.error('AX Planner mermaid render error', err);
+    });
+  }
+
+  function setView(view){
+    currentView = view;
+    if (view === 'mermaid'){
+      canvasWrapEl.style.display = 'none';
+      mermaidWrapEl.style.display = '';
+      if (mermaidDirToggle) mermaidDirToggle.style.display = '';
+      viewCanvasBtn.classList.remove('active');
+      viewMermaidBtn.classList.add('active');
+      renderMermaidView();
+    } else {
+      mermaidWrapEl.style.display = 'none';
+      canvasWrapEl.style.display = '';
+      if (mermaidDirToggle) mermaidDirToggle.style.display = 'none';
+      viewMermaidBtn.classList.remove('active');
+      viewCanvasBtn.classList.add('active');
+    }
+  }
+
+  if (viewCanvasBtn && viewMermaidBtn){
+    viewCanvasBtn.addEventListener('click', function(){ setView('canvas'); });
+    viewMermaidBtn.addEventListener('click', function(){ setView('mermaid'); });
+  }
+  if (dirLRBtn && dirTDBtn){
+    dirLRBtn.addEventListener('click', function(){
+      mermaidDirection = 'LR';
+      dirLRBtn.classList.add('active'); dirTDBtn.classList.remove('active');
+      renderMermaidView();
+    });
+    dirTDBtn.addEventListener('click', function(){
+      mermaidDirection = 'TD';
+      dirTDBtn.classList.add('active'); dirLRBtn.classList.remove('active');
+      renderMermaidView();
+    });
+  }
+
+  // ---------- 화면 빌더 (캔버스 아래) ----------
+  function buildScreenLines(node){
+    var lines = [];
+    node.screenLines.forEach(function(l){
+      if (l.type === 'msg' && l.text.trim()) lines.push('msg: ' + l.text.trim());
+      if (l.type === 'chips' && l.text.trim()) lines.push('chips: ' + l.text.trim());
+      if (l.type === 'desc' && (l.text.trim() || l.text2.trim())) lines.push('desc: ' + l.text.trim() + ' | ' + l.text2.trim());
+    });
+    return lines;
+  }
+
+  function renderPreviewOnly(node){
+    var previewWrap = screenBuilderEl.querySelector('.axp-screen-preview-wrap');
+    if (!previewWrap) return;
+    var lines = buildScreenLines(node);
+    previewWrap.innerHTML = lines.length
+      ? flowParseScreenBlock(lines, node.label)
+      : '<div class="axp-screen-empty">아직 추가된 화면 옵션이 없어요. 위에서 옵션을 추가해보세요.</div>';
+  }
+
+  function optionRowEl(node, line, idx){
+    var row = document.createElement('div');
+    row.className = 'axp-option-row';
+
+    var fields = document.createElement('div');
+    fields.className = 'axp-option-row-fields';
+
+    var labelMap = { msg: '메시지 (번호 배지)', chips: '칩 그룹 · | 로 구분, 강조는 (on)', desc: '설명 항목' };
+    var kindLabel = document.createElement('div');
+    kindLabel.className = 'axp-option-kind-label';
+    kindLabel.textContent = labelMap[line.type];
+    fields.appendChild(kindLabel);
+
+    if (line.type === 'desc'){
+      var titleInput = document.createElement('input');
+      titleInput.type = 'text'; titleInput.placeholder = '제목'; titleInput.value = line.text;
+      titleInput.addEventListener('input', function(){ line.text = titleInput.value; renderPreviewOnly(node); });
+      var descInput = document.createElement('input');
+      descInput.type = 'text'; descInput.placeholder = '설명'; descInput.value = line.text2;
+      descInput.addEventListener('input', function(){ line.text2 = descInput.value; renderPreviewOnly(node); });
+      fields.appendChild(titleInput);
+      fields.appendChild(descInput);
+    } else {
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = line.type === 'chips' ? '예: 확인(on) | 취소' : '메시지 내용을 입력하세요';
+      input.value = line.text;
+      input.addEventListener('input', function(){ line.text = input.value; renderPreviewOnly(node); });
+      fields.appendChild(input);
+    }
+    row.appendChild(fields);
+
+    var removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'axp-option-remove';
+    removeBtn.textContent = '✕';
+    removeBtn.addEventListener('click', function(){
+      node.screenLines.splice(idx, 1);
+      renderScreenBuilder();
+    });
+    row.appendChild(removeBtn);
+
+    return row;
+  }
+
+  function renderScreenBuilder(){
+    var node = state.selectedId ? findNode(state.selectedId) : null;
+    screenNodeLabelEl.textContent = node ? ('— ' + node.label) : '';
+
+    if (!node){
+      screenBuilderEl.innerHTML = '<div class="axp-screen-empty">캔버스에서 노드를 클릭하면 이곳에서 화면을 구성할 수 있어요.</div>';
+      return;
+    }
+
+    screenBuilderEl.innerHTML = '';
+
+    var optionsWrap = document.createElement('div');
+    node.screenLines.forEach(function(line, idx){ optionsWrap.appendChild(optionRowEl(node, line, idx)); });
+    screenBuilderEl.appendChild(optionsWrap);
+
+    var addRow = document.createElement('div');
+    addRow.className = 'axp-add-option-row';
+    [
+      { type: 'msg', label: '+ 메시지 추가' },
+      { type: 'chips', label: '+ 칩 그룹 추가' },
+      { type: 'desc', label: '+ 설명 항목 추가' }
+    ].forEach(function(opt){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'axp-add-option-btn';
+      btn.textContent = opt.label;
+      btn.addEventListener('click', function(){
+        node.screenLines.push({ type: opt.type, text: '', text2: '' });
+        renderScreenBuilder();
+      });
+      addRow.appendChild(btn);
+    });
+    screenBuilderEl.appendChild(addRow);
+
+    var previewWrap = document.createElement('div');
+    previewWrap.className = 'axp-screen-preview-wrap';
+    var lines = buildScreenLines(node);
+    previewWrap.innerHTML = lines.length
+      ? flowParseScreenBlock(lines, node.label)
+      : '<div class="axp-screen-empty">아직 추가된 화면 옵션이 없어요. 위에서 옵션을 추가해보세요.</div>';
+    screenBuilderEl.appendChild(previewWrap);
+  }
+
+  if (resetBtn){
+    var resetArmed = false;
+    var resetTimer = null;
+    var resetDefaultText = resetBtn.textContent;
+    resetBtn.addEventListener('click', function(){
+      if (!resetArmed){
+        resetArmed = true;
+        resetBtn.textContent = '한 번 더 누르면 초기화돼요';
+        resetBtn.style.color = '#DC2626';
+        resetBtn.style.borderColor = '#DC2626';
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function(){
+          resetArmed = false;
+          resetBtn.textContent = resetDefaultText;
+          resetBtn.style.color = '';
+          resetBtn.style.borderColor = '';
+        }, 3000);
+        return;
+      }
+      clearTimeout(resetTimer);
+      resetArmed = false;
+      resetBtn.textContent = resetDefaultText;
+      resetBtn.style.color = '';
+      resetBtn.style.borderColor = '';
+      state = { nodes: [], edges: [], selectedId: null, selectedEdgeId: null };
+      placedCount = 0;
+      render();
+      renderScreenBuilder();
+      if (currentView === 'mermaid') renderMermaidView();
+    });
+  }
+
+  buildPalette();
+  render();
+  renderScreenBuilder();
+})();
+</script>
+
+</body>
+</html>

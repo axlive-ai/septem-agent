@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>종료/이탈/예외 · 대화흐름정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">종료/이탈/예외 · 대화흐름정의</div>
+      <div class="prose">
+        <p class="lead">전체 Agent 공통의 종료·이탈·예외 처리 흐름을 정의해요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>대화 흐름 요약</h2>
+      </div>
+      <div class="prose">
+        <p>사용자 케이스 정의에서 다룬 Case A~D가 이 흐름의 어느 지점에서 시작되는지부터 확인해요.</p>
+      </div>
+      <table class="data-table">
+        <thead><tr><th style="width:160px;">케이스</th><th style="width:140px;">진입 지점</th><th>시작 상태</th></tr></thead>
+        <tbody><tr>
+            <td><strong>Case A</strong><br><span style="color:var(--text-3); font-size:13px;">정상 종료</span></td>
+            <td><span class="range-tag">업무 완료 후</span></td>
+            <td>고객 종료 요청 → 종료 발화</td>
+          </tr><tr>
+            <td><strong>Case B</strong><br><span style="color:var(--text-3); font-size:13px;">비정상 이탈</span></td>
+            <td><span class="range-tag">세션 중</span></td>
+            <td>세션 자동 저장 → 이어하기 연결</td>
+          </tr><tr>
+            <td><strong>Case C</strong><br><span style="color:var(--text-3); font-size:13px;">시스템 오류</span></td>
+            <td><span class="range-tag">처리 중</span></td>
+            <td>오류 안내 + 재시도 또는 고객센터 연결</td>
+          </tr><tr>
+            <td><strong>Case D</strong><br><span style="color:var(--text-3); font-size:13px;">세션 만료</span></td>
+            <td><span class="range-tag">장시간 미사용</span></td>
+            <td>재로그인 유도 → 상태 복원</td>
+          </tr></tbody>
+      </table>
+      <div class="box" style="margin-top:16px;">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">대화 진행 중</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">상황 감지<span class="rel-sub">종료/이탈/오류</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">적절한 대응</div></div></div>
+      </div>
+      <div class="box box-last">
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:16px;">상황별 처리 분기</div>
+        <div class="branch-diagram">
+          <div class="branch-source"><div class="branch-source-box">상황 감지<span class="branch-sub">시스템/고객</span></div></div>
+          <div class="branch-connector"></div>
+          <div class="branch-targets"><div class="branch-target-row"><div class="branch-target-box">정상 종료</div><div class="branch-target-desc">종료 발화 → 대화 종료, 홈 복귀</div></div><div class="branch-target-row"><div class="branch-target-box">비정상 이탈</div><div class="branch-target-desc">세션 저장 → 이어하기 연결</div></div><div class="branch-target-row"><div class="branch-target-box">시스템 오류</div><div class="branch-target-desc">재시도 유도 → 3회 초과 시 고객센터 연결</div></div><div class="branch-target-row"><div class="branch-target-box">세션 만료</div><div class="branch-target-desc">재로그인 팝업 → 상태 복원</div></div></div>
+        </div>
+      </div>
+
+      
+      <div class="prose" id="doc-sec-2">
+        <h2>Case A·C 상세</h2>
+      </div>
+      <div class="box box-last">
+        
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:14px;">Case A · 정상 종료</div>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:24px;">
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">다른 도움이 필요하신가요?</div>
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:60%; align-self:flex-end;">아니, 이제 됐어. 고마워</div>
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">도움이 됐으면 좋겠어요. 또 필요하면 언제든 불러주세요!</div>
+        </div>
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:14px;">Case C · 반복 오류</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:#FFF0F0; border-radius:10px; padding:12px 16px; font-size:15px; color:#A23B3B; max-width:80%;">계속 같은 문제가 발생하고 있어요. 고객센터로 연결해드릴까요?</div>
+          <div style="display:flex; gap:6px;">
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; background:var(--blue); color:#fff; font-weight:600;">고객센터 연결</span>
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">나중에</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 발화 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">UTT-X01</div><div class="box-row-value muted">"다른 도움이 필요하신가요?" — 결과 화면 직후 자동 발화</div></div><div class="box-row"><div class="box-row-label">UTT-X02</div><div class="box-row-value muted">"도움이 됐으면 좋겠어요. 또 필요하면 언제든 불러주세요!" — </div></div><div class="box-row"><div class="box-row-label">UTT-X03</div><div class="box-row-value muted">"알겠어요. 진행 중인 내용은 임시 저장해둘게요." — 업무 미완료 상태에서 종료 시</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>UI 컴포넌트 매핑</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">전체 Agent 공통 컴포넌트</div>
+        <div class="list-row"><div class="list-row-dot"></div>종료 확인 말풍선</div><div class="list-row"><div class="list-row-dot"></div>오류 말풍선 + 재시도 Chip</div><div class="list-row"><div class="list-row-dot"></div>NDS 로그인 팝업 — 세션 만료 시</div><div class="list-row"><div class="list-row-dot"></div>고객센터 연결 Chip — 반복 오류 시</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">대화 흐름 요약</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Case A·C 상세</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 발화 정의</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">UI 컴포넌트 매핑</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>절세 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">절세</div>
+      <div class="prose">
+        <p class="lead">금융소득과 세부담을 반영해 절세 방향과 관련 솔루션을 제안하는 Sub Agent예요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>Agent 개요</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">목적</div>
+          <div class="box-row-value">금융소득종합과세 상한 도달 알림과 세금 절감을 위한 최적 솔루션(ISA·IRP·연금저축 등 과세이연 상품)을 제안해요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">추진 배경</div>
+          <div class="box-row-value muted">금융소득종합과세 도달 시 고객이 스스로 절세 방안을 찾아야 하는 어려움이 있었고, 과세이연 상품 연결 기회가 부재했어요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">대상 고객</div>
+          <div class="box-row-value muted">금융소득종합과세 대상 또는 예상 고객 — WM 시스템 대상 고객</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">화면 형태</div>
+          <div class="box-row-value muted">WM 시스템 + 올원뱅크 내 절세 안내 화면</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>역할 및 기능 범위</h2>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">주요 기능</div>
+        <div class="list-row"><div class="list-row-dot"></div>내외부 소득 데이터 확인 → 상한 세액·건보료 계산 및 최적 절세(인출) 전략 도출</div><div class="list-row"><div class="list-row-dot"></div>금융소득종합과세 기준금액 대비 누적 금융소득 비율 계산</div><div class="list-row"><div class="list-row-dot"></div>소득세 추가 납입 예상액 및 건강보험료 증가 예상액 제공</div><div class="list-row"><div class="list-row-dot"></div>ISA·IRP·연금저축 등 과세이연 가능한 당행 상품 제안 및 가입 추천</div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">서비스 흐름</div>
+        <div class="list-row"><div class="list-row-dot"></div>소득 데이터 확인 (이자·배당·근로·사업소득)</div><div class="list-row"><div class="list-row-dot"></div>상한 세액·건보료 계산</div><div class="list-row"><div class="list-row-dot"></div>최적 절세 전략 도출 (외부 Solution)</div><div class="list-row"><div class="list-row-dot"></div>고객 전달용 멘트 생성 (LLM)</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 관계</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node">
+      <div class="rel-box rel-box-prev">포트폴리오 진단·설계 / 종합자산관리 AI</div>
+      <div class="rel-label">절세 필요 감지 시</div>
+    </div>
+    <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-current">절세</div>
+      <div class="rel-label">현재 Agent</div>
+    </div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-next">금융상품 가입 화면 (ISA·IRP·연금저축)</div>
+      <div class="rel-label">과세이연 상품 선택 시</div>
+    </div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>핵심 인터랙션 포인트</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">UX 핵심 포인트</div>
+          <div class="box-row-value">
+            <div class="tag-wrap"><span class="tag-chip">세금 시뮬레이션 시각화</span><span class="tag-chip">과세이연 상품 카드</span><span class="tag-chip">소득 입력 UX</span></div>
+          </div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">UX 라이팅 톤</div>
+          <div class="box-row-value muted">전문적이되 이해하기 쉬운 세금 안내 어조예요. '예상' '시뮬레이션'을 명시하고, 세금 절감 보장 표현은 금지해요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>제약 및 특이사항</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          제약 및 개발 협의 필요
+        </div>
+        <div class="note-row"><div class="note-row-dot"></div>Solution 최적화 등 개발 과정에서의 주요 이슈 협의</div><div class="note-row"><div class="note-row-dot"></div>Solution이 LLM에게 보내는 값 정의 및 이를 해석할 보조 RAG 구성</div><div class="note-row"><div class="note-row-dot"></div>세금 절감 보장 표현 금지 — '예상 절세 효과' 표현 사용, 세무사 상담 권고 문구 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Agent 개요</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">역할 및 기능 범위</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 관계</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">핵심 인터랙션 포인트</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">제약 및 특이사항</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

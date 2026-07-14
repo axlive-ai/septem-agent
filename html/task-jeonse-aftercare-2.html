@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사후관리 · 업무 설계서 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">사후관리 · 업무 설계서</div>
+      <div class="prose">
+        <p class="lead">확정일자·전입신고·보증보험 등 계약 이후 관리를 지원하는 업무를 정의해요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>업무 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">업무명</div><div class="box-row-value muted">계약 후 행정 절차 안내 — 확정일자·전입신고·보증보험 안내 및 등기 변동 모니터링</div></div><div class="box-row"><div class="box-row-label">업무 유형</div><div class="box-row-value muted">타임라인 안내형 — 입력 정보 기반 절차 가이드</div></div><div class="box-row"><div class="box-row-label">수행 주체</div><div class="box-row-value muted">Agent(절차 안내·알림 발송) + 고객(정보 입력)</div></div><div class="box-row"><div class="box-row-label">완료 조건</div><div class="box-row-value muted">필수 절차 안내 확인 및 등기 변동 모니터링 설정 완료</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>업무 흐름</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">진입<span class="rel-sub">fo-start</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">정보 입력<span class="rel-sub">Agent</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">타임라인 제공<span class="rel-sub">자동</span></div></div></div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">분기 처리</div>
+        <div class="list-row"><div class="list-row-dot"></div>전입신고 안내 → 대항력 확보 절차 강조</div><div class="list-row"><div class="list-row-dot"></div>보증보험 가입 → 가입 화면 연결</div><div class="list-row"><div class="list-row-dot"></div>등기 변동 발생 → 올원뱅크 알림 발송</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>업무 단계별 상세</h2>
+      </div>
+      <div class="task-head-bar">
+        <span class="task-card-num">업무 1</span><span class="task-card-title">입주 정보 입력</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>입주일·확정일자 여부·보증보험 가입 여부 수집</div><div class="task-col-item cond"><div class="task-col-dot"></div>계약 직후 또는 알림 진입 시 실행</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>입주 정보 슬롯 카드</div><div class="task-col-item ui"><div class="task-col-dot"></div>날짜 선택기</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 입주 정보 입력</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">전세 계약 축하드려요! 입주 후 챙겨야 할 것들을 안내해드릴게요.</div>
+                    <div class="snap-bubble-agent">입주 예정일 입력중 · 확정일자 대기 · 보증보험 대기</div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">오늘</span><span class="snap-chip">1주일 후</span><span class="snap-chip">1개월 후</span><span class="snap-chip">직접입력</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>입주 슬롯</strong>입주일·확정일자·보증보험 3가지를 순서대로 수집해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>날짜 선택</strong>빠른 선택 칩 또는 직접 입력으로 날짜를 선택해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>입주일 경과 시 긴급 절차 안내</div><div class="task-col-item exc"><div class="task-col-dot"></div>보증보험 미가입 시 가입 유도</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>입주일이 이미 지났는데 확정일자 미신청</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 입주일 경과 긴급 안내</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">입주일이 이미 지났어요! 확정일자 신청이 급해요.</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">지금 바로 신청</span><span class="snap-chip">방법 알려줘</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>긴급 안내</strong>입주일 경과 시 즉시 확정일자 신청을 안내해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>빠른 연결</strong>신청 방법이나 직접 신청으로 바로 연결해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-head-bar spaced">
+        <span class="task-card-num">업무 2</span><span class="task-card-title">행정 절차 타임라인 안내</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>입주일 기준 D-day 체크리스트 생성</div><div class="task-col-item cond"><div class="task-col-dot"></div>확정일자·전입신고·보증보험 순서 안내</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>타임라인 카드</div><div class="task-col-item ui"><div class="task-col-dot"></div>D-day 강조 표시</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 타임라인 안내</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">입주 후 꼭 챙겨야 할 일정이에요!</div>
+                    <div class="snap-bubble-agent">D-1 확정일자 신청 · D+0 전입신고 · D+3 보증보험 신청</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-chips"><span class="snap-chip on">확정일자 신청하기</span><span class="snap-chip">알림 설정</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>타임라인 카드</strong>입주 전후 꼭 해야 할 일을 D-day 기준으로 보여줘요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>직접 연결</strong>각 절차를 바로 신청하거나 알림을 설정할 수 있어요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>기간 내 미완료 시 리마인더 발송</div><div class="task-col-item exc"><div class="task-col-dot"></div>완료 체크 기능</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>확정일자 신청 기한이 임박한 경우</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 기한 임박 리마인더</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">⏰ 확정일자 신청 기한이 내일까지예요! 지금 바로 하시겠어요?</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">네, 지금 신청할게요</span><span class="snap-chip">나중에 할게요</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>리마인더</strong>기한이 임박하면 알림으로 고객에게 알려요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>즉시 연결</strong>바로 신청 페이지로 이동할 수 있어요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-head-bar spaced">
+        <span class="task-card-num">업무 3</span><span class="task-card-title">등기 변동 모니터링 및 알림</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>계약 기간 중 등기부 정기 모니터링</div><div class="task-col-item cond"><div class="task-col-dot"></div>변동 감지 시 즉시 알림</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>변동 내용 + 조치 안내</div><div class="task-col-item ui"><div class="task-col-dot"></div>위험도 재산출</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 등기 변동 알림</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">📢 거주 중인 주택의 등기가 변경됐어요!</div></div>
+                    <div class="snap-bubble-agent">변동 내용 근저당 추가 설정 · 설정 금액 5,000만원</div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">위험도 재진단</span><span class="snap-chip">전문가 상담</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>변동 알림</strong>등기 변동 즉시 고객에게 알리고 내용을 보여줘요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>즉각 조치</strong>위험도 재진단 또는 전문가 상담으로 바로 연결해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>알림 수신 거부 시 주기적 체크 안내</div><div class="task-col-item exc"><div class="task-col-dot"></div>변동 없음 주기적 리포트</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>등기부 변동 감지 시 고객 대응</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 알림 거부 시 주기 리포트</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">이번 달 등기 변동 내역이에요. 이상 없이 안전해요! ✅</div></div>
+                    <div class="snap-bubble-agent">· 2026.07.01 기준 · 변동 없음</div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">상세 보기</span><span class="snap-chip">알림 설정 변경</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>월간 리포트</strong>알림 거부 고객에게도 월 1회 상태 요약을 제공해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>설정 변경</strong>알림 설정을 언제든 변경할 수 있어요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="prose" id="doc-sec-4">
+        <h2>엣지 케이스</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>개발 협의 필요</div>
+        <div class="note-row"><div class="note-row-dot"></div>입력된 고객정보·부동산 등기 변동 데이터 연계 체계 구축 필요</div><div class="note-row"><div class="note-row-dot"></div>등기변동 이벤트 연계 시스템 개발 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">업무 정의</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">업무 흐름</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">업무 단계별 상세</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">엣지 케이스</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

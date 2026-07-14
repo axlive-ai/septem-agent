@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI금융계산기 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">AI금융계산기</div>
+      <div class="prose">
+        <p class="lead">대출이자·DSR·중도상환수수료 등 복합 금융계산을 대화로 수행하고 결과를 쉽게 설명해주는 Sub Agent예요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>Agent 개요</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">목적</div>
+          <div class="box-row-value">고객이 직접 이해하고 계산해야 했던 대출이자·DSR·중도상환수수료를 대화 방식으로 손쉽고 빠르게 처리해요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">추진 배경</div>
+          <div class="box-row-value muted">대출 조건·상환 비용 등 금융용어나 계산에 필요한 항목들을 고객이 직접 이해하고 계산해야 하는 어려움이 있었어요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">대상 고객</div>
+          <div class="box-row-value muted">대출 조건·상환 비용 계산이 필요한 고객</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">화면 형태</div>
+          <div class="box-row-value muted">인앱 새 창 — 채팅 UI + 결과 카드</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>역할 및 기능 범위</h2>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">주요 기능</div>
+        <div class="list-row"><div class="list-row-dot"></div>대출이자 계산 (원리금균등·원금균등·만기일시)</div><div class="list-row"><div class="list-row-dot"></div>DSR(총부채원리금상환비율) 계산</div><div class="list-row"><div class="list-row-dot"></div>중도상환수수료 계산 (기존 여신계좌 연계)</div><div class="list-row"><div class="list-row-dot"></div>계산 결과 인라인 설명 및 용어 안내</div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">서비스 흐름</div>
+        <div class="list-row"><div class="list-row-dot"></div>진입 — 올원뱅크 내 AI 금융 계산기 화면 진입</div><div class="list-row"><div class="list-row-dot"></div>요청 — 고객이 대화창에 자연어로 계산 요청 입력</div><div class="list-row"><div class="list-row-dot"></div>추론 — AI가 의도·핵심 개체 분석, 슬롯 필링</div><div class="list-row"><div class="list-row-dot"></div>완료 — 계산된 값을 대화창에 즉시 안내</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 관계</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node">
+      <div class="rel-box rel-box-prev">AI 금융비서</div>
+      <div class="rel-label">계산 의도 감지 시 자동 전환</div>
+    </div>
+    <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-current">AI 금융계산기</div>
+      <div class="rel-label">현재 Agent</div>
+    </div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-next">맞춤 상품 안내</div>
+      <div class="rel-label">상품 추천 선택 시</div>
+    </div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>핵심 인터랙션 포인트</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">UX 핵심 포인트</div>
+          <div class="box-row-value">
+            <div class="tag-wrap"><span class="tag-chip">슬롯 필링 UX 설계</span><span class="tag-chip">결과 카드 레이아웃</span><span class="tag-chip">수치 입력 편의성</span><span class="tag-chip">재계산 흐름</span><span class="tag-chip">용어 인라인 설명</span></div>
+          </div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">UX 라이팅 톤</div>
+          <div class="box-row-value muted">정확하고 친절한 안내 어조예요. 금융 용어는 쉬운 말로 풀어서 설명하고, 계산 근거를 간단히 함께 제시해요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>제약 및 특이사항</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          제약 및 개발 협의 필요
+        </div>
+        <div class="note-row"><div class="note-row-dot"></div>계산 유형별 필수 입력항목 상이 — 유형마다 슬롯 구성 다름</div><div class="note-row"><div class="note-row-dot"></div>중도상환수수료 계산은 기존 여신계좌 연계 필요 (계정계 API)</div><div class="note-row"><div class="note-row-dot"></div>계산 결과는 참고용이며 실제 대출 조건과 상이할 수 있음 — 법적 고지 문구 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Agent 개요</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">역할 및 기능 범위</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 관계</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">핵심 인터랙션 포인트</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">제약 및 특이사항</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

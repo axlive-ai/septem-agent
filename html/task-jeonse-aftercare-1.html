@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사후관리 · 대화흐름정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">사후관리 · 대화흐름정의</div>
+      <div class="prose">
+        <p class="lead">확정일자·전입신고 등 입주 후 행정 절차를 안내하는 흐름을 정의해요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>대화 흐름 요약</h2>
+      </div>
+      <div class="prose">
+        <p>사용자 케이스 정의에서 다룬 Case A~D가 이 흐름의 어느 지점에서 시작되는지부터 확인해요.</p>
+      </div>
+      <table class="data-table">
+        <thead><tr><th style="width:160px;">케이스</th><th style="width:140px;">진입 지점</th><th>시작 상태</th></tr></thead>
+        <tbody><tr>
+            <td><strong>Case A</strong><br><span style="color:var(--text-3); font-size:13px;">계약 직후</span></td>
+            <td><span class="range-tag">Flow 1 처음부터</span></td>
+            <td>기본정보 입력부터 시작</td>
+          </tr><tr>
+            <td><strong>Case B</strong><br><span style="color:var(--text-3); font-size:13px;">입주 전 알림</span></td>
+            <td><span class="range-tag">타임라인 직행</span></td>
+            <td>D-day 절차 강조 표시</td>
+          </tr><tr>
+            <td><strong>Case C</strong><br><span style="color:var(--text-3); font-size:13px;">등기 변동</span></td>
+            <td><span class="range-tag">변동 안내 직행</span></td>
+            <td>변동 내용 + 조치 안내</td>
+          </tr><tr>
+            <td><strong>Case D</strong><br><span style="color:var(--text-3); font-size:13px;">보증보험 리마인드</span></td>
+            <td><span class="range-tag">가입 안내 직행</span></td>
+            <td>리마인드 메시지 + 가입 버튼</td>
+          </tr></tbody>
+      </table>
+      <div class="box" style="margin-top:16px;">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">진입</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">정보 입력</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">타임라인 안내</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">알림 연동</div></div></div>
+      </div>
+      <div class="box box-last">
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:16px;">절차 안내 후속</div>
+        <div class="branch-diagram">
+          <div class="branch-source"><div class="branch-source-box">타임라인 표시<span class="branch-sub">입력 정보 기반</span></div></div>
+          <div class="branch-connector"></div>
+          <div class="branch-targets"><div class="branch-target-row"><div class="branch-target-box">전입신고 안내</div><div class="branch-target-desc">대항력 확보 절차 강조</div></div><div class="branch-target-row"><div class="branch-target-box">보증보험 가입</div><div class="branch-target-desc">가입 화면 연결</div></div><div class="branch-target-row"><div class="branch-target-box">등기 변동 알림</div><div class="branch-target-desc">올원뱅크 알림 발송</div></div></div>
+        </div>
+      </div>
+
+      
+      <div class="prose" id="doc-sec-2">
+        <h2>Flow 1 · 입주 후 절차 안내</h2>
+      </div>
+      <div class="box box-last">
+        
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:85%;">입주일과 확정일자 신청 여부를 알려주세요.</div>
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:60%; align-self:flex-end;">이번주 토요일 입주, 확정일자 아직 안함</div>
+          <div style="background:var(--blue-bg); border-radius:10px; padding:12px 16px; font-size:15px; color:#1B4FA0; max-width:85%;">이사 끝나시면 바로 전입신고 하셔야 대항력이 생겨요!</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 발화 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">UTT-01</div><div class="box-row-value muted">"입주일과 확정일자 신청 여부를 알려주세요." — </div></div><div class="box-row"><div class="box-row-label">UTT-02</div><div class="box-row-value muted">"오늘 이사 끝나셨나요? 지금 바로 전입신고를 하셔야 대항력이 생깁니다." — 입주일 기준 D-day 알림</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>UI 컴포넌트 매핑</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">절차 안내 컴포넌트</div>
+        <div class="list-row"><div class="list-row-dot"></div>타임라인 카드 — D-day 표시, 체크리스트 형태</div><div class="list-row"><div class="list-row-dot"></div>D-day 알림 + 보증보험 버튼 — 입주일 기준 자동 발송</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">대화 흐름 요약</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Flow 1 · 입주 후 절차 안내</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 발화 정의</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">UI 컴포넌트 매핑</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

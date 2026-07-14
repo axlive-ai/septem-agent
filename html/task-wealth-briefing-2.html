@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모닝브리핑 · 업무 설계서 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">모닝브리핑 · 업무 설계서</div>
+      <div class="prose">
+        <p class="lead">국내외 뉴스·경제기관 지표를 자산·부채와 연결해 개인화 리포트를 제공하는 업무를 정의해요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>업무 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">업무명</div><div class="box-row-value muted">개인화 리포트 생성 — 뉴스·지표 수집 후 고객 자산에 맞춘 리포트 제공</div></div><div class="box-row"><div class="box-row-label">업무 유형</div><div class="box-row-value muted">시황정보 제공형 — Rule-based 키워드 추출 + Multi-RAG 생성</div></div><div class="box-row"><div class="box-row-label">수행 주체</div><div class="box-row-value muted">Agent(데이터 수집·리포트 생성) + 시스템(데이터 적재)</div></div><div class="box-row"><div class="box-row-label">완료 조건</div><div class="box-row-value muted">개인화 리포트 생성 및 전달 완료</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>업무 흐름</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">데이터 수집<span class="rel-sub">자동</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">키워드 추출<span class="rel-sub">Rule-based</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">리포트 생성<span class="rel-sub">Multi-RAG</span></div></div></div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">분기 처리</div>
+        <div class="list-row"><div class="list-row-dot"></div>대면(WM) → Weekly Report 전체 제공</div><div class="list-row"><div class="list-row-dot"></div>비대면(올원뱅크) → 핵심 요약 제공</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>업무 단계별 상세</h2>
+      </div>
+      <div class="task-head-bar">
+        <span class="task-card-num">업무 1</span><span class="task-card-title">데이터 수집 및 키워드 추출</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>마이데이터 기반 자산·부채 최신 데이터 수집</div><div class="task-col-item cond"><div class="task-col-dot"></div>핵심 변동 키워드 3가지 추출</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>데이터 수집 중 인디케이터</div><div class="task-col-item ui"><div class="task-col-dot"></div>수집 완료 후 키워드 표시</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 데이터 수집</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">오늘의 자산 현황을 불러오는 중이에요...</div></div>
+                    <div class="snap-bubble-agent">✓ NH농협은행 · ↻ 증권 계좌 수집 중</div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>수집 현황</strong>어떤 기관 데이터를 수집 중인지 보여줘요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>실시간 업데이트</strong>수집 완료된 기관부터 순서대로 표시해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>일부 기관 데이터 누락 시 표시</div><div class="task-col-item exc"><div class="task-col-dot"></div>수집 실패 시 전일 데이터 사용</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>특정 기관 데이터 누락</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 데이터 누락 안내</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">증권 계좌 데이터를 불러오지 못했어요. 나머지 자산으로 브리핑을 드릴게요.</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">확인</span><span class="snap-chip">나중에 다시</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>누락 안내</strong>일부 데이터 누락 시 투명하게 고객에게 알려요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>부분 서비스</strong>누락된 부분 제외하고 나머지로 브리핑을 제공해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-head-bar spaced">
+        <span class="task-card-num">업무 2</span><span class="task-card-title">Multi-RAG 기반 리포트 생성</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>수집 데이터 + 시장 뉴스 결합 리포트</div><div class="task-col-item cond"><div class="task-col-dot"></div>핵심 변동·주의사항·기회 3가지 요약</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>리포트 카드</div><div class="task-col-item ui"><div class="task-col-dot"></div>섹션별 펼치기</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 브리핑 리포트</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">오늘의 자산 브리핑이에요!</div>
+                    <div class="snap-bubble-agent">📈 변동사항 +230만원 · ⚠️ 주의 예금 만기 3일 후 · 💡 기회 금리 4.5% 특판</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-chips"><span class="snap-chip on">상세 보기</span><span class="snap-chip">포트폴리오 진단</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>브리핑 리포트</strong>변동·주의·기회 3가지를 한눈에 요약해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>심화 분석</strong>포트폴리오 진단으로 바로 이동할 수 있어요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>시장 데이터 오류 시 자산 데이터만 사용</div><div class="task-col-item exc"><div class="task-col-dot"></div>리포트 생성 실패 시 단순 요약</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>시장 뉴스 API 오류</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 시장 데이터 오류</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">오늘은 시장 데이터를 가져오지 못했어요. 자산 현황만 알려드릴게요.</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-bubble-agent">총 자산 2억 3,450만원</div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>오류 안내</strong>시장 데이터 없이 자산 현황만 제공할 때 명확히 안내해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>부분 서비스</strong>가능한 정보라도 제공해 고객 가치를 유지해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="prose" id="doc-sec-4">
+        <h2>엣지 케이스</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>개발 협의 필요</div>
+        <div class="note-row"><div class="note-row-dot"></div>RAG 및 리포트 항목 종류·내용·구성할 데이터 pool 개발 과정에서 결정</div><div class="note-row"><div class="note-row-dot"></div>투자 권유 규정 준수 — 리포트 내 확정 수익 표현 금지</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">업무 정의</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">업무 흐름</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">업무 단계별 상세</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">엣지 케이스</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

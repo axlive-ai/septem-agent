@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>종료/이탈/예외 · 업무 설계서 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">종료/이탈/예외 · 업무 설계서</div>
+      <div class="prose">
+        <p class="lead">전체 Agent 공통으로 수행하는 종료·이탈·예외 처리 업무를 정의해요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>업무 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">업무명</div><div class="box-row-value muted">종료/이탈/예외 처리 — 대화 중단 상황을 감지하고 적절히 대응해요.</div></div><div class="box-row"><div class="box-row-label">업무 유형</div><div class="box-row-value muted">상황 감지형 — 4가지 상황(정상종료·이탈·오류·세션만료)을 감지해 분기</div></div><div class="box-row"><div class="box-row-label">수행 주체</div><div class="box-row-value muted">시스템(상황 감지) + Agent(대응 발화)</div></div><div class="box-row"><div class="box-row-label">완료 조건</div><div class="box-row-value muted">상황별 대응 완료 후 대화 종료 또는 정상 흐름 복귀</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>업무 흐름</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">대화 진행<span class="rel-sub">상황 발생</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">상황 판별<span class="rel-sub">시스템</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">대응 실행<span class="rel-sub">Agent</span></div></div></div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">분기 처리</div>
+        <div class="list-row"><div class="list-row-dot"></div>정상 종료 → 종료 발화 후 홈 복귀</div><div class="list-row"><div class="list-row-dot"></div>비정상 이탈 → 세션 저장 후 종료</div><div class="list-row"><div class="list-row-dot"></div>시스템 오류 → 재시도 또는 고객센터 연결</div><div class="list-row"><div class="list-row-dot"></div>세션 만료 → 재로그인 후 상태 복원</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>업무 단계별 상세</h2>
+      </div>
+      <div class="task-head-bar">
+        <span class="task-card-num">업무 1</span><span class="task-card-title">상황 판별</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>사용자 발화·앱 이벤트·시스템 신호 감지</div><div class="task-col-item cond"><div class="task-col-dot"></div>정상종료·이탈·오류·만료 4가지 분류</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>발화 기반: "종료", "그만", "끝" 감지</div><div class="task-col-item ui"><div class="task-col-dot"></div>이벤트 기반: 앱 백그라운드 전환 감지</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 종료 의도 감지</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">도움이 되셨다니 기쁘네요! 또 필요하시면 언제든 불러주세요. 😊</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">처음으로</span><span class="snap-chip">앱 종료</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>종료 발화</strong>감사 인사와 함께 자연스럽게 대화를 마무리해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>후속 액션 칩</strong>처음으로 돌아가거나 앱을 종료할 수 있어요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>신호 불명확 시 "계속하시겠어요?" 재확인</div><div class="task-col-item exc"><div class="task-col-dot"></div>2회 무응답 시 자동 이탈 처리</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>"다른 건 없나요?"처럼 종료 의도가 불명확한 발화</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 종료 의도 불명확 재확인</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">혹시 지금 대화를 마치실 건가요?</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">네, 종료할게요</span><span class="snap-chip">아니요, 더 도와주세요</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>재확인 발화</strong>종료 의도가 불명확하면 먼저 확인해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>명확한 선택지</strong>종료 여부를 칩으로 명확히 선택할 수 있어요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-head-bar spaced">
+        <span class="task-card-num">업무 2</span><span class="task-card-title">상황별 대응 실행</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>정상 종료: 마무리 발화 + 세션 저장</div><div class="task-col-item cond"><div class="task-col-dot"></div>이탈: 24시간 이어하기 예약</div><div class="task-col-item cond"><div class="task-col-dot"></div>오류: 재시도 유도</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>이탈 시: "이어하기" 알림 예약 안내</div><div class="task-col-item ui"><div class="task-col-dot"></div>오류 3회 초과: 고객센터 연결 버튼</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 이탈 시 이어하기 예약</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">잠깐 나가시는군요. 진행 중이던 내용을 저장해뒀어요. 24시간 안에 돌아오시면 이어서 도와드릴게요!</div></div>
+                    <div class="snap-bubble-agent">· 전세대출 보증 추천 — 진행 중 저장됨</div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>세션 저장 알림</strong>이탈 시 진행 내용을 자동 저장하고 고객에게 안내해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>이어하기 안내</strong>24시간 이내 재진입 시 이어하기가 가능해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>세션 저장 실패 시 이어하기 불가 안내</div><div class="task-col-item exc"><div class="task-col-dot"></div>API 오류 지속 시 고객센터 연결</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>네트워크 단절로 세션 저장 실패</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 저장 실패 안내</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">죄송해요, 일시적인 오류로 진행 내용을 저장하지 못했어요.</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">다시 시도</span><span class="snap-chip">고객센터 연결</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>오류 안내</strong>저장 실패 시 고객에게 명확히 알려요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>대안 제공</strong>재시도 또는 고객센터 연결로 해결할 수 있어요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="prose" id="doc-sec-4">
+        <h2>엣지 케이스</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>개발 협의 필요</div>
+        <div class="note-row"><div class="note-row-dot"></div>세션 저장 유효 기간 정책 결정 필요</div><div class="note-row"><div class="note-row-dot"></div>고객센터 연결 시 컨텍스트(오류 내용) 전달 방식 협의 필요</div><div class="note-row"><div class="note-row-dot"></div>재로그인 후 상태 복원 범위 — 전체 vs 일부</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">업무 정의</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">업무 흐름</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">업무 단계별 상세</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">엣지 케이스</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

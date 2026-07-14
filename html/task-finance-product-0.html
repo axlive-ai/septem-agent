@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>맞춤상품안내 · 사용자 케이스 정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">맞춤상품안내 · 사용자 케이스 정의</div>
+      <div class="prose">
+        <p class="lead">맞춤 상품 안내 Sub Agent가 마주하는 사용자 케이스를 정의해요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>Case A · 첫 추천</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">처음 상품 추천을 받는 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">AI 금융비서에서 최초 연결 · 추천 이력 없음</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">친절한 니즈 수집부터 시작해요 — "목표 기간이 어떻게 되세요?"</div></div>
+      </div>
+      <div class="prose" id="doc-sec-2">
+        <h2>Case B · 슬롯 수집 중 이탈</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">니즈 슬롯(기간·금액 등) 입력 중 이탈한 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">미완료 슬롯 세션 존재</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">이어하기 카드로 중단된 슬롯부터 재개해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-3">
+        <h2>Case C · 이미 가입 고객</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">추천 대상 상품에 이미 가입한 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">가입 상품 데이터와 추천 후보 중복</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">다음 우선순위 상품으로 자연스럽게 전환해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-4">
+        <h2>Case D · 만기·금리 알림 진입</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">만기 알림이나 금리 변동 알림으로 진입한 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">알림 클릭 진입 · 알림 관련 상품 ID 존재</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">알림 맥락을 그대로 이어받아 관련 상품을 즉시 안내해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-5">
+        <h2>케이스별 변형 포인트</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">화면 설계 시 고려 사항</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case A는 슬롯 0개 상태에서 시작 — 풀 플로우 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case B는 중간 상태에서 시작 — 이어하기 카드 UI 별도 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case C는 최근 이력 참조 UI 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case D는 맥락이 사전에 채워진 상태로 시작 — 프리필 로직 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Case A · 첫 추천</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Case B · 슬롯 수집 중 이탈</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Case C · 이미 가입 고객</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">Case D · 만기·금리 알림 진입</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">케이스별 변형 포인트</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

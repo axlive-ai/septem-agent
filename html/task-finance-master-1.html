@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>금융비서 Master · 대화흐름정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">금융비서 Master · 대화흐름정의</div>
+      <div class="prose">
+        <p class="lead">고객 의도를 파악해 적합한 Sub Agent로 연결하는 흐름을 정의해요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>대화 흐름 요약</h2>
+      </div>
+      <div class="prose">
+        <p>사용자 케이스 정의에서 다룬 Case A~D가 이 흐름의 어느 지점에서 시작되는지부터 확인해요.</p>
+      </div>
+      <table class="data-table">
+        <thead><tr><th style="width:160px;">케이스</th><th style="width:140px;">진입 지점</th><th>시작 상태</th></tr></thead>
+        <tbody><tr>
+            <td><strong>Case A</strong><br><span style="color:var(--text-3); font-size:13px;">첫 방문</span></td>
+            <td><span class="range-tag">Flow 1 처음부터</span></td>
+            <td>서비스 유형 소개 후 선택</td>
+          </tr><tr>
+            <td><strong>Case B</strong><br><span style="color:var(--text-3); font-size:13px;">의도 불명확</span></td>
+            <td><span class="range-tag">Flow 1 재질문</span></td>
+            <td>4가지 Chip 제시</td>
+          </tr><tr>
+            <td><strong>Case C</strong><br><span style="color:var(--text-3); font-size:13px;">재방문</span></td>
+            <td><span class="range-tag">Flow 1 단축</span></td>
+            <td>최근 이력 참조 후 단축 진입</td>
+          </tr><tr>
+            <td><strong>Case D</strong><br><span style="color:var(--text-3); font-size:13px;">Sub 전환</span></td>
+            <td><span class="range-tag">Flow 2 즉시</span></td>
+            <td>타 Sub Agent 이용 중 즉시 전환</td>
+          </tr></tbody>
+      </table>
+      <div class="box" style="margin-top:16px;">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">진입</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">의도 파악</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">Sub Agent 연결</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">완료/복귀</div></div></div>
+      </div>
+      <div class="box box-last">
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:16px;">의도 분기 — 발화 분석 결과</div>
+        <div class="branch-diagram">
+          <div class="branch-source"><div class="branch-source-box">의도 파악<span class="branch-sub">고객 발화</span></div></div>
+          <div class="branch-connector"></div>
+          <div class="branch-targets"><div class="branch-target-row"><div class="branch-target-box">상품 추천 의도</div><div class="branch-target-desc">맞춤 상품 안내 Sub Agent 전환</div></div><div class="branch-target-row"><div class="branch-target-box">계산 의도</div><div class="branch-target-desc">AI 금융계산기 Sub Agent 전환</div></div><div class="branch-target-row"><div class="branch-target-box">의도 불명확</div><div class="branch-target-desc">재질문 → 4가지 Chip 제공</div></div></div>
+        </div>
+      </div>
+
+      
+      <div class="prose" id="doc-sec-2">
+        <h2>Flow 1 · 의도 파악 및 서비스 연결</h2>
+      </div>
+      <div class="box box-last">
+        
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:14px;">Case A · 상품 추천 의도 감지</div>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:24px;">
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:85%;">안녕하세요! 어떤 금융 상품을 알아보실 건가요?</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; background:var(--blue); color:#fff; font-weight:600;">예금·적금</span>
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">대출</span>
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">펀드·투자</span>
+          </div>
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:50%; align-self:flex-end;">예금 추천해줘</div>
+        </div>
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:14px;">Case B · 의도 불명확</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:40%; align-self:flex-end;">뭐 좀 알려줘</div>
+          <div style="background:#FFF0F0; border-radius:10px; padding:12px 16px; font-size:15px; color:#A23B3B; max-width:85%;">어떤 부분이 궁금하세요? 아래에서 선택해주세요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 발화 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">UTT-01</div><div class="box-row-value muted">"안녕하세요! 어떤 금융 상품을 알아보실 건가요?" — 서비스 유형 Chip 4종</div></div><div class="box-row"><div class="box-row-label">UTT-02</div><div class="box-row-value muted">"[유형] 계산이군요! AI 금융계산기로 연결해드릴게요." — Sub Agent 전환 알림</div></div><div class="box-row"><div class="box-row-label">UTT-03</div><div class="box-row-value muted">"어떤 부분이 궁금하세요? 아래에서 선택해주세요." — 4가지 대분류 Chip</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>UI 컴포넌트 매핑</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">Flow 1 컴포넌트</div>
+        <div class="list-row"><div class="list-row-dot"></div>서비스 유형 선택 Chip — 4가지 + 자유 입력</div><div class="list-row"><div class="list-row-dot"></div>Sub Agent 전환 안내 말풍선 — 컨텍스트 유지 표시</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">대화 흐름 요약</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Flow 1 · 의도 파악 및 서비스 연결</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 발화 정의</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">UI 컴포넌트 매핑</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

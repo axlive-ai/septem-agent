@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모닝브리핑 · 사용자 케이스 정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">모닝브리핑 · 사용자 케이스 정의</div>
+      <div class="prose">
+        <p class="lead">국내외 뉴스·자산 정보를 연결해 개인화 리포트를 제공하는 Sub Agent가 마주하는 사용자 케이스를 정의해요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>Case A · 첫 브리핑 수신</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">처음 브리핑을 받는 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">리포트 발송 이력 없음</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">브리핑 구성(자산현황·이슈·영향분석·일정)을 간단히 소개해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-2">
+        <h2>Case B · 며칠간 미확인</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">여러 날 브리핑을 확인하지 않은 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">3일 이상 미열람 누적</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">누적 기간의 핵심 변동사항만 요약해 보여줘요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-3">
+        <h2>Case C · 특정 이슈 후속 질문</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">브리핑 내용에 대해 추가로 질문하는 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">브리핑 확인 후 관련 질문 발화</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">해당 이슈에 대한 상세 분석을 추가로 제공해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-4">
+        <h2>Case D · 비대면 요약 선호</h2>
+      </div>
+      <div class="box">
+        <div class="box-row"><div class="box-row-label">정의</div><div class="box-row-value">WM 대면 상담 없이 핵심만 보는 고객이에요.</div></div>
+        <div class="box-row"><div class="box-row-label">인식 신호</div><div class="box-row-value muted">비대면 채널(올원뱅크)만 이용</div></div>
+        <div class="box-row"><div class="box-row-label">웰컴 화면 방향</div><div class="box-row-value muted">Weekly Report 전체 대신 1~2줄 핵심 요약을 제공해요.</div></div>
+      </div>
+      <div class="prose" id="doc-sec-5">
+        <h2>케이스별 변형 포인트</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">화면 설계 시 고려 사항</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case A는 슬롯 0개 상태에서 시작 — 풀 플로우 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case B는 중간 상태에서 시작 — 이어하기 카드 UI 별도 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case C는 최근 이력 참조 UI 필요</div>
+        <div class="list-row"><div class="list-row-dot"></div>Case D는 맥락이 사전에 채워진 상태로 시작 — 프리필 로직 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Case A · 첫 브리핑 수신</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Case B · 며칠간 미확인</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Case C · 특정 이슈 후속 질문</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">Case D · 비대면 요약 선호</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">케이스별 변형 포인트</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

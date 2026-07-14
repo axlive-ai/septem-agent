@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI금융계산기 · 업무 설계서 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">AI금융계산기 · 업무 설계서</div>
+      <div class="prose">
+        <p class="lead">Agent가 어떤 업무를 어떻게 수행하는지 정의해요. 업무 정의, 업무 흐름, 단계별 상세, 엣지 케이스를 다뤄요.</p>
+      </div>
+
+
+      <div class="prose" id="doc-sec-1">
+        <h2>업무 정의</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">업무명</div>
+          <div class="box-row-value">금융 계산 — 고객이 원하는 금융 수치를 대화를 통해 계산하고 결과를 제공해요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">업무 유형</div>
+          <div class="box-row-value muted">룰형 (슬롯 필링) — 필요한 정보를 순차적으로 수집하여 정해진 계산식으로 결과를 도출해요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">수행 주체</div>
+          <div class="box-row-value muted">Agent(계산 실행·결과 제공) + 고객(계산 조건 입력·선택)</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">업무 범위</div>
+          <div class="box-row-value muted">대출이자 · 전세이자 · 적금만기 · DSR 계산 (본 문서는 대출이자 기준)</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">완료 조건</div>
+          <div class="box-row-value muted">계산 결과를 고객이 확인하고 다음 행동(재계산·상품추천·종료)을 선택해요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>업무 흐름</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow">
+          <div class="rel-node"><div class="rel-box rel-box-prev">시작</div></div>
+          <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+          <div class="rel-node"><div class="rel-box rel-box-current">업무 1<span class="rel-sub">계산 유형 파악</span></div></div>
+          <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+          <div class="rel-sub-stack">
+            <div class="rel-box rel-box-next" style="font-size:12.5px;">2-1 대출금액</div>
+            <div class="rel-box rel-box-next" style="font-size:12.5px;">2-2 금리</div>
+            <div class="rel-box rel-box-next" style="font-size:12.5px;">2-3 상환기간</div>
+            <div class="rel-box rel-box-next" style="font-size:12.5px;">2-4 상환방식</div>
+          </div>
+          <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+          <div class="rel-node"><div class="rel-box rel-box-next">업무 3<span class="rel-sub">계산·결과 제공</span></div></div>
+        </div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">분기 처리</div>
+        <div class="list-row"><div class="list-row-dot"></div>재계산 → 변경 슬롯만 교체 후 업무 3 복귀</div>
+        <div class="list-row"><div class="list-row-dot"></div>상품추천 → 맞춤 상품 안내 Agent로 전환</div>
+        <div class="list-row"><div class="list-row-dot"></div>범위 초과·주제 이탈 → 오류 안내 후 동일 슬롯 재수집</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>업무 단계별 상세</h2>
+      </div>
+
+      <div class="task-head-bar">
+        <span class="task-card-num">업무 1</span><span class="task-card-title">계산 유형 파악</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>진입 즉시 수행. 계산 유형이 확정될 때까지 반복</div><div class="task-col-item cond"><div class="task-col-dot"></div>칩 선택과 자유 입력 모두 허용</div><div class="task-col-item cond"><div class="task-col-dot"></div>유형 확정 후 즉시 업무 2 시작</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>계산 유형 선택 칩 — 대출이자·전세이자·적금만기·DSR 4가지</div><div class="task-col-item ui"><div class="task-col-dot"></div>선택된 칩 활성(검정) 표시</div><div class="task-col-item ui"><div class="task-col-dot"></div>자유 입력창 항상 활성</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 계산 유형 선택</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">안녕하세요! 어떤 계산을 도와드릴까요?</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-chips"><span class="snap-chip on">대출이자</span><span class="snap-chip">전세이자</span><span class="snap-chip">적금만기</span><span class="snap-chip">DSR</span></div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-bubble-agent">대출 이자 계산해줘</div></div>
+                    <div class="snap-bubble-agent">대출이자 계산이군요!</div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>계산 유형 선택 칩</strong>대출이자·전세이자·적금만기·DSR 4가지 제공. 탭 즉시 해당 유형 확정 후 슬롯 수집 시작.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>자유 입력 인식</strong>"대출 이자 계산해줘"처럼 자유 발화도 의도를 분류해 동일하게 처리.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>의도 불명확 → 재질문 후 칩 재제공</div><div class="task-col-item exc"><div class="task-col-dot"></div>2회 이상 시 칩 선택 강제 유도</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>"계산 좀 해줘"처럼 계산 유형이 특정되지 않는 발화</div><div class="task-col-item ui"><div class="task-col-dot"></div>의미 없는 텍스트나 오타로 의도 파악 실패</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 의도 불명확 재질문</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">안녕하세요! 어떤 계산을 도와드릴까요?</div>
+                    <div class="snap-bubble-agent">계산 좀 해줘</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">대출이자 / 전세이자 / 적금만기 / DSR 중 어떤 계산을 원하세요?</div></div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip">대출이자</span><span class="snap-chip">전세이자</span><span class="snap-chip">적금만기</span><span class="snap-chip">DSR</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>재질문 발화</strong>의도를 분류할 수 없을 때 빨간 말풍선으로 다시 묻고, 칩을 재제공해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>칩 강제 노출</strong>2회 이상 불명확 시 자유 입력 없이 칩 선택만 유도해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-head-bar spaced">
+        <span class="task-card-num">업무 2</span><span class="task-card-title">슬롯 수집 (2-1 ~ 2-4)</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>슬롯은 반드시 순서대로 수집. 건너뛰기 불가</div><div class="task-col-item cond"><div class="task-col-dot"></div>유효값 입력 즉시 완료 처리 후 다음 슬롯 자동 진행</div><div class="task-col-item cond"><div class="task-col-dot"></div>완료된 슬롯은 언제든 수정 요청 가능</div><div class="task-col-item cond"><div class="task-col-dot"></div>슬롯별 허용 범위: 대출금액 100만원~100억원, 금리 0.1%~20%, 상환기간 1년~50년</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>슬롯 진행 상태 카드 — 완료·활성·대기 3단계</div><div class="task-col-item ui"><div class="task-col-dot"></div>슬롯별 빠른 선택 칩 3~4개 제공</div><div class="task-col-item ui"><div class="task-col-dot"></div>입력창 플레이스홀더 = 현재 슬롯 힌트</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 슬롯 진행 상태</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">3억원이군요. 다음으로 연 금리를 입력해주세요.</div></div>
+                    <div class="snap-bubble-agent">✓ 대출 금액 3억원 · 금리 입력중 · 상환 기간 대기 · 상환 방식 대기</div>
+                    <div class="snap-msg"><div class="snap-badge">3</div><div class="snap-chips"><span class="snap-chip on">3.5%</span><span class="snap-chip">4.5%</span><span class="snap-chip">직접입력</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>슬롯 질문 발화</strong>현재 수집 중인 슬롯을 자연어로 물어봐요. 볼드로 슬롯명을 강조해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>슬롯 진행 상태 카드</strong>완료(파랑 ✓) · 활성(검정) · 대기(회색) 3단계 상태를 한눈에 보여줘요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">3</div><div class="snap-desc-text"><strong>빠른 선택 칩</strong>슬롯별 자주 쓰는 값을 칩으로 제공. 직접 입력도 병행 가능해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>범위 초과 → 허용 범위 안내, 동일 슬롯 재수집</div><div class="task-col-item exc"><div class="task-col-dot"></div>주제 이탈 → 슬롯 유지, 동일 질문 반복</div><div class="task-col-item exc"><div class="task-col-dot"></div>슬롯 수정 요청 → 나머지 유지 여부 확인 후 처리</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>허용 범위 밖의 숫자 입력 (예: 200억, 금리 50%)</div><div class="task-col-item ui"><div class="task-col-dot"></div>금융 계산과 무관한 발화 입력</div><div class="task-col-item ui"><div class="task-col-dot"></div>이미 입력한 슬롯 값 변경 요청</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 슬롯 범위 초과 오류</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">먼저 대출 금액을 알려주세요.</div>
+                    <div class="snap-bubble-agent">200억</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">계산 가능한 금액은 최대 100억원이에요. 다시 입력해주세요.</div></div>
+                    <div class="snap-bubble-agent">대출 금액 재입력 필요 · 금리 대기 · 상환 기간 대기 · 상환 방식 대기</div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>범위 초과 오류 발화</strong>허용 범위를 안내하고 동일 슬롯을 재수집해요. 다음 슬롯으로 진행 불가.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>슬롯 상태 유지</strong>오류 슬롯만 재활성화, 나머지 슬롯 상태는 그대로 유지해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-head-bar spaced">
+        <span class="task-card-num">업무 3</span><span class="task-card-title">계산 실행 및 결과 제공</span>
+        <div class="task-tab-group">
+          <button type="button" class="task-tab active" onclick="toggleTaskCase(this,'normal')">정상 Case</button>
+          <button type="button" class="task-tab" onclick="toggleTaskCase(this,'exc')">예외 Case</button>
+        </div>
+      </div>
+      <div class="task-case-panel active">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label cond">업무 조건</div><div class="task-col-item cond"><div class="task-col-dot"></div>슬롯 4개 완료 즉시 자동 계산</div><div class="task-col-item cond"><div class="task-col-dot"></div>결과 후 고객 선택에 따라 4가지 분기 발생</div></div>
+            <div class="task-col"><div class="task-col-label ui">UI 표현</div><div class="task-col-item ui"><div class="task-col-dot"></div>결과 카드 — 월 상환액 대표값 상단 강조</div><div class="task-col-item ui"><div class="task-col-dot"></div>결과 카드 배경 Primary Blue</div><div class="task-col-item ui"><div class="task-col-dot"></div>후속 액션 칩 4가지 동시 제공</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 계산 결과</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">계산 결과예요!</div>
+                    <div class="snap-msg"><div class="snap-badge">1</div><div class="snap-bubble-agent">월 상환액 1,520,060원</div></div>
+                    <div class="snap-bubble-agent">조건을 바꿔서 다시 계산해볼까요?</div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">금리 바꾸기</span><span class="snap-chip">대출 상품 추천</span><span class="snap-chip">다른 계산</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>결과 카드</strong>월 상환액을 가장 크게 강조해요. Primary Blue 배경으로 완료 상태를 시각적으로 표현해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>후속 액션 칩</strong>재계산 · 대출 상품 추천 · 다른 계산 · 종료 4가지 분기를 칩으로 동시 제공해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="task-case-panel">
+        <div class="task-card box-last">
+          <div class="task-card-body cols-2">
+            <div class="task-col"><div class="task-col-label exc">예외 처리</div><div class="task-col-item exc"><div class="task-col-dot"></div>재계산 선택 시 → 해당 슬롯만 재활성화</div><div class="task-col-item exc"><div class="task-col-dot"></div>상품 추천 선택 시 → 맞춤 상품 안내 Agent 전환</div></div>
+            <div class="task-col"><div class="task-col-label ui">발생 조건</div><div class="task-col-item ui"><div class="task-col-dot"></div>결과 확인 후 특정 조건 변경 요청</div><div class="task-col-item ui"><div class="task-col-dot"></div>결과 확인 후 상품 추천으로 흐름 전환 요청</div></div>
+          </div>
+        </div>
+        <div class="task-screen-box">
+          <div class="task-screen-box-label">화면 — 재계산 슬롯 재활성화</div>
+          <div class="task-snapshot">
+            <div class="snapshot-row">
+              <div class="snap-phone-wrap">
+                <div class="snap-phone">
+                  <div class="snap-gnb"><span class="snap-gnb-back">‹</span><span class="snap-gnb-title">화면</span></div>
+                  <div class="snap-body">
+                    <div class="snap-bubble-agent">어떤 조건을 바꿔볼까요?</div>
+                    <div class="snap-bubble-agent">✓ 대출 금액 3억원 · 금리 변경 중 · ✓ 상환 기간 30년 · ✓ 상환 방식 원리금균등</div>
+                    <div class="snap-msg"><div class="snap-badge">2</div><div class="snap-chips"><span class="snap-chip on">3.5%</span><span class="snap-chip">4.0%</span><span class="snap-chip">직접입력</span></div></div>
+                    <div class="snap-input-bar"><div class="snap-input-field">메시지 입력</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="snap-desc-col">
+                <div class="snap-desc-item"><div class="snap-desc-num">1</div><div class="snap-desc-text"><strong>해당 슬롯만 재활성화</strong>변경 요청한 슬롯만 active 상태로 전환. 나머지 완료 슬롯은 그대로 유지해요.</div></div>
+                <div class="snap-desc-item"><div class="snap-desc-num">2</div><div class="snap-desc-text"><strong>빠른 선택 칩 재제공</strong>해당 슬롯의 칩이 다시 노출돼요. 변경 완료 즉시 결과를 재계산해요.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>슬롯 정의</h2>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:40px;">No.</th>
+            <th style="width:110px;">슬롯명</th>
+            <th style="width:140px;">허용 범위</th>
+            <th style="width:220px;">빠른 선택 칩</th>
+            <th>오류 처리</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="num-badge">1</span></td>
+            <td><strong>대출 금액</strong></td>
+            <td><span class="range-tag">100만원 ~ 100억원</span></td>
+            <td>직접 입력</td>
+            <td><span class="err-text">범위 초과: "계산 가능한 금액은 최대 100억원이에요."</span><span class="err-text">숫자 아님: "금액을 숫자로 입력해주세요. 예) 3억, 5000만원"</span></td>
+          </tr>
+          <tr>
+            <td><span class="num-badge">2</span></td>
+            <td><strong>연 금리</strong></td>
+            <td><span class="range-tag">0.1% ~ 20%</span></td>
+            <td><span class="chip-mini">3.5%</span><span class="chip-mini">4.0%</span><span class="chip-mini">4.5%</span><span class="chip-mini">직접입력</span></td>
+            <td><span class="err-text">범위 초과: "일반적인 금리 범위(0.1~20%)를 입력해주세요."</span></td>
+          </tr>
+          <tr>
+            <td><span class="num-badge">3</span></td>
+            <td><strong>상환 기간</strong></td>
+            <td><span class="range-tag">1년 ~ 50년</span></td>
+            <td><span class="chip-mini">10년</span><span class="chip-mini">20년</span><span class="chip-mini">30년</span><span class="chip-mini">직접입력</span></td>
+            <td><span class="err-text">범위 초과: "상환 기간은 최대 50년까지 계산 가능해요."</span></td>
+          </tr>
+          <tr>
+            <td><span class="num-badge">4</span></td>
+            <td><strong>상환 방식</strong></td>
+            <td><span class="range-tag">3가지 중 선택</span></td>
+            <td><span class="chip-mini">원리금균등</span><span class="chip-mini">원금균등</span><span class="chip-mini">만기일시</span></td>
+            <td><span class="err-text">불명확: "원리금균등 / 원금균등 / 만기일시 중 선택해주세요."</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>실제 서비스 엣지 케이스</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          개발 협의 필요
+        </div>
+        <div class="note-row"><div class="note-row-dot"></div>세션 중단 — 슬롯 수집 중 앱 종료 시 상태 저장 유효 기간 (1일? 7일?)</div>
+        <div class="note-row"><div class="note-row-dot"></div>네트워크 오류 — 응답 타임아웃 기준 및 재시도 최대 횟수, 3회 실패 시 인간 채널 연결 여부</div>
+        <div class="note-row"><div class="note-row-dot"></div>로그인 세션 만료 — 슬롯 상태 임시 저장 방식, 비로그인 상태에서 계산 허용 여부</div>
+        <div class="note-row"><div class="note-row-dot"></div>계산 중 다른 업무 요청 — 다른 업무 완료 후 복귀 여부, 슬롯 임시 보관 유효 기간</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">업무 정의</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">업무 흐름</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">업무 단계별 상세</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">슬롯 정의</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">엣지 케이스</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

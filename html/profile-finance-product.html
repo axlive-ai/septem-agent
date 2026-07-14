@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>맞춤상품안내 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">맞춤상품안내</div>
+      <div class="prose">
+        <p class="lead">상품 추천 결과를 활용해 상품 안내부터 가입까지 지원하는 Sub Agent예요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>Agent 개요</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">목적</div>
+          <div class="box-row-value">기존 ML 기반 상품 추천 결과를 활용하여 고객 맞춤형 상품 안내부터 질의응답·가입까지 자연스럽게 연결해요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">추진 배경</div>
+          <div class="box-row-value muted">단순 추천·노출 중심으로 가입 연계의 한계가 있었고, 추천 이후 금리·우대조건·가입 가능 여부 확인을 위한 별도 탐색과 상담이 필요했어요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">대상 고객</div>
+          <div class="box-row-value muted">금융 상품(예금·적금·대출·투자·보험) 비교·선택이 필요한 고객</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">화면 형태</div>
+          <div class="box-row-value muted">인앱 대화형 채팅 화면 — 상품 카드 + 가입 연결 버튼</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>역할 및 기능 범위</h2>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">주요 기능</div>
+        <div class="list-row"><div class="list-row-dot"></div>ML 추천 결과 기반 맞춤형 상품 안내 (1~3순위 제공)</div><div class="list-row"><div class="list-row-dot"></div>고객 질문에 자연어로 응답 (금리·우대조건·가입 자격 등)</div><div class="list-row"><div class="list-row-dot"></div>자주 묻는 질문 키워드 사전 제시해 상담 흐름 유도</div><div class="list-row"><div class="list-row-dot"></div>상품 신청 버튼 클릭 시 금융상품 가입화면 연결</div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">서비스 흐름</div>
+        <div class="list-row"><div class="list-row-dot"></div>노출 — ML 기반 개인화 상품 추천 결과 활용</div><div class="list-row"><div class="list-row-dot"></div>진입 — AI 금융비서에서 상품 추천 의도 감지 시 자동 전환</div><div class="list-row"><div class="list-row-dot"></div>안내 — 추천 상품·지식베이스 결합 맞춤형 안내 수행</div><div class="list-row"><div class="list-row-dot"></div>가입 연결 — 상품 가입 버튼 클릭 시 가입 상세 페이지 이동</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 관계</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node">
+      <div class="rel-box rel-box-prev">AI 금융비서</div>
+      <div class="rel-label">상품 추천 의도 감지</div>
+    </div>
+    <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-current">맞춤 상품 안내</div>
+      <div class="rel-label">현재 Agent</div>
+    </div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-next">상품 가입 상세 페이지</div>
+      <div class="rel-label">가입 선택 시</div>
+    </div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>핵심 인터랙션 포인트</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">UX 핵심 포인트</div>
+          <div class="box-row-value">
+            <div class="tag-wrap"><span class="tag-chip">추천 상품 카드 레이아웃</span><span class="tag-chip">추천 질문 키워드 제시</span><span class="tag-chip">상품 비교 UX</span><span class="tag-chip">가입 연결 흐름</span></div>
+          </div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">UX 라이팅 톤</div>
+          <div class="box-row-value muted">친근하고 전문적인 금융 상담사 어조예요. 상품 특징을 쉽고 명확하게 설명하고, 가입 유도는 자연스럽게 해요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>제약 및 특이사항</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          제약 및 개발 협의 필요
+        </div>
+        <div class="note-row"><div class="note-row-dot"></div>ML 추천결과 연계 데이터 수신 방법 정의 필요 (API 활용)</div><div class="note-row"><div class="note-row-dot"></div>상품설명서·약관 등 상담 지식베이스 구축 및 최신화 체계 필요</div><div class="note-row"><div class="note-row-dot"></div>투자 상품 안내 시 투자 권유 규정 준수 필요 — 확정 수익률 표현 금지</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Agent 개요</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">역할 및 기능 범위</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 관계</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">핵심 인터랙션 포인트</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">제약 및 특이사항</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

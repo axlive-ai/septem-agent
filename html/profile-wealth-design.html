@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포트폴리오 설계 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">포트폴리오 설계</div>
+      <div class="prose">
+        <p class="lead">진단 결과에 따른 고객별 최적의 행동(자산 매입·매도·부채 상환 등)을 제안하는 Sub Agent예요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>Agent 개요</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">목적</div>
+          <div class="box-row-value">포트폴리오 진단 결과와 고객 특성·시장 전망을 반영하여 자산 조정·부채 상환 등 개선 방향을 제안하고, 최종 실행(상품 가입 등)까지 파이프라인을 구축해요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">추진 배경</div>
+          <div class="box-row-value muted">현행 WM 시스템 포트폴리오 설계 서비스는 룰 기반 기계적 제안값 도출에 한계가 있었고, AI 기반 개인화 설계로 고도화가 필요했어요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">대상 고객</div>
+          <div class="box-row-value muted">포트폴리오 진단 완료 후 구체적인 조정 실행이 필요한 WM 고객</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">화면 형태</div>
+          <div class="box-row-value muted">WM 시스템 포트폴리오 설계 화면 + Chat Loop</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>역할 및 기능 범위</h2>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">주요 기능</div>
+        <div class="list-row"><div class="list-row-dot"></div>보완 필요 영역(기대수익률 개선·위험 감소·유동성 확보) 파악</div><div class="list-row"><div class="list-row-dot"></div>인구통계학적 데이터·위험 성향 반영하여 개선률 상한 규정</div><div class="list-row"><div class="list-row-dot"></div>자산군 조정 방향(자산 매입·매도·부채 상환) 제안</div><div class="list-row"><div class="list-row-dot"></div>거시경제 지표로 보정치 산출 → 최종 개선 가능 영역 제안</div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">서비스 흐름</div>
+        <div class="list-row"><div class="list-row-dot"></div>보완 필요 영역 파악 (기대수익률·위험·유동성)</div><div class="list-row"><div class="list-row-dot"></div>개선률 상한 규정 (위험 부담 상한)</div><div class="list-row"><div class="list-row-dot"></div>자산군 조정 방향 제안 (ALM 관점)</div><div class="list-row"><div class="list-row-dot"></div>결과 제공 및 최종 실행(상품 가입 등) 유도</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 관계</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node">
+      <div class="rel-box rel-box-prev">포트폴리오 진단</div>
+      <div class="rel-label">진단 완료 후</div>
+    </div>
+    <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-current">포트폴리오 설계</div>
+      <div class="rel-label">현재 Agent</div>
+    </div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-next">금융상품 Landing 연계 / 절세</div>
+      <div class="rel-label">실행 선택 시</div>
+    </div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>핵심 인터랙션 포인트</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">UX 핵심 포인트</div>
+          <div class="box-row-value">
+            <div class="tag-wrap"><span class="tag-chip">조정 제안 카드 UI</span><span class="tag-chip">실행 연결 UX</span><span class="tag-chip">ALM 관점 설명 방식</span></div>
+          </div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">UX 라이팅 톤</div>
+          <div class="box-row-value muted">실행 중심적이고 구체적인 어조예요. 조정 이유와 기대 효과를 명확히 전달하고, 확정 수익 표현은 금지해요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>제약 및 특이사항</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          제약 및 개발 협의 필요
+        </div>
+        <div class="note-row"><div class="note-row-dot"></div>자산·부채 통합분석 Rule 및 고객 Action 제안 종류 개발 과정 결정</div><div class="note-row"><div class="note-row-dot"></div>상품까지 연결할지 여부 및 연결 시 상품 매칭 방안 협의 필요</div><div class="note-row"><div class="note-row-dot"></div>EF 엔진을 보조할 Solution 사항 협의 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Agent 개요</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">역할 및 기능 범위</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 관계</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">핵심 인터랙션 포인트</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">제약 및 특이사항</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

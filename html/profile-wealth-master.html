@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI종합자산관리 Master — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">AI종합자산관리 Master</div>
+      <div class="prose">
+        <p class="lead">고객의 자산진단부터 포트폴리오 조정·절세 안내까지 통합 지원하는 Master Agent예요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>Agent 개요</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">목적</div>
+          <div class="box-row-value">개인화되지 않은 비효율적인 금융정보 제공 구조의 한계를 극복하고, 포트폴리오 진단·설계 고도화 등 실질적인 자산관리 서비스를 제공해요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">추진 배경</div>
+          <div class="box-row-value muted">대면 중심 자산관리를 대면+비대면 Omni 채널로 확장하고, Rule-Based 단순 수익률 계산에서 AI Base + Rule-Based 통합 서비스로 고도화할 필요가 있었어요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">대상 고객</div>
+          <div class="box-row-value muted">WM 시스템 대상 고객 + 올원뱅크 마이데이터 동의 고객</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">화면 형태</div>
+          <div class="box-row-value muted">올원뱅크 + WM 시스템 동시 탑재 — 채팅 UI + 자산 대시보드</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>역할 및 기능 범위</h2>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">주요 기능</div>
+        <div class="list-row"><div class="list-row-dot"></div>모닝브리핑 Sub Agent — 개인화 시황 브리핑 제공</div><div class="list-row"><div class="list-row-dot"></div>포트폴리오 진단 Sub Agent — 자산·부채 통합 진단</div><div class="list-row"><div class="list-row-dot"></div>포트폴리오 설계 Sub Agent — 맞춤형 포트폴리오 조정 제안</div><div class="list-row"><div class="list-row-dot"></div>절세 Sub Agent — 절세 방향 및 과세이연 상품 솔루션 제안</div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">서비스 흐름</div>
+        <div class="list-row"><div class="list-row-dot"></div>대면→Omni — WM시스템 + NH올원뱅크 동시 탑재</div><div class="list-row"><div class="list-row-dot"></div>Rule-Based→AI Base — 개인화·심층분석 필요 영역에 AI Modeling 적용</div><div class="list-row"><div class="list-row-dot"></div>자산→자산+부채 — 부채까지 반영한 종합 자산관리 서비스</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 관계</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node">
+      <div class="rel-box rel-box-prev">올원뱅크 / WM 시스템</div>
+      <div class="rel-label">직접 진입 또는 알림</div>
+    </div>
+    <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-current">종합자산관리 AI</div>
+      <div class="rel-label">현재 Agent</div>
+    </div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-sub-stack"><div class="rel-box rel-box-next" style="font-size:12.5px;">모닝브리핑</div><div class="rel-box rel-box-next" style="font-size:12.5px;">포트폴리오 진단</div><div class="rel-box rel-box-next" style="font-size:12.5px;">포트폴리오 설계</div><div class="rel-box rel-box-next" style="font-size:12.5px;">절세</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-next">WM 시스템 포트폴리오 설계 / 상품 가입 Landing</div>
+      <div class="rel-label">실행 선택 시</div>
+    </div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>핵심 인터랙션 포인트</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">UX 핵심 포인트</div>
+          <div class="box-row-value">
+            <div class="tag-wrap"><span class="tag-chip">자산 대시보드 UX</span><span class="tag-chip">Sub Agent 간 컨텍스트 연속성</span><span class="tag-chip">투자 권유 규정 준수 표현</span></div>
+          </div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">UX 라이팅 톤</div>
+          <div class="box-row-value muted">전문적이고 신뢰할 수 있는 PB 어조예요. 확정 수익 표현은 금지하고, '시뮬레이션·예상' 표현을 사용해요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>제약 및 특이사항</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          제약 및 개발 협의 필요
+        </div>
+        <div class="note-row"><div class="note-row-dot"></div>투자 권유 규정 준수 — 확정 수익률 약속 금지, '예상·시뮬레이션' 명시</div><div class="note-row"><div class="note-row-dot"></div>마이데이터 동의 고객 대상 — 미동의 고객 대상 서비스 범위 별도 정의 필요</div><div class="note-row"><div class="note-row-dot"></div>WM 시스템 + 올원뱅크 동시 탑재 — 채널별 UI 차이 설계 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Agent 개요</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">역할 및 기능 범위</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 관계</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">핵심 인터랙션 포인트</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">제약 및 특이사항</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

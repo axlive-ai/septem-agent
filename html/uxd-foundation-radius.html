@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radius — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">Radius</div>
+    <div class="prose"><p class="lead">요소의 모서리를 둥글게 처리하는 곡률 체계예요. 카드·인풋·버튼은 12, 칩·토글·플로팅 요소는 완전한 원형(circle)을 기본으로 적용해 시각적 일관성을 유지해요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="rd-scale"><div class="lf-h"><h3>Radius scale</h3></div><p class="usenote">모서리 곡률(둥근 정도)의 전체 스케일이에요. <code>Variable</code> 토큰과 <code>Primitive</code> 값(px÷4), 실제 <code>Px</code> 값을 함께 확인할 수 있어요.</p><div class="sp-scalewrap"><svg viewBox="40 195 880 792" class="rd-scale-svg" preserveAspectRatio="xMidYMin meet" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="50" y="234" font-family="Pretendard, sans-serif" font-size="16" font-weight="700" fill="black">Variable Name</text><text x="350" y="234" font-family="Pretendard, sans-serif" font-size="16" font-weight="700" fill="black">Primitive Variable</text><text x="645" y="234" font-family="Pretendard, sans-serif" font-size="16" font-weight="700" fill="black">Px</text><text x="840" y="234" font-family="Pretendard, sans-serif" font-size="16" font-weight="700" fill="black">Visual</text><line x1="40" y1="276.5" x2="900" y2="276.5" stroke="#111111" stroke-width="1.5"/><text x="50" y="334" font-family="Pretendard, sans-serif" font-size="15" fill="black">Radius/0</text><text x="374" y="334" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">0</text><text x="645" y="334" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">0</text><rect x="840" y="304" width="48" height="48" rx="0" fill="#007AFC" fill-opacity="0.3"/><line x1="40" y1="377.5" x2="900" y2="377.5" stroke="#DDDDDD" stroke-width="1"/><text x="50" y="434" font-family="Pretendard, sans-serif" font-size="15" fill="black">Radius/4</text><text x="374" y="434" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">1</text><text x="645" y="434" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">4</text><rect x="840" y="404" width="48" height="48" rx="4" fill="#007AFC" fill-opacity="0.3"/><line x1="40" y1="477.5" x2="900" y2="477.5" stroke="#DDDDDD" stroke-width="1"/><text x="50" y="534" font-family="Pretendard, sans-serif" font-size="15" fill="black">Radius/8</text><text x="374" y="534" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">2</text><text x="645" y="534" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">8</text><rect x="840" y="504" width="48" height="48" rx="8" fill="#007AFC" fill-opacity="0.3"/><line x1="40" y1="577.5" x2="900" y2="577.5" stroke="#DDDDDD" stroke-width="1"/><text x="50" y="634" font-family="Pretendard, sans-serif" font-size="15" fill="black">Radius/10</text><text x="374" y="634" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">2.5</text><text x="645" y="634" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">10</text><rect x="840" y="604" width="48" height="48" rx="10" fill="#007AFC" fill-opacity="0.3"/><line x1="40" y1="677.5" x2="900" y2="677.5" stroke="#DDDDDD" stroke-width="1"/><text x="50" y="734" font-family="Pretendard, sans-serif" font-size="15" fill="black">Radius/12</text><text x="374" y="734" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">3</text><text x="645" y="734" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">12</text><rect x="840" y="704" width="48" height="48" rx="12" fill="#007AFC" fill-opacity="0.3"/><line x1="40" y1="777.5" x2="900" y2="777.5" stroke="#DDDDDD" stroke-width="1"/><text x="50" y="834" font-family="Pretendard, sans-serif" font-size="15" fill="black">Radius/16</text><text x="374" y="834" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">4</text><text x="645" y="834" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">16</text><rect x="840" y="804" width="48" height="48" rx="16" fill="#007AFC" fill-opacity="0.3"/><line x1="40" y1="877.5" x2="900" y2="877.5" stroke="#DDDDDD" stroke-width="1"/><text x="50" y="934" font-family="Pretendard, sans-serif" font-size="15" fill="black">Radius/circle</text><text x="374" y="934" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">—</text><text x="645" y="934" font-family="Pretendard, sans-serif" font-size="15" fill="#555555">999</text><circle cx="864" cy="928" r="24" fill="#007AFC" fill-opacity="0.3"/></svg></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="rd-scale" href="#rd-scale" onclick="setActiveToc(this)">Radius scale</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

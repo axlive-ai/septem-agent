@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>맞춤상품안내 · 대화흐름정의 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">맞춤상품안내 · 대화흐름정의</div>
+      <div class="prose">
+        <p class="lead">니즈 수집부터 추천·비교·가입까지의 흐름을 정의해요.</p>
+      </div>
+      <div class="prose" id="doc-sec-1">
+        <h2>대화 흐름 요약</h2>
+      </div>
+      <div class="prose">
+        <p>사용자 케이스 정의에서 다룬 Case A~D가 이 흐름의 어느 지점에서 시작되는지부터 확인해요.</p>
+      </div>
+      <table class="data-table">
+        <thead><tr><th style="width:160px;">케이스</th><th style="width:140px;">진입 지점</th><th>시작 상태</th></tr></thead>
+        <tbody><tr>
+            <td><strong>Case A</strong><br><span style="color:var(--text-3); font-size:13px;">첫 추천</span></td>
+            <td><span class="range-tag">Flow 1 처음부터</span></td>
+            <td>니즈 슬롯 0개 상태</td>
+          </tr><tr>
+            <td><strong>Case B</strong><br><span style="color:var(--text-3); font-size:13px;">슬롯 이탈</span></td>
+            <td><span class="range-tag">Flow 1 중간</span></td>
+            <td>이어하기로 중단 슬롯부터 재개</td>
+          </tr><tr>
+            <td><strong>Case C</strong><br><span style="color:var(--text-3); font-size:13px;">이미 가입</span></td>
+            <td><span class="range-tag">Flow 2 결과</span></td>
+            <td>추천 결과에서 차순위로 자동 대체</td>
+          </tr><tr>
+            <td><strong>Case D</strong><br><span style="color:var(--text-3); font-size:13px;">알림 진입</span></td>
+            <td><span class="range-tag">Flow 2 직행</span></td>
+            <td>관련 상품 정보 사전 로드 후 직행</td>
+          </tr></tbody>
+      </table>
+      <div class="box" style="margin-top:16px;">
+        <div class="rel-flow"><div class="rel-node"><div class="rel-box rel-box-prev">진입</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-current">니즈 수집<span class="rel-sub">슬롯 필링</span></div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">상품 추천</div></div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div><div class="rel-node"><div class="rel-box rel-box-next">비교·가입</div></div></div>
+      </div>
+      <div class="box box-last">
+        <div style="font-size:13px; font-weight:700; color:var(--text-1); margin-bottom:16px;">Flow 3 후속 분기 — 추천 결과 확인 후</div>
+        <div class="branch-diagram">
+          <div class="branch-source"><div class="branch-source-box">결과 확인<span class="branch-sub">고객 선택</span></div></div>
+          <div class="branch-connector"></div>
+          <div class="branch-targets"><div class="branch-target-row"><div class="branch-target-box">가입 신청</div><div class="branch-target-desc">상품 가입 프로세스로 이동</div></div><div class="branch-target-row"><div class="branch-target-box">비교 요청</div><div class="branch-target-desc">비교표 표시</div></div><div class="branch-target-row"><div class="branch-target-box">더 보기</div><div class="branch-target-desc">3순위 이하 상품 추가 표시</div></div><div class="branch-target-row"><div class="branch-target-box">결과 없음</div><div class="branch-target-desc">조건 완화 제안</div></div></div>
+        </div>
+      </div>
+
+      
+      <div class="prose" id="doc-sec-2">
+        <h2>Flow 1 · 니즈 슬롯 수집</h2>
+      </div>
+      <div class="box box-last">
+        
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">목표 기간이 어떻게 되세요?</div>
+          <div style="display:flex; gap:6px;">
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; background:var(--blue); color:#fff; font-weight:600;">1년</span>
+            <span style="font-size:13px; padding:6px 14px; border-radius:16px; border:1px solid var(--border-strong); color:var(--text-2);">2년 이상</span>
+          </div>
+          <div style="background:var(--blue); border-radius:10px; padding:12px 16px; font-size:15px; color:#fff; max-width:30%; align-self:flex-end;">1년</div>
+          <div style="background:var(--bg-soft); border-radius:10px; padding:12px 16px; font-size:15px; color:var(--text-1); max-width:80%;">1년 예금이군요. 예치 금액은 얼마 정도 생각하세요?</div>
+        </div>
+      </div>
+      <div class="prose" id="doc-sec-3">
+        <h2>Flow 2 · 상품 추천 결과</h2>
+      </div>
+      <div class="box box-last">
+        
+        <div style="background:var(--blue-bg); border-radius:14px; padding:18px 20px;">
+          <div style="font-size:12px; color:#5A8FE0; margin-bottom:4px;">🥇 1순위 추천</div>
+          <div style="font-size:16px; font-weight:700; color:#1B4FA0; margin-bottom:6px;">NH 주거래 우대 정기예금</div>
+          <div style="font-size:22px; font-weight:700; color:#1B4FA0;">연 4.10%</div>
+          <div style="font-size:13px; color:#1B4FA0; margin-top:8px;">가입기간 12개월 · NH주거래 우대 · 비대면 가입</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>Agent 발화 정의</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row"><div class="box-row-label">UTT-01</div><div class="box-row-value muted">"목표 기간이 어떻게 되세요?" — 3개월/6개월/1년/2년이상 Chip</div></div><div class="box-row"><div class="box-row-label">UTT-04</div><div class="box-row-value muted">"조건에 딱 맞는 상품을 찾았어요!" — 1순위 카드와 함께</div></div><div class="box-row"><div class="box-row-label">UTT-05</div><div class="box-row-value muted">"두 상품을 비교해드릴게요." — 비교표 표시</div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>UI 컴포넌트 매핑</h2>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">니즈 수집 컴포넌트</div>
+        <div class="list-row"><div class="list-row-dot"></div>슬롯 진행 카드 — 3개 슬롯 상태 표시</div><div class="list-row"><div class="list-row-dot"></div>빠른 선택 Chip — 슬롯별 옵션</div>
+      </div><div class="list-card box-last">
+        <div class="list-card-title">추천 결과 컴포넌트</div>
+        <div class="list-row"><div class="list-row-dot"></div>1순위 추천 카드 — 금리 강조</div><div class="list-row"><div class="list-row-dot"></div>상품 비교표 — 2개 상품 나란히</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">대화 흐름 요약</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">Flow 1 · 니즈 슬롯 수집</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Flow 2 · 상품 추천 결과</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">Agent 발화 정의</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">UI 컴포넌트 매핑</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

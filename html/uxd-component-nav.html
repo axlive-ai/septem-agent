@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navigation — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">Navigation</div>
+    <div class="prose"><p class="lead">대화 흐름을 벗어나지 않는 확인·알림 컴포넌트예요. 대부분의 확인은 채팅 안에서 Inline Confirm으로 처리하고, 해지처럼 위험도가 아주 높은 실행만 예외적으로 화면 전체를 덮는 Dialog로 한 번 더 확인해요. 완료 알림은 Toast로 짧게 전해요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="cn-usage"><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in bub agent" data-delay="0">전세자금대출 이자를 이체할까요?</div><div class="mo-eitem in bub user" data-delay="700">응, 진행해줘</div><div class="mo-eitem in" data-delay="1500"><div class="ka"><span class="ai"><svg viewBox="0 0 24 22" xmlns="http://www.w3.org/2000/svg"><path d="M12 0l2.6 8.4L23 11l-8.4 2.6L12 22l-2.6-8.4L1 11l8.4-2.6z" fill="url(#aiGrad)"/></svg></span><div class="ct"><div class="inlineconfirm"><div class="t">이체를 실행할까요?</div><div class="d">NH 급여통장에서 300,000원이 출금돼요.</div><div class="row"><button class="bt ter sm" style="flex:1">취소</button><button class="bt sec sm" style="flex:1">실행</button></div></div></div></div></div><div class="mo-eitem in bub user" data-delay="2600">실행</div><div class="mo-eitem in" style="display:flex;justify-content:center;" data-delay="3300"><span class="toast">&#10003; 이체가 완료됐어요</span></div><div class="mo-eitem in bub agent" data-delay="4100">이체 내역은 언제든 다시 확인할 수 있어요.</div></div></div><p class="usenote" style="margin:16px 0 0;">대화 중 확인이 필요하면 화면을 벗어나지 않고 채팅 안에 Inline Confirm 카드로 물어봐요. 사용자가 답하면 실행하고, 완료되면 Toast로 짧게 알린 뒤 대화가 자연스럽게 이어져요.</p></section><section class="lf" id="cn-inline"><div class="lf-h"><h3>Inline Confirm <span class="en">인라인 확인</span></h3></div><p class="usenote">채팅 흐름 안에서 물어보는 확인 카드예요. Agent 말풍선과 같은 위치·radius(좌상단 4)를 써서 대화의 연장선처럼 보이게 하고, 화면을 가리지 않아요. 이체·신청처럼 되돌릴 수는 있지만 확인이 필요한 대부분의 실행에 이 방식을 기본으로 써요.</p><div class="mo-screen"><div class="bub agent">전세자금대출 이자를 이체할까요?</div><div class="bub user">응, 진행해줘</div><div class="ka"><span class="ai"><svg viewBox="0 0 24 22" xmlns="http://www.w3.org/2000/svg"><path d="M12 0l2.6 8.4L23 11l-8.4 2.6L12 22l-2.6-8.4L1 11l8.4-2.6z" fill="url(#aiGrad)"/></svg></span><div class="ct"><div class="inlineconfirm"><div class="t">이체를 실행할까요?</div><div class="d">NH 급여통장에서 300,000원이 출금돼요.</div><div class="row"><button class="bt ter sm" style="flex:1">취소</button><button class="bt sec sm" style="flex:1">실행</button></div></div></div></div></div></section><section class="lf" id="cn-dialog"><div class="lf-h"><h3>Dialog <span class="en">전체 확인</span></h3></div><p class="usenote">화면 전체를 덮는 예외적인 확인이에요. 해지·한도 상향처럼 되돌릴 수 없거나 영향이 큰 실행에만 제한적으로 써요. 버튼은 채우지 않은 아웃라인 스타일을 쓰고, 취소(회색)를 왼쪽에, 실행(그린)을 오른쪽에 둬요. 대화형 경험의 기본값이 아니라 꼭 필요할 때만 사용해요.</p><div class="mo-screen" style="position:relative;min-height:230px;"><div class="bub agent">해지 신청을 도와드릴게요.</div><div class="bub user">해지할게요</div><div style="position:absolute;inset:0;background:rgba(17,17,17,.4);border-radius:22px;display:flex;align-items:center;justify-content:center;padding:16px;"><div class="dialog" style="width:100%;font-size:15px"><div class="t" style="font-size:15px">해지를 진행할까요?</div><div class="d">해지 즉시 되돌릴 수 없고, 우대금리 혜택도 사라져요.</div><div class="row"><button class="bt ter sm" style="flex:1">취소</button><button class="bt sec sm" style="flex:1">해지</button></div></div></div></div></section><section class="lf" id="cn-toast"><div class="lf-h"><h3>Toast <span class="en">토스트</span></h3></div><p class="usenote">짧은 비차단 완료 알림이에요. 검정 배경(#111)에 흰 텍스트로 2~3초간 노출 후 화면을 가리지 않고 자동으로 사라져요. 실행 취소처럼 되돌릴 수 있는 동작은 액션 링크를 함께 붙이고, 실패는 Red(--error)로 구분해요.</p><div class="mo-screen"><div class="bub user">이체 실행</div><div style="display:flex;justify-content:center;"><span class="toast">&#10003; 이체가 완료됐어요</span></div><div class="bub user">최근 대화 삭제</div><div style="display:flex;justify-content:center;"><span class="toast">삭제했어요<span style="color:var(--green-200);font-weight:700;margin-left:4px;">실행 취소</span></span></div><div class="bub user">이체 재시도</div><div style="display:flex;justify-content:center;"><span class="toast" style="background:var(--error);">&#33; 이체에 실패했어요</span></div></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="cn-inline" href="#cn-inline" onclick="setActiveToc(this)">Inline Confirm</a>
+      <a class="toc-link" data-target="cn-dialog" href="#cn-dialog" onclick="setActiveToc(this)">Dialog</a>
+      <a class="toc-link" data-target="cn-toast" href="#cn-toast" onclick="setActiveToc(this)">Toast</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

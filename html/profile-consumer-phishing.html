@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>피싱 탐지 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">피싱 탐지</div>
+      <div class="prose">
+        <p class="lead">스팸·악성 URL 등 피싱 위협을 탐지하고 경고하는 Sub Agent예요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>Agent 개요</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">목적</div>
+          <div class="box-row-value">올원뱅크 앱에 탑재된 SDK 기반 피싱 탐지 시스템을 연계하여 악성 앱 실행 및 스미싱 문자 인입 시 위험을 즉시 탐지하고 전면 팝업으로 경고해요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">추진 배경</div>
+          <div class="box-row-value muted">실시간 탐지 기능이 미공 상태였고, 정보안내 메뉴를 통한 외부 유료 서비스 연계 수준으로만 운영되고 있었어요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">대상 고객</div>
+          <div class="box-row-value muted">올원뱅크 앱 사용 고객 전체 — 스미싱·악성 앱 위협에 노출된 모든 고객</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">화면 형태</div>
+          <div class="box-row-value muted">실시간 전면 팝업 경고 + 올원뱅크 UI/UX 가이드라인 적용 알림 화면</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>역할 및 기능 범위</h2>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">주요 기능</div>
+        <div class="list-row"><div class="list-row-dot"></div>솔루션 SDK가 실시간 모니터링 중 위험 감지 → 탐지 정보를 당행 앱 서버로 즉시 전송</div><div class="list-row"><div class="list-row-dot"></div>당행 AI Agent가 경고 화면을 통해 능동적으로 안내 (전면 팝업·이체 기능 임시 차단)</div><div class="list-row"><div class="list-row-dot"></div>탐지된 로그(내용·위험 URL·시간) 내부 모니터링 DB 적재</div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">서비스 흐름</div>
+        <div class="list-row"><div class="list-row-dot"></div>단말기 — SDK가 실시간 위험 식별</div><div class="list-row"><div class="list-row-dot"></div>통신 — 탐지 정보를 당행 앱 서버로 즉시 전송</div><div class="list-row"><div class="list-row-dot"></div>UX — 당행 앱 내 경고 팝업 노출 및 이체 기능 임시 차단</div><div class="list-row"><div class="list-row-dot"></div>사후 — 탐지 로그 내부 모니터링 DB 적재</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 관계</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow"><div class="rel-node">
+      <div class="rel-box rel-box-prev">올원뱅크 앱 SDK 탐지 시스템</div>
+      <div class="rel-label">위험 감지 시 자동 트리거</div>
+    </div>
+    <div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-current">피싱탐지</div>
+      <div class="rel-label">현재 Agent</div>
+    </div><div class="rel-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    <div class="rel-node">
+      <div class="rel-box rel-box-next">FDS 시스템 / 이체 차단 처리</div>
+      <div class="rel-label">탐지 완료 후</div>
+    </div></div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>핵심 인터랙션 포인트</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">UX 핵심 포인트</div>
+          <div class="box-row-value">
+            <div class="tag-wrap"><span class="tag-chip">전면 팝업 경고 UX</span><span class="tag-chip">즉각적 행동 유도</span><span class="tag-chip">이체 차단 안내</span></div>
+          </div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">UX 라이팅 톤</div>
+          <div class="box-row-value muted">즉각적이고 강한 경고 어조예요. 클릭하지 말 것을 명확히 지시하고, 다음 행동을 명확하게 안내해요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>제약 및 특이사항</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          제약 및 개발 협의 필요
+        </div>
+        <div class="note-row"><div class="note-row-dot"></div>SDK 탑재 및 AI 기반 실시간 위험 식별 — 외부 솔루션 데이터 범위에 따라 기능 범위 변경</div><div class="note-row"><div class="note-row-dot"></div>피싱/스팸 URL 데이터 준실시간 반영 체계 구축</div><div class="note-row"><div class="note-row-dot"></div>올원뱅크 UI/UX 가이드라인(NDS) 적용한 알림 화면 구현</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Agent 개요</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">역할 및 기능 범위</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 관계</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">핵심 인터랙션 포인트</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">제약 및 특이사항</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

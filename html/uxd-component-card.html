@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">Card</div>
+    <div class="prose"><p class="lead">Recommendation·Result·Summary·Product 네 가지 카드예요. Radius 12 · Border #E1E1E1을 공통으로 쓰되, 목적에 따라 강조 방식을 달리해요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="cd-usage"><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in bub user" data-delay="0">전세보증금 3억원 대출 한도 알려줘</div><div class="mo-eitem in" data-delay="700"><div class="card"><div class="hd">&#9673; 계산 결과</div><div class="row"><span class="lb">세후 수령액</span><span class="vl">10,325,710원</span></div><div class="row"><span class="lb">세후 이자</span><span class="vl up">+325,710원</span></div></div></div><div class="mo-eitem in" data-delay="1500"><div class="summary"><div class="lb">예상 대출 한도</div><div class="big">2억원</div><div class="row"><span>연 3.92%</span><span>최대 80%</span></div></div></div><div class="mo-eitem in bub agent" data-delay="2300">이 조건에 맞는 상품도 함께 볼까요?</div><div class="mo-eitem in" data-delay="3000"><div class="product"><span class="ic">&#128179;</span><div><div class="nm">NH채움 신용대출</div><div class="ds">한도 5,000만원</div></div><div class="rate"><div class="pc">4.5%~</div><div class="pl">연</div></div></div></div></div></div><p class="usenote" style="margin:16px 0 0;">계산 과정은 Result Card로 항목별 근거를 보여주고, 가장 중요한 결론은 Summary Card로 크게 강조해요. 이어서 조건에 맞는 상품을 Product Card로 제시해요. 하나의 응답 안에서 근거→결론→다음 행동 순서로 카드가 쌓여요.</p></section><section class="lf" id="cd-reco"><div class="lf-h"><h3>Recommendation Card <span class="en">추천 카드</span></h3></div><p class="usenote">추천 상품을 근거와 함께 보여주는 카드예요. 상품명·조건·평점을 좌측에, 금리를 우측에 Primary Green으로 강조해요. 추천 근거 없이 제시하지 않고, 상위 2~3개로 제한해요.</p><div class="mo-screen"><div class="product"><span class="ic">&#127974;</span><div><div class="nm">NH e금리우대예금</div><div class="ds">12개월 · 비대면</div><div class="rt">&#9733;&#9733;&#9733;&#9733;&#9733;</div></div><div class="rate"><div class="pc">3.85%</div><div class="pl">연</div></div></div></div></section><section class="lf" id="cd-result"><div class="lf-h"><h3>Result Card <span class="en">결과 카드</span></h3></div><p class="usenote">계산·조회 결과를 항목별로 구조화한 카드예요. 헤더는 Green 강조 캡션으로, 각 행은 상단 보더로 구분하고 수치는 우측 정렬해요. 증감은 상승 Red(#EC0C0C)·하락 Blue(#2C6DD4) 규칙을 지켜요.</p><div class="mo-screen"><div class="card"><div class="hd">&#9673; 계산 결과</div><div class="row"><span class="lb">세후 수령액</span><span class="vl">10,325,710원</span></div><div class="row"><span class="lb">세후 이자</span><span class="vl up">+325,710원</span></div></div></div></section><section class="lf" id="cd-summary"><div class="lf-h"><h3>Summary Card <span class="en">요약 카드</span></h3></div><p class="usenote">가장 중요한 결론 하나만 큰 수치로 강조하는 카드예요. Green 그라디언트 배경에 흰 텍스트를 사용하고, 보조 정보는 하단에 작게 한 줄로 덧붙여요. 카드 안에 결론을 여러 개 욱여넣지 않아요.</p><div class="mo-screen"><div class="summary"><div class="lb">예상 대출 한도</div><div class="big">2억원</div><div class="row"><span>연 3.92%</span><span>최대 80%</span></div></div></div></section><section class="lf" id="cd-product"><div class="lf-h"><h3>Product Card <span class="en">상품 카드</span></h3></div><p class="usenote">상품명·한도·금리 등 핵심 정보만 담은 한 줄 카드예요. 아이콘(40 · radius 10) + 이름 + 금리 순으로 배치해 목록에서도 빠르게 훑을 수 있게 해요. 탭하면 상세 화면으로 연결해요.</p><div class="mo-screen"><div class="product"><span class="ic">&#128179;</span><div><div class="nm">NH채움 신용대출</div><div class="ds">한도 5,000만원</div></div><div class="rate"><div class="pc">4.5%~</div><div class="pl">연</div></div></div></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="cd-reco" href="#cd-reco" onclick="setActiveToc(this)">Recommendation Card</a>
+      <a class="toc-link" data-target="cd-result" href="#cd-result" onclick="setActiveToc(this)">Result Card</a>
+      <a class="toc-link" data-target="cd-summary" href="#cd-summary" onclick="setActiveToc(this)">Summary Card</a>
+      <a class="toc-link" data-target="cd-product" href="#cd-product" onclick="setActiveToc(this)">Product Card</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

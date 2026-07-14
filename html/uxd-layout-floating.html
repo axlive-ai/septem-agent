@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Floating — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">Floating</div>
+    <div class="prose"><p class="lead">화면 위에 떠 있는 보조 동작 영역이에요. 스크롤과 무관하게 접근할 수 있도록 안전 여백을 지켜 배치해요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="fl-usage"><div class="ct-specstage"><svg class="ct-specsvg2" viewBox="0 0 360 640" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="359" height="639" rx="20" fill="white" stroke="#DDDDDD"/><path d="M1 45H359V621C359 630.941 350.941 639 341 639H19C9.05888 639 1 630.941 1 621V45Z" fill="#FBFBFB"/><rect x="24" y="69" width="120" height="14" rx="7" fill="#E4EEF9"/><rect x="24" y="97" width="200" height="10" rx="5" fill="#EFEFEF"/><rect x="24" y="117" width="160" height="10" rx="5" fill="#EFEFEF"/><circle cx="317" cy="597" r="26" fill="#19973C"/><rect x="315.5" y="589" width="3" height="16" rx="1.5" fill="white"/><rect x="309" y="595.5" width="16" height="3" rx="1.5" fill="white"/><line x1="344" y1="593" x2="344" y2="601" stroke="#007AFC"/><line x1="355" y1="593" x2="355" y2="601" stroke="#007AFC"/><line x1="344" y1="597" x2="355" y2="597" stroke="#007AFC"/><text x="349.5" y="587" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="13" font-weight="600" fill="#007AFC">16</text><line x1="313" y1="624" x2="321" y2="624" stroke="#007AFC"/><line x1="313" y1="635" x2="321" y2="635" stroke="#007AFC"/><line x1="317" y1="624" x2="317" y2="635" stroke="#007AFC"/><text x="329" y="633.5" font-family="Pretendard, sans-serif" font-size="13" font-weight="600" fill="#007AFC">16</text></svg></div><p class="usenote" style="margin:16px 0 0;">실제 화면에서 플로팅 버튼이 배치되는 위치를 보여주는 예시예요. 우측·하단 모두 24px 세이프 영역에서 16px를 더 띄워 화면 끝에 붙지 않도록 하고, 콘텐츠 스크롤과 무관하게 항상 같은 위치에 고정돼요.</p></section><section class="lf" id="fl-button"><div class="lf-h"><h3>Floating Button <span class="en">플로팅 버튼</span></h3></div><p class="usenote">AI Agent를 호출하거나 다른 Agent로 전환하는 원형 진입점이에요. Primary Green(#19973C)을 그대로 사용해 NH 브랜드 컬러와 완전히 일치시키고, 화면 위에 떠 있는 형태와 원형 셰이프로 일반 버튼과 구분해요.</p><div class="ct-specstage"><svg class="ct-specsvg2" viewBox="0 0 498 260" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="130" r="60" fill="#19973C"/><rect x="97" y="110" width="6" height="40" rx="3" fill="white"/><rect x="80" y="127" width="40" height="6" rx="3" fill="white"/><line x1="40" y1="206" x2="40" y2="214" stroke="#007AFC"/><line x1="160" y1="206" x2="160" y2="214" stroke="#007AFC"/><line x1="40" y1="210" x2="160" y2="210" stroke="#007AFC"/><text x="100" y="230" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="14" font-weight="600" fill="#007AFC">52 × 52</text><line x1="100" y1="70" x2="100" y2="190" stroke="white" stroke-opacity="0.5" stroke-dasharray="3 3"/><g font-family="Pretendard, sans-serif"><text x="240" y="70" font-size="13" fill="#767676">Color</text><text x="240" y="92" font-size="15" font-weight="600" fill="#111111">#19973C (Primary Green 500)</text><rect x="240" y="104" width="18" height="18" rx="4" fill="#19973C"/><text x="240" y="150" font-size="13" fill="#767676">Shape</text><text x="240" y="172" font-size="15" font-weight="600" fill="#111111">Circle · 52 × 52</text><text x="240" y="200" font-size="13" fill="#767676">Icon</text><text x="240" y="222" font-size="15" font-weight="600" fill="#111111">24px · White · AI / +</text></g></svg></div></section><section class="lf" id="fl-action"><div class="lf-h"><h3>Floating Action <span class="en">플로팅 액션</span></h3></div><p class="usenote">일반 화면에서는 우하단에 노출하고, 대화에 몰입해야 하는 Agent 화면에서는 숨겨 콘텐츠 집중도를 높여요. 화면당 핵심 보조 동작 1개만 고정해요.</p><div class="ct-specstage"><svg class="ct-specsvg2" viewBox="0 0 480 430" fill="none" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 0)"><rect x="0.5" y="0.5" width="219" height="379" rx="20" fill="white" stroke="#DDDDDD"/><path d="M1 40H219V361C219 371.5 208.5 379 200 379H20C9.05888 379 1 371.5 1 361V40Z" fill="#FBFBFB"/><rect x="16" y="60" width="90" height="12" rx="6" fill="#E4EEF9"/><rect x="16" y="84" width="140" height="8" rx="4" fill="#EFEFEF"/><rect x="16" y="100" width="110" height="8" rx="4" fill="#EFEFEF"/><circle cx="182" cy="342" r="22" fill="#19973C"/><rect x="180" y="331" width="4" height="22" rx="2" fill="white"/><rect x="171" y="340" width="22" height="4" rx="2" fill="white"/></g><g transform="translate(260 0)"><rect x="0.5" y="0.5" width="219" height="379" rx="20" fill="white" stroke="#DDDDDD"/><path d="M1 40H219V361C219 371.5 208.5 379 200 379H20C9.05888 379 1 371.5 1 361V40Z" fill="#FBFBFB"/><rect x="16" y="60" width="90" height="12" rx="6" fill="#E4EEF9"/><rect x="16" y="84" width="140" height="8" rx="4" fill="#EFEFEF"/><rect x="16" y="100" width="110" height="8" rx="4" fill="#EFEFEF"/><rect x="16" y="310" width="180" height="30" rx="14" fill="#EFF6FF"/><rect x="30" y="318" width="140" height="8" rx="4" fill="#BFDBFE"/></g><text x="110.0" y="410" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="14" font-weight="600" fill="#111111">일반 화면 · 노출</text><text x="370.0" y="410" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="14" font-weight="600" fill="#111111">Agent 대화 화면 · 숨김</text></svg></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="fl-button" href="#fl-button" onclick="setActiveToc(this)">Floating Button</a>
+      <a class="toc-link" data-target="fl-action" href="#fl-action" onclick="setActiveToc(this)">Floating Action</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

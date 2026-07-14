@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typography — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">Typography</div>
+    <div class="prose"><p class="lead">NDS의 타이포그래피는 Pretendard를 기본 서체로, 모바일에서 읽기 쉽고 일관된 텍스트 경험을 제공해요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="ty-use"><div class="lf-h"><h3>기본 사용법</h3></div><p class="usenote">NDS의 모든 텍스트는 <code>Pretendard</code>를 기본 서체로 사용해요. 국문·영문·숫자·특수문자를 포함하고, 경량 폰트로 로딩 속도와 가독성을 함께 챙겼어요. 텍스트 스타일은 <code>typography</code> 토큰에서 가져와 일관되게 적용할 수 있어요.</p><div class="code"><span class="tk-com">// 타이포그래피 토큰 가져오기</span>
+<span class="tk-key">import</span> { typography } <span class="tk-key">from</span> <span class="tk-str">&#39;@nhonce/tokens&#39;</span>;</div><p class="usenote">가져온 스타일을 컴포넌트에 그대로 적용해요.</p><div class="code"><span class="tk-tag">&lt;Text</span> <span class="tk-attr">style</span>={{ ...<span class="tk-prop">typography</span>.<span class="tk-prop">h1</span> }}<span class="tk-tag">&gt;</span>NH AI Agent UX 디자인시스템<span class="tk-tag">&lt;/Text&gt;</span></div><div class="tf-sample"><div class="big">Pretendard 프리텐다드 0123!@#$</div><div class="w"><span>SemiBold</span><span>Medium</span><span>Regular</span></div></div></section><section class="lf" id="ty-scale"><div class="lf-h"><h3>텍스트 스타일</h3></div><p class="usenote">폰트 사이즈마다 고유의 행간을 가져요. 심미적으로 필요한 경우에만 정해진 값 이외의 설정을 사용해요.</p><div class="ty-spec"><span class="tag">Font Size : 16</span><span class="mid">NH AI Agent UX 디자인시스템 012345 !@#$%^&amp;*()</span><span class="tag">Line Height : 24</span></div><div class="tybox"><div class="tytbl-wrap"><table class="tytbl"><thead><tr><th>Scale</th><th>Weight</th><th>Size/Line-height</th><th>Letter-spacing</th><th>Usage</th></tr></thead><tbody><tr><td class="sc"><span style="font-size:16px;line-height:24px;font-weight:600">Header</span></td><td class="nowrap">SemiBold</td><td class="nowrap">16/24</td><td class="nowrap">-2% / -0.1em</td><td class="usage">페이지 타이틀</td></tr><tr><td class="sc"><span style="font-size:26px;line-height:38px;font-weight:600">H1</span></td><td class="nowrap">SemiBold/Medium</td><td class="nowrap">26/38</td><td class="nowrap">-2% / -0.3em</td><td class="usage">서비스 소개 타이틀</td></tr><tr><td class="sc"><span style="font-size:22px;line-height:32px;font-weight:600">H2</span></td><td class="nowrap">SemiBold/Medium</td><td class="nowrap">22/32</td><td class="nowrap">-2% / -0.3em</td><td class="usage">상품 소개, 프로세스 타이틀</td></tr><tr><td class="sc"><span style="font-size:20px;line-height:28px;font-weight:600">H3</span></td><td class="nowrap">SemiBold/Medium</td><td class="nowrap">20/28</td><td class="nowrap">-2% / -0.3em</td><td class="usage">팝업 페이지 타이틀</td></tr><tr><td class="sc"><span style="font-size:18px;line-height:26px;font-weight:600">H4</span></td><td class="nowrap">SemiBold/Medium</td><td class="nowrap">18/26</td><td class="nowrap">-2% / -0.2em</td><td class="usage">약관 타이틀, 숫자 목록 타이틀, 안내 팝업, 슬라이드 팝업 타이틀, 테이블 타이틀</td></tr><tr><td class="sc"><span style="font-size:16px;line-height:24px;font-weight:600">H5</span></td><td class="nowrap">SemiBold/Medium</td><td class="nowrap">16/24</td><td class="nowrap">-2% / -0.2em</td><td class="usage">콘텐츠 내부의 서브 타이틀</td></tr><tr class="grp"><td class="sc"><span style="font-size:16px;line-height:24px;font-weight:500">Body1</span></td><td class="nowrap">Medium/Regular</td><td class="nowrap">16/24</td><td class="nowrap">-2% / -0.1em</td><td class="usage">강조 및 기본 폰트</td></tr><tr><td class="sc"><span style="font-size:15px;line-height:24px;font-weight:500">Body2</span></td><td class="nowrap">Medium/Regular</td><td class="nowrap">15/24</td><td class="nowrap">-2% / -0.2em</td><td class="usage">콘텐츠 내부 문구 테이블, 안내, 약관 등</td></tr><tr><td class="sc"><span style="font-size:14px;line-height:22px;font-weight:500">Body3</span></td><td class="nowrap">Medium/Regular</td><td class="nowrap">14/22</td><td class="nowrap">-2% / -0.2em</td><td class="usage">콘텐츠 내부 문구, 툴팁 문구, 안내 문구 등</td></tr><tr class="grp"><td class="sc"><span style="font-size:16px;line-height:24px;font-weight:500">Table1</span></td><td class="nowrap">Medium/Regular</td><td class="nowrap">16/24</td><td class="nowrap">-2% / -0.1em</td><td class="usage">테이블 내 숫자 폰트</td></tr><tr><td class="sc"><span style="font-size:15px;line-height:24px;font-weight:500">Table2</span></td><td class="nowrap">Medium/Regular</td><td class="nowrap">15/24</td><td class="nowrap">-2% / -0.2em</td><td class="usage">테이블 내 숫자 폰트</td></tr><tr><td class="sc"><span style="font-size:14px;line-height:22px;font-weight:500">Table3</span></td><td class="nowrap">Medium/Regular</td><td class="nowrap">14/22</td><td class="nowrap">-2% / -0.2em</td><td class="usage">테이블 내 숫자 폰트</td></tr><tr class="grp"><td class="sc"><span style="font-size:13px;line-height:20px;font-weight:500">Caption1</span></td><td class="nowrap">Medium/Regular</td><td class="nowrap">13/20</td><td class="nowrap">-2% / -0.1em</td><td class="usage">카드 및 라인 리스트 주요정보, 아코디언 목록, 메뉴형 목록</td></tr><tr><td class="sc"><span style="font-size:12px;line-height:18px;font-weight:500">Caption2</span></td><td class="nowrap">Medium/Regular</td><td class="nowrap">12/18</td><td class="nowrap">-2% / -0.1em</td><td class="usage">그룹핑 내부 - 아코디언, 메뉴형 목록</td></tr><tr><td class="sc"><span style="font-size:10px;line-height:15px;font-weight:500">Caption3</span></td><td class="nowrap">Medium/Regular</td><td class="nowrap">10/15</td><td class="nowrap">-2% / -0.1em</td><td class="usage">데이터형 목록, 박스 내/외</td></tr></tbody></table></div></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="ty-use" href="#ty-use" onclick="setActiveToc(this)">기본 사용법</a>
+      <a class="toc-link" data-target="ty-scale" href="#ty-scale" onclick="setActiveToc(this)">텍스트 스타일</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

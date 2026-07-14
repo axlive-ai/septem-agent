@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI금융비서 Master — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">AI금융비서 Master</div>
+      <div class="prose">
+        <p class="lead">일상 금융의 탐색·이체·상품안내를 쉽고 빠르게 지원하는 Master Agent예요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>Agent 개요</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">목적</div>
+          <div class="box-row-value">조회·이체·상품안내 등 주요 금융서비스 이용 과정의 메뉴 탐색 및 정보 입력 부담을 완화하고, 대화·AI 기반 입력 보조를 통해 쉽고 빠른 금융 실행 경험을 제공해요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">추진 배경</div>
+          <div class="box-row-value muted">주요 금융기능을 메뉴 탐색 없이 직관적으로 이용 가능하도록 지원하고, 탐색·안내·실행이 하나의 흐름으로 이어져 끊김 없는 금융 이용 경험을 제공할 필요가 있었어요.</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">대상 고객</div>
+          <div class="box-row-value muted">올원뱅크 전 고객층 — 금융 상품 탐색·가입·계산·이체가 필요한 모든 고객</div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">화면 형태</div>
+          <div class="box-row-value muted">올원뱅크 홈 통합 AI 서비스 진입 — 채팅 UI + 화면 이동 버튼</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>역할 및 기능 범위</h2>
+      </div>
+      <div class="list-card">
+        <div class="list-card-title">주요 기능</div>
+        <div class="list-row"><div class="list-row-dot"></div>고객 발화 의도 분석 → 적합한 Sub Agent 자동 연결</div>
+        <div class="list-row"><div class="list-row-dot"></div>맞춤 상품 안내 Sub Agent 오케스트레이션</div>
+        <div class="list-row"><div class="list-row-dot"></div>AI 금융계산기 Sub Agent 자동 전환 (계산 의도 감지)</div>
+        <div class="list-row"><div class="list-row-dot"></div>금융 서비스 전반 질의응답 및 안내</div>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">서비스 흐름</div>
+        <div class="list-row"><div class="list-row-dot"></div>노출 — 메인화면에 AI 서비스 진입 문구 노출</div>
+        <div class="list-row"><div class="list-row-dot"></div>진입 — 고객 클릭 시 대화형 상담 화면 진입</div>
+        <div class="list-row"><div class="list-row-dot"></div>안내 — 추천 결과·지식베이스 기반 맞춤형 안내</div>
+        <div class="list-row"><div class="list-row-dot"></div>연결 — 상품 신청 버튼 클릭 시 가입화면 연결</div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>Agent 관계</h2>
+      </div>
+      <div class="box">
+        <div class="rel-flow">
+          <div class="rel-node">
+            <div class="rel-box rel-box-prev">올원뱅크 홈<span class="rel-sub">검색창</span></div>
+            <div class="rel-label">직접 진입</div>
+          </div>
+          <div class="rel-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </div>
+          <div class="rel-node">
+            <div class="rel-box rel-box-current">AI 금융비서<span class="rel-sub">Master Agent</span></div>
+            <div class="rel-label">현재 Agent</div>
+          </div>
+          <div class="rel-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </div>
+          <div class="rel-sub-stack">
+            <div class="rel-box rel-box-next" style="font-size:12.5px;">맞춤 상품 안내<span class="rel-sub">상품 추천 요청 시</span></div>
+            <div class="rel-box rel-box-next" style="font-size:12.5px;">AI 금융계산기<span class="rel-sub">계산 의도 감지 시</span></div>
+          </div>
+          <div class="rel-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </div>
+          <div class="rel-node">
+            <div class="rel-box rel-box-next">상품 가입 프로세스</div>
+            <div class="rel-label">가입 선택 시</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-4">
+        <h2>핵심 인터랙션 포인트</h2>
+      </div>
+      <div class="box">
+        <div class="box-row">
+          <div class="box-row-label">UX 핵심 포인트</div>
+          <div class="box-row-value">
+            <div class="tag-wrap">
+              <span class="tag-chip">대화형 채팅 인터페이스 설계</span>
+              <span class="tag-chip">의도 파악 UX</span>
+              <span class="tag-chip">Sub Agent 전환 경험</span>
+              <span class="tag-chip">상품 가입 연결 흐름</span>
+            </div>
+          </div>
+        </div>
+        <div class="box-row">
+          <div class="box-row-label">UX 라이팅 톤</div>
+          <div class="box-row-value muted">친근하고 신속한 금융 전문가 어조예요. 고객 상황에 맞춘 맞춤형 안내를 하고, 복잡한 금융 용어는 쉽게 풀어서 설명해요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-5">
+        <h2>제약 및 특이사항</h2>
+      </div>
+      <div class="note-box">
+        <div class="note-box-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          제약 및 개발 협의 필요
+        </div>
+        <div class="note-row"><div class="note-row-dot"></div>상품추천 모형 연계 데이터 및 주기 정의 필요 (추천 상품명·추천 사유·기본금리·우대금리 등)</div>
+        <div class="note-row"><div class="note-row-dot"></div>상품설명서·약관 등 상담 지식베이스 적재 및 관리 체계 구축 필요</div>
+        <div class="note-row"><div class="note-row-dot"></div>Sub Agent 전환 시 컨텍스트(고객 발화·슬롯 상태) 전달 방식 개발 협의 필요</div>
+      </div>
+    
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">Agent 개요</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">역할 및 기능 범위</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">Agent 관계</a>
+      <a class="toc-link" data-target="doc-sec-4" href="#doc-sec-4" onclick="setActiveToc(this)">핵심 인터랙션 포인트</a>
+      <a class="toc-link" data-target="doc-sec-5" href="#doc-sec-5" onclick="setActiveToc(this)">제약 및 특이사항</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

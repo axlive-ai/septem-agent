@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>방법론 — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+
+      <div class="page-title">방법론</div>
+      <div class="prose">
+        <p class="lead">NH AI Agent UX Guide System은 Agent Profile → Agent Task Design → Agent UX Design → Prototype 순서로 구성돼요. 각 단계가 어떤 역할을 하고, 서로 어떻게 연결되는지 설명해드릴게요.</p>
+      </div>
+
+      <div class="prose" id="doc-sec-1">
+        <h2>4단계로 완성하는 설계 방식</h2>
+      </div>
+      <div class="list-card box-last">
+        <div class="list-card-title">4단계 구성</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>STEP 01 · Agent Profile</strong> — 이 AI가 누구인지 정의해요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>STEP 02 · Agent Task Design</strong> — 어떻게 일하는지 설계해요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>STEP 03 · Agent UX Design</strong> — 어떻게 보이는지 정의해요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>STEP 04 · Prototype</strong> — 실제로 작동하게 만들어요.</div>
+      </div>
+
+      <div class="prose" id="doc-sec-2">
+        <h2>단계가 연결되는 방식</h2>
+      </div>
+      <div class="box box-last">
+        <div class="box-row">
+          <div class="box-row-label">HOW IT CONNECTS</div>
+          <div class="box-row-value">Profile에서 정의한 역할이 Task Design의 업무 흐름을 만들고, 그 흐름이 UX Design의 화면 기준을 결정하며, Prototype에서 실제 경험으로 구현돼요.</div>
+        </div>
+      </div>
+
+      <div class="prose" id="doc-sec-3">
+        <h2>각 단계 상세</h2>
+      </div>
+      <div class="prose">
+        <p>각 단계에서 무엇을 정의하고, 어떤 산출물이 나오는지 정리했어요.</p>
+      </div>
+
+      <div class="list-card">
+        <div class="list-card-title">1 · Agent Profile — 이 AI 에이전트가 누구인지 한 페이지로 정의</div>
+        <div class="list-row"><div class="list-row-dot"></div>각 에이전트의 이름, 역할, 수행 범위, 다른 에이전트와의 관계를 명확히 정의해요. 설계를 시작하기 전에 "이 에이전트는 어떤 고객의 어떤 문제를 해결하는가"를 먼저 정의하는 단계예요. Profile이 명확해야 Task Design이 올바른 방향으로 진행돼요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>🪪 Agent Profile 문서</strong> — 에이전트 역할 정의 · Master/Sub 관계 · 담당 업무 범위 · 진입 경로</div>
+      </div>
+
+      <div class="list-card">
+        <div class="list-card-title">2 · Agent Task Design — 고객과 어떻게 대화하고, 업무를 어떻게 처리하는지 정의</div>
+        <div class="list-row"><div class="list-row-dot"></div>에이전트가 고객과 실제로 나누는 대화 흐름과 업무 처리 방식을 상세히 정의해요. 화면(스크린)이 아닌 업무(Task)를 기준으로 설계해요. 같은 화면 안에서도 대화가 진행되면서 상태가 계속 바뀌기 때문에, 업무 단위로 정의하는 것이 AI 에이전트 설계의 핵심이에요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>💬 대화흐름정의</strong> — 고객 케이스 정의(Case A~D) · 케이스별 실제 대화 · 발화 정의 · UI 컴포넌트 매핑</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>📋 업무 설계서</strong> — 업무 단계별 조건 · UI 표현 · 예외 처리 · 실제 화면 상태(mockup)</div>
+      </div>
+
+      <div class="list-card">
+        <div class="list-card-title">3 · Agent UX Design — 모든 에이전트가 공통으로 따르는 디자인 기준 정의</div>
+        <div class="list-row"><div class="list-row-dot"></div>각 에이전트가 개별적으로 다른 디자인을 쓰면 고객 경험이 일관되지 않아요. 색상, 타이포그래피, 컴포넌트, 레이아웃, 인터랙션 원칙을 공통 기준으로 정의해서 어떤 에이전트든 같은 경험을 제공하도록 해요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>🎨 Foundation</strong> — 색상 · 타이포그래피 · 그리드 · 간격 시스템</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>📐 Layout · Interaction · Component</strong> — 화면 구성 원칙 · 대화 인터랙션 패턴 · 재사용 가능한 UI 컴포넌트</div>
+      </div>
+
+      <div class="list-card box-last">
+        <div class="list-card-title">4 · Prototype — 실제로 눌러보면서 경험을 검증하는 단계</div>
+        <div class="list-row"><div class="list-row-dot"></div>앞 단계에서 정의한 대화 흐름, 업무 설계, UX 기준을 바탕으로 실제로 작동하는 인터랙티브 프로토타입을 만들어요. 개발이 시작되기 전에 실제 경험을 먼저 확인하고, 이해관계자 리뷰와 사용자 테스트에 활용해요.</div>
+        <div class="list-row"><div class="list-row-dot"></div><strong>▶️ 인터랙티브 프로토타입</strong> — 실제 대화 흐름을 체험할 수 있는 클릭 가능한 프로토타입</div>
+      </div>
+
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="doc-sec-1" href="#doc-sec-1" onclick="setActiveToc(this)">4단계 구성</a>
+      <a class="toc-link" data-target="doc-sec-2" href="#doc-sec-2" onclick="setActiveToc(this)">단계 연결 방식</a>
+      <a class="toc-link" data-target="doc-sec-3" href="#doc-sec-3" onclick="setActiveToc(this)">각 단계 상세</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

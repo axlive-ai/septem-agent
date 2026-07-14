@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">Feedback</div>
+    <div class="prose"><p class="lead">진행·완료·오류 상태를 일관된 색과 패턴으로 전달해요. 정적인 배지가 아니라 지금 상태가 바뀌고 있다는 걸 움직임으로 함께 알려줘요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="fb-usage"><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in fb" style="grid-template-columns:1fr" data-delay="0"><div class="it loading"><span class="dot"></span><div><div class="nm">Loading</div><div class="ds">처리 시작을 알렸어요.</div></div></div></div><div class="mo-eitem in" data-delay="900"><div class="prog"><i class="anim" style="width:64%"></i></div><div style="font-size:12px;color:var(--font-5);margin-top:8px">STEP 2 / 3 · 64%</div></div><div class="mo-eitem in" data-delay="2300" style="display:flex;align-items:center;gap:8px;color:var(--green-600);font-weight:600;font-size:14px;">&#10003; 신청이 완료됐어요</div></div></div><p class="usenote" style="margin:16px 0 0;">하나의 요청이 처리되는 흐름이에요. 시작을 알리는 Loading, 진행 정도를 보여주는 Progress를 거쳐 완료를 Green으로 명확히 안내해요. 실패하면 이 흐름 대신 Error·Retry로 전환해요.</p></section><section class="lf" id="fb-loading"><div class="lf-h"><h3>Loading</h3></div><p class="usenote">처리 시작을 알리는 상태예요. 처리 시작 즉시 표시해 대기를 인지시켜요.</p><div class="ix-exwrap"><div class="fb" style="grid-template-columns:1fr"><div class="it loading"><span class="dot"></span><div><div class="nm">Loading</div><div class="ds">처리 시작을 인지시킴.</div></div></div></div></div></section><section class="lf" id="fb-progress"><div class="lf-h"><h3>Progress</h3></div><p class="usenote">진행률을 보여주는 상태예요. 단계·비율로 남은 시간을 인지시켜요.</p><div class="ix-exwrap"><div class="prog"><i class="anim" style="width:64%"></i></div><div style="font-size:12px;color:var(--font-5);margin-top:8px">STEP 2 / 3 · 64%</div></div></section><section class="lf" id="fb-success"><div class="lf-h"><h3>Success</h3></div><p class="usenote">성공 상태예요. 완료를 Green 체크로 명확히 안내해요.</p><div class='mo-demo2'><button class='mo-play' onclick='motionSuccess(this)'><span class='ic'>↻</span> 다시 보기</button><div class='mo-screen mo-succ go'><span class='mo-check'><svg viewBox='0 0 52 52'><circle class='c' cx='26' cy='26' r='24'/><path class='k' d='M15 27 L23 35 L38 19'/></svg></span><div class='mo-succ-t'>신청이 완료되었어요</div></div></div></section><section class="lf" id="fb-warning"><div class="lf-h"><h3>Warning</h3></div><p class="usenote">주의 상태예요. 확인이 필요한 상황을 강조해요.</p><div class="ix-exwrap"><div class="infobox"><span class="ic">!</span><span>입력 정보를 다시 확인해 주세요.</span></div></div></section><section class="lf" id="fb-error"><div class="lf-h"><h3>Error</h3></div><p class="usenote">오류 상태예요. 무엇이 잘못됐고 어떻게 해결할지 안내해요.</p><div class='mo-demo2'><button class='mo-play' onclick='motionError(this)'><span class='ic'>↻</span> 다시 보기</button><div class='mo-screen'><div class='mo-err go'><div class='mo-errbub'><span class='mo-errico'>!</span>답변을 불러오지 못했어요</div><span class='chip-el'>다시 시도</span></div></div></div></section><section class="lf" id="fb-retry"><div class="lf-h"><h3>Retry</h3></div><p class="usenote">오류 후 같은 동작을 다시 시도하도록 명확히 제공해요.</p><div class="ix-exwrap"><div class="btns"><span class="bt sec sm">다시 시도</span><span class="bt ter sm">취소</span></div></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="fb-loading" href="#fb-loading" onclick="setActiveToc(this)">Loading</a>
+      <a class="toc-link" data-target="fb-progress" href="#fb-progress" onclick="setActiveToc(this)">Progress</a>
+      <a class="toc-link" data-target="fb-success" href="#fb-success" onclick="setActiveToc(this)">Success</a>
+      <a class="toc-link" data-target="fb-warning" href="#fb-warning" onclick="setActiveToc(this)">Warning</a>
+      <a class="toc-link" data-target="fb-error" href="#fb-error" onclick="setActiveToc(this)">Error</a>
+      <a class="toc-link" data-target="fb-retry" href="#fb-retry" onclick="setActiveToc(this)">Retry</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>

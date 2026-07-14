@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conversation — NH AI Agent UX</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/css/page.css">
+<link rel="stylesheet" href="../assets/css/uxd.css">
+<style>
+body { padding: 0; margin: 0; background: var(--bg, #fff); }
+.content-wrap { display: flex; width: 100%; max-width: 1600px; gap: 64px; padding: 56px 48px 160px 40px; margin: 0 auto; }
+.doc-body { flex: 1; min-width: 0; }
+.toc { width: 200px; flex-shrink: 0; position: sticky; top: 24px; align-self: flex-start; }
+.toc-title { font-size: 12px; font-weight: 700; color: var(--text-3, #8B95A1); letter-spacing: 0.06em; margin-bottom: 12px; }
+@media (max-width: 1100px) { .toc { display: none; } }
+</style>
+</head>
+<body>
+<div class="content-wrap">
+  <div class="doc-body">
+    <div class="page-title">Conversation</div>
+    <div class="prose"><p class="lead">Greeting·Welcome으로 시작해 Question→Answer→Follow-up, Closing으로 마쳐요. 각 순간은 정적인 말풍선이 아니라 등장·대기 모션으로 지금 무슨 일이 일어나는지 알려줘요.</p></div>
+    <div class="uxd-doc">
+<section class="lf" id="cv-usage"><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in bub agent" data-delay="0">안녕하세요, NH AI 금융비서예요.</div><div class="mo-eitem in bub agent" data-delay="450">예금·대출·절세를 도와드려요.</div><div class="mo-eitem in chips" data-delay="650"><span class="chip-el">예금 이자</span><span class="chip-el">전세 한도</span></div><div class="mo-eitem in bub user" data-delay="1200">전세보증금이 얼마인가요?</div><div class="mo-eitem in mo-status" data-delay="1700"><span class="mo-spark"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="nhspark" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#12732E"/><stop offset=".55" stop-color="#19973C"/><stop offset="1" stop-color="#7BD88F"/></linearGradient></defs><path d="M12 1 C12.6 6.2 17.8 11.4 23 12 C17.8 12.6 12.6 17.8 12 23 C11.4 17.8 6.2 12.6 1 12 C6.2 11.4 11.4 6.2 12 1 Z" fill="url(#nhspark)"/></svg></span><span class="mo-stxt-wrap"><span class="mo-stxt s1">정보를 찾고 있어요</span><span class="mo-stxt s2">계산을 준비하고 있어요</span></span></div><div class="mo-eitem in mo-ecard" data-delay="3100"><div class="t">예상 한도</div><div class="d">전세보증금 3억원 기준 2억 4,000만원이에요.</div></div><div class="mo-eitem in chips" data-delay="3450"><span class="chip-el gr">한도 조회</span><span class="chip-el">조건 변경</span></div><div class="mo-eitem in bub agent" data-delay="3900">신청이 완료됐어요. 더 도와드릴까요?</div></div></div><p class="usenote" style="margin:16px 0 0;">실제 대화가 이어지는 흐름이에요. 짧은 인사(Greeting) 뒤 할 수 있는 일을 소개(Welcome)하고, 정보를 물어(Question) 답을 준비하는 동안 브랜드 인디케이터가 반짝이며 상황에 맞는 문구로 바뀌어요. 결과를 카드로 제시(Answer)하고 다음 행동을 제안(Follow-up)한 뒤, 완료를 안내(Closing)하며 마쳐요. 각 메시지는 아래에서 살짝 올라오며 순차적으로 등장해요.</p></section><section class="lf" id="cv-greeting"><div class="lf-h"><h3>Greeting <span class="en">인사</span></h3></div><p class="usenote">사용자를 맞이하는 첫 인사예요. 대화 시작 시 짧게 인사하고 부담 없이 진입하도록 해요.</p><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in bub agent">안녕하세요, NH AI 금융비서예요.</div></div></div></section><section class="lf" id="cv-welcome"><div class="lf-h"><h3>Welcome <span class="en">소개</span></h3></div><p class="usenote">Agent 역할과 가능한 일을 소개해요. 무엇을 도울 수 있는지 안내하고, 예시 질문을 Chip으로 제시해 시작을 도와요.</p><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in bub agent">예금·대출·절세를 도와드려요.</div><div class="mo-eitem in chips"><span class="chip-el">예금 이자</span><span class="chip-el">전세 한도</span></div></div></div></section><section class="lf" id="cv-question"><div class="lf-h"><h3>Question <span class="en">질문</span></h3></div><p class="usenote">필요한 정보를 묻는 질문이에요. 한 번에 하나씩 필요한 정보만 물어요. 선택형은 Chip, 수치는 Slot Input으로 받아요.</p><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in bub agent">전세보증금이 얼마인가요?</div><div class="mo-eitem in bub user">3억원이요</div></div></div></section><section class="lf" id="cv-answer"><div class="lf-h"><h3>Answer <span class="en">응답</span></h3></div><p class="usenote">결과를 제시하는 응답이에요. 핵심 결과를 먼저, 근거는 Card·Table로 보충해요. 금융 수치는 상승 Red·하락 Blue 규칙을 적용해요.</p><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in mo-ecard"><div class="t">예상 한도</div><div class="d">전세보증금 3억원 기준 2억 4,000만원이에요.</div></div></div></div></section><section class="lf" id="cv-followup"><div class="lf-h"><h3>Follow-up <span class="en">다음 제안</span></h3></div><p class="usenote">다음 행동을 제안하며 대화를 이어요. 결과 후 자연스러운 다음 단계를 Quick Reply로 제안해요.</p><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in chips"><span class="chip-el gr">한도 조회</span><span class="chip-el">조건 변경</span></div></div></div></section><section class="lf" id="cv-closing"><div class="lf-h"><h3>Closing <span class="en">종료</span></h3></div><p class="usenote">완료를 안내하며 종료해요. 처리 결과를 요약하고 추가 도움 여부를 가볍게 안내한 뒤 마쳐요.</p><div class="mo-demo2"><button class="mo-play" onclick="motionEnter(this)"><span class="ic">↻</span> 다시 보기</button><div class="mo-screen"><div class="mo-eitem in bub agent">신청이 완료됐어요. 더 도와드릴까요?</div></div></div></section>
+    </div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">ON THIS PAGE</div>
+    <div class="toc-list">
+      <a class="toc-link active" data-target="cv-greeting" href="#cv-greeting" onclick="setActiveToc(this)">Greeting</a>
+      <a class="toc-link" data-target="cv-welcome" href="#cv-welcome" onclick="setActiveToc(this)">Welcome</a>
+      <a class="toc-link" data-target="cv-question" href="#cv-question" onclick="setActiveToc(this)">Question</a>
+      <a class="toc-link" data-target="cv-answer" href="#cv-answer" onclick="setActiveToc(this)">Answer</a>
+      <a class="toc-link" data-target="cv-followup" href="#cv-followup" onclick="setActiveToc(this)">Follow-up</a>
+      <a class="toc-link" data-target="cv-closing" href="#cv-closing" onclick="setActiveToc(this)">Closing</a>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/uxd.js"></script>
+</body>
+</html>
