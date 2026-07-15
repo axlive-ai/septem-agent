@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NH AI 금융비서 · 페르소나별 프로토타입 (NDS 적용)</title>
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+  :root{
+    /* ============ NDS Primitive → Semantic tokens (NH Design System 원본 값) ============ */
+    --green:#1AA63C;        /* Point Color · Green 500 */
+    --green-d:#0E8A2E;      /* Green pressed / dark text on soft bg */
+    --green-soft:#E7F5EC;   /* Green 50 계열 */
+    --ink:#121212; --ink-2:#343434; --ink-3:#505050; --ink-4:#767676; --ink-5:#909090;
+    --blue:#2A6FF0;         /* Positive Color */
+    --red:#E5484D;          /* Negative Color */
+    --red-soft:#FEE4E2; --red-d:#B42318;   /* NDS tag.req 조합 그대로 사용 */
+    --orange:#F79009; --orange-d:#B54708;  /* NDS Label 라인 컬러 조합 그대로 사용 */
+    --orange-soft:#FDF1E0;  /* ※ 배경 tint는 NDS에 별도 정의가 없어 green-soft와 동일한 비율로 추정 보간한 값입니다 */
+    --line:#EAECEF; --line-2:#E0E3E8;
+    --bg:#FFFFFF; --soft:#F6F7F9; --soft-2:#F0F2F5;
+    --card-dark:#0B0C0E; --card-dark-2:#15171B; /* NDS 다크모드 카드 색 (Toast 등에서 사용) */
+    --sans:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+
+    /* Radius — NDS Shape: 0,4,8,10,12,14,16, circle=999 */
+    --r-sm:8px; --r-md:10px; --r-lg:12px; --r-xl:14px; --r-2xl:16px; --r-pill:999px;
+
+    /* Spacing — NDS 8pt grid (2,4,8,12,16,20,24,32,40,64,80) */
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-7:32px;
+
+    /* Typography scale — NDS Font Scale (size/line-height) */
+    --t-h2:22px; --t-h2-lh:32px;      /* H2 */
+    --t-h3:20px; --t-h3-lh:28px;      /* H3 */
+    --t-h4:18px; --t-h4-lh:26px;      /* H4 */
+    --t-h5:16px; --t-h5-lh:24px;      /* H5 */
+    --t-b1:16px; --t-b1-lh:24px;      /* Body1 */
+    --t-b2:15px; --t-b2-lh:24px;      /* Body2 */
+    --t-b3:14px; --t-b3-lh:22px;      /* Body3 */
+    --t-c1:13px; --t-c1-lh:20px;      /* Caption1 */
+    --t-c3:10px; --t-c3-lh:15px;      /* Caption3 */
+
+    /* ---- 화면별 역할 매핑 (general 기준값. persona별로 override) ---- */
+    --fs-topbar:  var(--t-h5); --lh-topbar: var(--t-h5-lh);
+    --fs-greeting:var(--t-h3); --lh-greeting: var(--t-h3-lh);
+    --fs-bubble:  var(--t-b2); --lh-bubble: var(--t-b2-lh);
+    --fs-cardtitle:var(--t-c1); --lh-cardtitle: var(--t-c1-lh);
+    --fs-kv:      var(--t-b3); --lh-kv: var(--t-b3-lh);
+    --fs-chip:    var(--t-c1); --lh-chip: var(--t-c1-lh);
+    --fs-sub:     var(--t-c1); --lh-sub: var(--t-c1-lh);
+    --fs-back:    var(--t-c1); --lh-back: var(--t-c1-lh);
+    --fs-btn:     16px;        --lh-btn: 24px;
+    --fs-status-title: var(--t-h4); --lh-status-title: var(--t-h4-lh);
+    --fs-status-sub:   var(--t-b3); --lh-status-sub: var(--t-b3-lh);
+    --fs-auth-caption: var(--t-b2); --lh-auth-caption: var(--t-b2-lh);
+    --fs-stepper: var(--t-h4);
+    --btn-pad-v:16px; --chip-pad:8px 16px; --mic-size:48px; --auth-size:88px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--sans);
+    background:linear-gradient(180deg,#F6F7F9 0%,#EAECEF 100%);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:36px 16px 60px;
+    -webkit-font-smoothing:antialiased;
+    letter-spacing:-.01em;
+  }
+  .stage-label{
+    font-size:var(--t-c1); letter-spacing:.05em; color:var(--ink-4);
+    margin-bottom:6px; text-transform:uppercase; font-weight:700;
+  }
+  .stage-title{
+    font-size:var(--t-h2); font-weight:800; color:var(--ink);
+    margin-bottom:22px; text-align:center; letter-spacing:-.02em;
+  }
+  .stage-title span{color:var(--green-d);}
+
+  /* ---------- persona switcher ---------- */
+  .persona-switch{display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap; justify-content:center;}
+  .persona-btn{
+    display:flex; align-items:center; gap:6px;
+    border:1.5px solid var(--line-2);
+    background:var(--bg);
+    color:var(--ink-4);
+    font-weight:700;
+    font-size:var(--t-c1);
+    padding:9px 16px;
+    border-radius:var(--r-pill);
+    cursor:pointer;
+    transition:all .15s;
+    font-family:inherit;
+  }
+  .persona-btn .ic{font-size:15px;}
+  .persona-btn:active{transform:scale(.96);}
+  .persona-btn.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .persona-btn.active[data-p="general"]{background:var(--green-d);border-color:var(--green-d);}
+  .persona-btn.active[data-p="teen"]{background:#7C4DFF;border-color:#7C4DFF;}
+  .persona-btn.active[data-p="foreigner"]{background:var(--blue);border-color:var(--blue);}
+
+  /* ---------- phone frame ---------- */
+  .phone{
+    position:relative; width:375px; height:812px; background:var(--bg);
+    border-radius:44px;
+    box-shadow:0 30px 60px -20px rgba(18,18,18,.28), 0 0 0 10px var(--ink);
+    overflow:hidden; flex-shrink:0; transition:background .2s ease;
+  }
+  .notch{
+    position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:150px; height:26px; background:var(--ink); border-radius:0 0 var(--r-2xl) var(--r-2xl); z-index:50;
+  }
+  .screen{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    opacity:0; transform:translateX(16px); pointer-events:none;
+    transition:opacity .3s cubic-bezier(.16,1,.3,1), transform .3s cubic-bezier(.16,1,.3,1);
+  }
+  .screen.active{opacity:1; transform:translateX(0); pointer-events:auto;}
+
+  /* ---------- shared header ---------- */
+  .topbar{
+    padding:44px var(--sp-5) var(--sp-3);
+    display:flex; align-items:center; gap:var(--sp-3);
+    background:var(--bg); border-bottom:1px solid var(--line); flex-shrink:0;
+  }
+  .mark{width:26px;height:26px;border-radius:7px;background:var(--green);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .mark svg{width:15px;height:15px;}
+  .topbar h1{font-size:var(--fs-topbar);line-height:var(--lh-topbar);font-weight:700;color:var(--ink);margin:0;}
+  .topbar .back{
+    margin-left:auto; font-size:var(--fs-back); color:var(--ink-4);
+    background:var(--soft-2); border:none; padding:7px 12px; border-radius:var(--r-pill); cursor:pointer;
+    font-family:inherit; transition:transform .12s cubic-bezier(.34,1.56,.64,1), background .12s ease;
+  }
+  .topbar .back:active{background:var(--line-2); transform:scale(.93);}
+  .lang-flag{
+    display:none; margin-left:auto; font-size:11px; font-weight:700; color:var(--blue);
+    background:#EAF1FE; border:1.5px solid #CFDFFB; padding:5px 10px; border-radius:var(--r-sm);
+  }
+
+  .body{flex:1; overflow-y:auto; padding:var(--sp-5) var(--sp-5) var(--sp-4); display:flex; flex-direction:column; gap:var(--sp-4);}
+
+  /* ---------- Kakaobank 스타일 말풍선/카드 등장 애니메이션 ---------- */
+  @keyframes popIn{
+    from{opacity:0; transform:translateY(10px) scale(.97);}
+    to{opacity:1; transform:translateY(0) scale(1);}
+  }
+  .screen.active .body > *{
+    animation:popIn .38s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  .screen.active .body > *:nth-child(1){animation-delay:.05s;}
+  .screen.active .body > *:nth-child(2){animation-delay:.55s;}
+  .screen.active .body > *:nth-child(3){animation-delay:1.05s;}
+  .screen.active .body > *:nth-child(4){animation-delay:1.55s;}
+  .screen.active .body > *:nth-child(5){animation-delay:2.05s;}
+  .screen.active .body > *:nth-child(6){animation-delay:2.55s;}
+
+  /* ---------- chat bubbles ---------- */
+  .bubble{max-width:84%; padding:12px 16px; border-radius:var(--r-2xl); font-size:var(--fs-bubble); line-height:var(--lh-bubble);}
+  .bubble.ai{background:var(--green-soft); color:var(--ink); border:1px solid #D3ECDD; align-self:flex-start; border-bottom-left-radius:4px;}
+  .bubble.user{background:var(--ink); color:#fff; align-self:flex-end; border-bottom-right-radius:4px;}
+  .bubble .eyebrow{display:block; font-size:12px; color:var(--green-d); font-weight:700; margin-bottom:4px; letter-spacing:.06em; text-transform:uppercase;}
+  .i18n-en{display:block; font-size:0.86em; color:var(--ink-4); margin-top:3px; font-style:italic;}
+
+  /* ---------- cards (NDS Card · general/list, account/list) ---------- */
+  .card{background:var(--bg); border:1px solid var(--line); border-radius:var(--r-xl); padding:18px;}
+  .card h3{margin:0 0 10px; font-size:var(--fs-cardtitle); line-height:var(--lh-cardtitle); color:var(--ink-4); font-weight:700;}
+  .kv{display:flex; justify-content:space-between; font-size:var(--fs-kv); line-height:var(--lh-kv); padding:7px 0; border-bottom:1px solid var(--line); gap:10px;}
+  .kv:last-child{border-bottom:none;}
+  .kv .k{color:var(--ink-4); flex-shrink:0;}
+  .kv .v{font-weight:600; color:var(--ink); text-align:right;}
+
+  .acct-row{display:flex;align-items:center;gap:10px;margin-bottom:2px;}
+  .acct-avatar{width:36px;height:36px;border-radius:50%;background:var(--green);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;flex-shrink:0;}
+  .acct-meta .name{font-weight:700;font-size:var(--t-b3);color:var(--ink);}
+  .acct-meta .num{font-size:12px;color:var(--ink-5);margin-top:1px;}
+
+  /* NDS Label — line/orange (caution), fill (product) */
+  .badge{display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius:var(--r-sm);
+    border:1.5px solid var(--orange); color:var(--orange-d); margin-left:6px;}
+
+  /* NDS Infobox 기반 + Negative/Caution 컬러 적용 */
+  .warn-card{background:var(--orange-soft); border:1px solid var(--orange); border-radius:var(--r-lg); padding:16px 18px;}
+  .warn-card .title{display:flex; align-items:center; gap:8px; font-weight:700; color:var(--orange-d); font-size:var(--t-b3); margin-bottom:8px;}
+  .warn-card ul{margin:8px 0 0; padding-left:16px; font-size:var(--t-c1); color:var(--ink-3); list-style:none;}
+  .warn-card li{margin-bottom:4px; position:relative; padding-left:2px;}
+  .warn-card li::before{content:""; position:absolute; left:-14px; top:8px; width:5px; height:5px; border-radius:50%; background:var(--orange);}
+
+  .danger-card{background:var(--red-soft); border:1px solid var(--red); border-radius:var(--r-lg); padding:16px 18px;}
+  .danger-card .title{display:flex; align-items:center; gap:8px; font-weight:700; color:var(--red-d); font-size:var(--t-b3); margin-bottom:8px;}
+  .danger-card p{font-size:var(--t-c1); color:var(--ink-3); margin:0; line-height:1.6;}
+
+  /* NDS Chip · basic (unselected) */
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{background:var(--soft-2); border:none; border-radius:var(--r-pill); padding:var(--chip-pad);
+    font-size:var(--fs-chip); line-height:var(--lh-chip); cursor:pointer; color:var(--ink-4); font-weight:600;
+    transition:transform .12s cubic-bezier(.34,1.56,.64,1), background .12s ease;}
+  .chip:active{background:var(--line-2); color:var(--ink-3); transform:scale(.95);}
+
+  /* ---------- footer / buttons (NDS Button · basic, cta) ---------- */
+  .footer{padding:var(--sp-4) var(--sp-5) 26px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:10px; background:var(--bg);}
+  .btn{width:100%; border:none; border-radius:var(--r-lg); padding:var(--btn-pad-v); font-size:var(--fs-btn); line-height:var(--lh-btn);
+    font-weight:700; cursor:pointer; text-align:center; font-family:inherit;
+    transition:transform .12s cubic-bezier(.34,1.56,.64,1), background .12s ease;}
+  .btn:active{transform:scale(.965);}
+  .btn-primary{background:var(--green); color:#fff;}
+  .btn-primary:active{background:var(--green-d); transform:scale(.965);}
+  .btn-secondary{background:var(--soft-2); color:var(--ink-3);}
+  .btn-secondary:active{background:var(--line-2); transform:scale(.965);}
+  .btn-warn{background:var(--orange); color:#fff;}
+  .btn-warn:active{background:var(--orange-d); transform:scale(.965);}
+  .btn-ghost{background:transparent; color:var(--ink-4); text-decoration:underline; font-weight:500; font-size:var(--t-c1); padding:6px;}
+
+  /* ---------- home screen ---------- */
+  .greeting{font-size:var(--fs-greeting); line-height:var(--lh-greeting); font-weight:700; color:var(--ink); margin:6px 0 2px;}
+  .greeting .accent{color:var(--green-d);}
+  .sub{font-size:var(--fs-sub); line-height:var(--lh-sub); color:var(--ink-4); margin-bottom:10px;}
+  .input-bar{display:flex; align-items:center; gap:10px; background:var(--soft-2); border-radius:var(--r-pill); padding:6px 8px 6px 18px; border:1.5px solid var(--line-2);}
+  .input-bar input{flex:1; border:none; background:none; font-size:var(--t-b3); outline:none; color:var(--ink); font-family:inherit;}
+  .mic-btn{width:var(--mic-size); height:var(--mic-size); border-radius:50%; background:var(--green); border:none; color:#fff; font-size:17px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    transition:transform .12s cubic-bezier(.34,1.56,.64,1);}
+  .mic-btn:active{transform:scale(.9);}
+  .mic-btn.pulse{animation:pulse 1.4s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(26,166,60,.35);}70%{box-shadow:0 0 0 12px rgba(26,166,60,0);}100%{box-shadow:0 0 0 0 rgba(26,166,60,0);}}
+
+  /* ---------- stepper (NDS Controls · stepper) ---------- */
+  .stepper{display:flex; align-items:center; justify-content:center; gap:0; border:1px solid var(--line-2); border-radius:var(--r-md); overflow:hidden; background:var(--bg);}
+  .stepper button{width:40px; height:40px; background:var(--bg); border:none; cursor:pointer; font-size:18px; color:var(--ink-4); transition:transform .12s cubic-bezier(.34,1.56,.64,1), background .12s ease;}
+  .stepper button:active{background:var(--soft-2); transform:scale(.88);}
+  .stepper .amount{font-size:var(--fs-stepper); font-weight:700; min-width:120px; text-align:center; height:40px; line-height:40px; border-left:1px solid var(--line-2); border-right:1px solid var(--line-2); color:var(--ink);}
+
+  /* ---------- auth screen ---------- */
+  .auth-center{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;}
+  .fingerprint{width:var(--auth-size); height:var(--auth-size); border-radius:50%; background:var(--green-soft); border:2px solid var(--green); display:flex; align-items:center; justify-content:center; font-size:36px; cursor:pointer; color:var(--green-d); transition:transform .15s cubic-bezier(.34,1.56,.64,1), background .2s ease;}
+  .fingerprint:active{transform:scale(.94);}
+  .fingerprint.success{background:var(--green); color:#fff; border-color:var(--green); animation:successBounce .5s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes successBounce{
+    0%{transform:scale(1);}
+    40%{transform:scale(1.18);}
+    100%{transform:scale(1);}
+  }
+  .auth-caption{font-size:var(--fs-auth-caption); line-height:var(--lh-auth-caption); color:var(--ink-3); text-align:center; padding:0 24px;}
+
+  /* ---------- complete / status screens ---------- */
+  .status-center{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center; padding:0 20px;}
+  .status-icon{width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px;}
+  .status-icon.ok{background:var(--green-soft); color:var(--green-d);}
+  .status-icon.stop{background:var(--orange-soft); color:var(--orange-d);}
+  .status-title{font-size:var(--fs-status-title); line-height:var(--lh-status-title); font-weight:700; color:var(--ink);}
+  .status-sub{font-size:var(--fs-status-sub); line-height:var(--lh-status-sub); color:var(--ink-3);}
+  .spinner{width:20px; height:20px; border-radius:50%; border:3px solid var(--green-soft); border-top-color:var(--green); animation:spin .9s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ---------- presenter control bar ---------- */
+  .control-bar{margin-top:26px; width:375px; background:var(--bg); border:1px solid var(--line); border-radius:var(--r-2xl); padding:16px; display:flex; flex-direction:column; gap:10px;}
+  .control-bar .label{font-size:12px; color:var(--ink-4); font-weight:700; margin-bottom:2px;}
+  .control-row{display:flex; gap:8px; flex-wrap:wrap;}
+  .ctrl-btn{flex:1; min-width:100px; border:1px solid var(--line-2); background:var(--soft-2); border-radius:var(--r-sm); padding:9px 8px; font-size:12px; font-weight:600; color:var(--ink-3); cursor:pointer; font-family:inherit;}
+  .ctrl-btn:active{background:var(--line-2);}
+  .ctrl-btn.danger-outline{border-color:var(--red); color:var(--red-d);}
+  .ctrl-btn.gold-outline{border-color:var(--orange); color:var(--orange-d);}
+  .disclaimer{font-size:12px; color:var(--ink-4); text-align:center; max-width:375px; margin-top:14px; line-height:1.6;}
+  .disclaimer b{color:var(--ink-3);}
+
+  /* =========================================================
+     PERSONA OVERRIDES
+     ========================================================= */
+
+  /* ---- SENIOR: NDS 타입 스케일 '한 단계 위' 적용 + 터치영역 확장 + 선택지 축소 ---- */
+  .phone.persona-senior{
+    --fs-topbar: var(--t-h4); --lh-topbar: var(--t-h4-lh);
+    --fs-greeting: var(--t-h2); --lh-greeting: var(--t-h2-lh);
+    --fs-bubble: var(--t-b1); --lh-bubble: var(--t-b1-lh);
+    --fs-cardtitle: var(--t-b3); --lh-cardtitle: var(--t-b3-lh);
+    --fs-kv: var(--t-b1); --lh-kv: var(--t-b1-lh);
+    --fs-chip: var(--t-b3); --lh-chip: var(--t-b3-lh);
+    --fs-sub: var(--t-b3); --lh-sub: var(--t-b3-lh);
+    --fs-back: var(--t-b3); --lh-back: var(--t-b3-lh);
+    --fs-btn: var(--t-h5); --lh-btn: var(--t-h5-lh);
+    --fs-status-title: var(--t-h3); --lh-status-title: var(--t-h3-lh);
+    --fs-status-sub: var(--t-b1); --lh-status-sub: var(--t-b1-lh);
+    --fs-auth-caption: var(--t-h5); --lh-auth-caption: var(--t-h5-lh);
+    --btn-pad-v:20px; --chip-pad:14px 18px; --mic-size:58px; --auth-size:112px;
+    --line:#C9D3C6; --line-2:#C9D3C6;
+  }
+  .phone.persona-senior .chip-row .chip:nth-child(3){display:none;}
+  .phone.persona-senior .card, .phone.persona-senior .warn-card, .phone.persona-senior .danger-card{border-width:1.5px;}
+  .phone.persona-senior .mic-btn.pulse{animation-duration:2s;}
+
+  /* ---- TEEN: NDS 다크모드 뉴트럴(#0B0C0E/#15171B) 위에 세그먼트 전용 포인트 컬러(네온) 오버레이 ---- */
+  .phone.persona-teen{background:var(--card-dark);}
+  .phone.persona-teen .topbar{background:var(--card-dark-2); border-bottom:1px solid #24262B;}
+  .phone.persona-teen .topbar h1{color:#F5F6F7; font-weight:800;}
+  .phone.persona-teen .topbar .back{background:#20232A; color:#B9A6FF;}
+  .phone.persona-teen .mark{background:linear-gradient(135deg,#FF3D81,#7C4DFF);}
+  .phone.persona-teen .body{background:transparent;}
+  .phone.persona-teen .bubble.ai{background:#1B1D22; color:#F1F2F4; border:1px solid #2A2D34;}
+  .phone.persona-teen .bubble.user{background:linear-gradient(135deg,#FF3D81,#7C4DFF); color:#fff;}
+  .phone.persona-teen .bubble .eyebrow{color:#C6FF3D;}
+  .phone.persona-teen .card{background:#15171B; border:1px solid #2A2D34; color:#F1F2F4;}
+  .phone.persona-teen .card h3{color:#9AA0AC;}
+  .phone.persona-teen .kv{border-bottom:1px solid #24262B;}
+  .phone.persona-teen .kv .k{color:#8A8F99;}
+  .phone.persona-teen .kv .v{color:#F5F6F7;}
+  .phone.persona-teen .badge{border-color:#C6FF3D; color:#C6FF3D;}
+  .phone.persona-teen .chip{background:#20232A; color:#E7E8EB; font-weight:700;}
+  .phone.persona-teen .chip:active{background:#2A2D34;}
+  .phone.persona-teen .footer{background:var(--card-dark-2); border-top:1px solid #24262B;}
+  .phone.persona-teen .btn-primary{background:linear-gradient(135deg,#FF3D81,#7C4DFF); color:#fff;}
+  .phone.persona-teen .btn-secondary{background:#20232A; color:#E7E8EB;}
+  .phone.persona-teen .btn-warn{background:#C6FF3D; color:#0B0C0E;}
+  .phone.persona-teen .btn-ghost{color:#8A8F99;}
+  .phone.persona-teen .input-bar{background:#1B1D22; border-color:#2A2D34;}
+  .phone.persona-teen .input-bar input{color:#F1F2F4;}
+  .phone.persona-teen .input-bar input::placeholder{color:#5B616D;}
+  .phone.persona-teen .mic-btn{background:linear-gradient(135deg,#FF3D81,#7C4DFF);}
+  .phone.persona-teen .warn-card{background:#2A2308; border:1px solid #5C4A12; }
+  .phone.persona-teen .warn-card .title{color:#FFD166;}
+  .phone.persona-teen .warn-card ul{color:#E8D8AC;}
+  .phone.persona-teen .warn-card li::before{background:#FFD166;}
+  .phone.persona-teen .danger-card{background:#2E1116; border:1px solid #5C222C;}
+  .phone.persona-teen .danger-card .title{color:#FF6B8B;}
+  .phone.persona-teen .danger-card p{color:#F0BFC9;}
+  .phone.persona-teen .fingerprint{background:#1B1D22; border-color:#7C4DFF; color:#C6FF3D;}
+  .phone.persona-teen .fingerprint.success{background:linear-gradient(135deg,#FF3D81,#7C4DFF); border-color:#7C4DFF; color:#fff;}
+  .phone.persona-teen .auth-caption{color:#B9A6FF; font-weight:600;}
+  .phone.persona-teen .status-title{color:#F5F6F7;}
+  .phone.persona-teen .status-sub{color:#9AA0AC;}
+  .phone.persona-teen .status-icon.ok{background:#20232A; color:#C6FF3D;}
+  .phone.persona-teen .status-icon.stop{background:#2A2308; color:#FFD166;}
+  .phone.persona-teen .greeting{color:#F5F6F7; font-weight:800;}
+  .phone.persona-teen .greeting .accent{color:#C6FF3D;}
+  .phone.persona-teen .sub{color:#8A8F99;}
+  .phone.persona-teen .stepper{background:#1B1D22; border-color:#2A2D34;}
+  .phone.persona-teen .stepper button{background:#1B1D22; color:#C6FF3D;}
+  .phone.persona-teen .stepper .amount{color:#F5F6F7; border-color:#2A2D34;}
+  .phone.persona-teen .acct-avatar{background:linear-gradient(135deg,#FF3D81,#7C4DFF);}
+
+  /* ---- FOREIGNER: 이중언어 레이아웃 + Positive(Blue) 톤 보조 accent ---- */
+  .phone.persona-foreigner .bubble, .phone.persona-foreigner .card, .phone.persona-foreigner .kv,
+  .phone.persona-foreigner .warn-card, .phone.persona-foreigner .danger-card{line-height:1.55;}
+  .phone.persona-foreigner .lang-flag{display:inline-flex;}
+  .phone.persona-foreigner .badge{border-color:var(--blue); color:var(--blue);}
+  .phone.persona-foreigner .kv .v{text-align:right; max-width:60%;}
+</style>
+</head>
+<body>
+
+  <div class="stage-title">NH AI 금융비서 AX프로토타입</div>
+
+  <div class="persona-switch" id="personaSwitch">
+    <button class="persona-btn" data-p="teen"><span class="ic">🎧</span>틴에이저</button>
+    <button class="persona-btn active" data-p="general"><span class="ic">🙂</span>일반</button>
+    <button class="persona-btn" data-p="senior"><span class="ic">🧓</span>시니어</button>
+    <button class="persona-btn" data-p="foreigner"><span class="ic">🌍</span>외국인</button>
+  </div>
+
+  <div class="phone" id="phone">
+    <div class="notch"></div>
+
+    <!-- 1. HOME -->
+    <div class="screen active" id="screen-home">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="home.h1"></h1>
+        <span class="lang-flag">EN / KO</span>
+      </div>
+      <div class="body">
+        <div class="greeting" data-key="home.greeting"></div>
+        <div class="sub" data-key="home.sub"></div>
+        <div class="chip-row">
+          <div class="chip" data-key="home.chip1" onclick="sendExample()"></div>
+          <div class="chip" data-key="home.chip2"></div>
+          <div class="chip" data-key="home.chip3"></div>
+        </div>
+        <div class="card" style="margin-top:auto;">
+          <h3 data-key="home.recentTitle"></h3>
+          <div class="kv"><span class="k" data-key="home.recent1k"></span><span class="v" data-key="home.recent1v"></span></div>
+          <div class="kv"><span class="k" data-key="home.recent2k"></span><span class="v" data-key="home.recent2v"></span></div>
+        </div>
+      </div>
+      <div class="footer" style="padding-top:10px;">
+        <div class="input-bar">
+          <input id="homeInput" placeholder="" readonly>
+          <button class="mic-btn" onclick="startTransfer()">🎙</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. INPUT -->
+    <div class="screen" id="screen-input">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="input.h1"></h1>
+        <button class="back" onclick="goTo('home')" data-key="input.back"></button>
+      </div>
+      <div class="body" style="align-items:center;justify-content:center;">
+        <div class="mic-btn pulse" style="width:72px;height:72px;font-size:26px;">🎙</div>
+        <div class="sub" style="text-align:center;margin-top:8px;" data-key="input.listening"></div>
+        <div class="bubble user" style="margin-top:18px;" data-key="input.userBubble"></div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-primary" onclick="goTo('intent')" data-key="input.submitBtn"></button>
+      </div>
+    </div>
+
+    <!-- 3. INTENT CONFIRM -->
+    <div class="screen" id="screen-intent">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="intent.h1"></h1>
+        <button class="back" onclick="goTo('home')" data-key="intent.back"></button>
+      </div>
+      <div class="body">
+        <div class="bubble user" data-key="input.userBubble"></div>
+        <div class="bubble ai" data-key="intent.aiBubble"></div>
+        <div class="card">
+          <h3 data-key="intent.summaryTitle"></h3>
+          <div class="kv"><span class="k" data-key="intent.typeLabel"></span><span class="v" data-key="intent.typeVal"></span></div>
+          <div class="kv"><span class="k" data-key="intent.targetLabel"></span><span class="v" data-key="intent.targetVal"></span></div>
+          <div class="kv"><span class="k" data-key="intent.amountLabel"></span><span class="v" data-key="intent.amountVal"></span></div>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-primary" onclick="goTo('recipient')" data-key="intent.confirmBtn"></button>
+        <button class="btn btn-secondary" onclick="goTo('home')" data-key="intent.retryBtn"></button>
+      </div>
+    </div>
+
+    <!-- 4. RECIPIENT / AMOUNT CONFIRM -->
+    <div class="screen" id="screen-recipient">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="recipient.h1"></h1>
+        <button class="back" onclick="goTo('intent')" data-key="recipient.back"></button>
+      </div>
+      <div class="body">
+        <div class="bubble ai" data-key="recipient.aiBubble"></div>
+        <div class="card">
+          <h3 data-key="recipient.recipientTitle"></h3>
+          <div class="acct-row">
+            <div class="acct-avatar" data-key-init="recipient.nameVal">NH</div>
+            <div class="acct-meta">
+              <div class="name"><span data-key="recipient.nameVal"></span><span class="badge" data-key="recipient.badge"></span></div>
+              <div class="num" data-key="recipient.acctVal"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 data-key="recipient.amountTitle"></h3>
+          <div class="stepper">
+            <button onclick="return false;">−</button>
+            <div class="amount" data-key="recipient.amountVal"></div>
+            <button onclick="return false;">+</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3 data-key="recipient.sourceTitle"></h3>
+          <div class="kv"><span class="k" data-key="recipient.sourceLabel"></span><span class="v" data-key="recipient.sourceVal"></span></div>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-primary" onclick="goTo('riskAlert')" data-key="recipient.nextBtn"></button>
+      </div>
+    </div>
+
+    <!-- 5. RISK ALERT -->
+    <div class="screen" id="screen-riskAlert">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="riskAlert.h1"></h1>
+        <button class="back" onclick="goTo('recipient')" data-key="riskAlert.back"></button>
+      </div>
+      <div class="body">
+        <div class="warn-card">
+          <div class="title" data-key="riskAlert.warnTitle"></div>
+          <ul>
+            <li data-key="riskAlert.bullet1"></li>
+            <li data-key="riskAlert.bullet2"></li>
+          </ul>
+        </div>
+        <div class="bubble ai" data-key="riskAlert.aiBubble"></div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-warn" onclick="goTo('followup')" data-key="riskAlert.continueBtn"></button>
+        <button class="btn btn-secondary" onclick="goTo('cancelled')" data-key="riskAlert.cancelBtn"></button>
+      </div>
+    </div>
+
+    <!-- 6. FOLLOW-UP QUESTION -->
+    <div class="screen" id="screen-followup">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="followup.h1"></h1>
+        <button class="back" onclick="goTo('riskAlert')" data-key="followup.back"></button>
+      </div>
+      <div class="body">
+        <div class="bubble ai" data-key="followup.question"></div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-warn" onclick="goTo('warning2')" data-key="followup.yesBtn"></button>
+        <button class="btn btn-secondary" onclick="goTo('finalApproval')" data-key="followup.noBtn"></button>
+      </div>
+    </div>
+
+    <!-- 7. VOICE PHISHING WARNING -->
+    <div class="screen" id="screen-warning2">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="warning2.h1"></h1>
+        <button class="back" onclick="goTo('followup')" data-key="warning2.back"></button>
+      </div>
+      <div class="body">
+        <div class="danger-card">
+          <div class="title" data-key="warning2.dangerTitle"></div>
+          <p data-key="warning2.dangerText"></p>
+        </div>
+        <div class="bubble ai" data-key="warning2.aiBubble"></div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-secondary" onclick="goTo('finalApproval')" data-key="warning2.confirmedBtn"></button>
+        <button class="btn btn-primary" onclick="goTo('counselor')" data-key="warning2.counselorBtn"></button>
+        <button class="btn btn-ghost" onclick="goTo('cancelled')" data-key="warning2.cancelBtn"></button>
+      </div>
+    </div>
+
+    <!-- 8. FINAL APPROVAL -->
+    <div class="screen" id="screen-finalApproval">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="finalApproval.h1"></h1>
+        <button class="back" onclick="goTo('followup')" data-key="finalApproval.back"></button>
+      </div>
+      <div class="body">
+        <div class="bubble ai" data-key="finalApproval.aiBubble"></div>
+        <div class="card">
+          <div class="kv"><span class="k" data-key="finalApproval.recipientLabel"></span><span class="v" data-key="finalApproval.recipientVal"></span></div>
+          <div class="kv"><span class="k" data-key="finalApproval.amountLabel"></span><span class="v" data-key="finalApproval.amountVal"></span></div>
+          <div class="kv"><span class="k" data-key="finalApproval.acctLabel"></span><span class="v" data-key="finalApproval.acctVal"></span></div>
+          <div class="kv"><span class="k" data-key="finalApproval.feeLabel"></span><span class="v" data-key="finalApproval.feeVal"></span></div>
+          <div class="kv"><span class="k" data-key="finalApproval.timeLabel"></span><span class="v" data-key="finalApproval.timeVal"></span></div>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-primary" onclick="goTo('auth')" data-key="finalApproval.confirmBtn"></button>
+        <button class="btn btn-secondary" onclick="goTo('cancelled')" data-key="finalApproval.cancelBtn"></button>
+      </div>
+    </div>
+
+    <!-- 9. AUTH -->
+    <div class="screen" id="screen-auth">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="auth.h1"></h1>
+      </div>
+      <div class="auth-center">
+        <div class="fingerprint" id="fingerprintIcon" onclick="doAuth()">🔒</div>
+        <div class="auth-caption" id="authCaption" data-key="auth.caption"></div>
+      </div>
+    </div>
+
+    <!-- 10a. COMPLETE -->
+    <div class="screen" id="screen-complete">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="complete.h1"></h1>
+      </div>
+      <div class="status-center">
+        <div class="status-icon ok">✓</div>
+        <div class="status-title" data-key="complete.title"></div>
+        <div class="status-sub" data-key="complete.sub"></div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-primary" onclick="resetDemo()" data-key="complete.homeBtn"></button>
+      </div>
+    </div>
+
+    <!-- 10b. CANCELLED -->
+    <div class="screen" id="screen-cancelled">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="cancelled.h1"></h1>
+      </div>
+      <div class="status-center">
+        <div class="status-icon stop">⏸</div>
+        <div class="status-title" data-key="cancelled.title"></div>
+        <div class="status-sub" data-key="cancelled.sub"></div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-primary" onclick="resetDemo()" data-key="cancelled.homeBtn"></button>
+      </div>
+    </div>
+
+    <!-- 10c. COUNSELOR -->
+    <div class="screen" id="screen-counselor">
+      <div class="topbar">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+        <h1 data-key="counselor.h1"></h1>
+      </div>
+      <div class="status-center" id="counselorWait">
+        <div class="spinner"></div>
+        <div class="status-title" data-key="counselor.title"></div>
+        <div class="status-sub" data-key="counselor.sub"></div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-primary" onclick="resetDemo()" data-key="counselor.homeBtn"></button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="control-bar">
+    <div class="label">발표자 컨트롤</div>
+    <div class="control-row">
+      <button class="ctrl-btn" onclick="resetDemo()">처음부터 다시</button>
+      <button class="ctrl-btn gold-outline" onclick="jumpTo('finalApproval')">정상 완료 직전으로 건너뛰기</button>
+      <button class="ctrl-btn danger-outline" onclick="jumpTo('warning2')">위험 감지 화면으로 건너뛰기</button>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    * 본 데모는 시연용 프로토타입이며 등장하는 고객명·계좌·금액·위험도 판단은 모두 가상의 예시입니다.<br>
+    <b>NH농협 디자인시스템(NDS)</b>의 Color / Typography / Radius / Component 토큰을 적용했습니다. 로고 마크는 실제 NH 심볼이 아닌 근사 아이콘입니다.<br>
+    상단 페르소나 버튼으로 틴에이저 / 일반 / 시니어 / 외국인 화면 구성을 전환해 보세요.
+  </div>
+
+<script>
+/* =========================================================
+   COPY — persona별 화면 텍스트
+   ========================================================= */
+const COPY = {
+
+general: {
+  "home.h1":"NH AI 금융비서",
+  "home.greeting":"안녕하세요, <span class=\"accent\">정민석</span>님.<br>무엇을 도와드릴까요?",
+  "home.sub":"예시를 눌러보거나, 직접 말씀하듯이 입력해보세요.",
+  "home.chip1":"동생한테 이체해줘",
+  "home.chip2":"적금 만기 상담",
+  "home.chip3":"대출 한도 조회",
+  "home.recentTitle":"최근 이용",
+  "home.recent1k":"7/10 이체", "home.recent1v":"본인 계좌 · 50,000원",
+  "home.recent2k":"7/8 조회", "home.recent2v":"거래내역 확인",
+  "home.inputPh":"예: 동생한테 30만원 보내줘",
+  "input.h1":"말씀해주세요", "input.back":"취소", "input.listening":"듣고 있어요…",
+  "input.userBubble":"동생한테 30만원 보내줘", "input.submitBtn":"이대로 요청하기",
+  "intent.h1":"의도 확인", "intent.back":"처음으로",
+  "intent.aiBubble":"<span class=\"eyebrow\">AI 이해 내용</span>'동생'에게 30만 원을 보내드리는 요청으로 이해했어요. 맞을까요?",
+  "intent.summaryTitle":"요청 요약", "intent.typeLabel":"업무 유형","intent.typeVal":"이체",
+  "intent.targetLabel":"대상","intent.targetVal":"동생","intent.amountLabel":"금액","intent.amountVal":"300,000원",
+  "intent.confirmBtn":"네, 맞아요", "intent.retryBtn":"아니에요, 다시 말할게요",
+  "recipient.h1":"수취인 · 금액 확인", "recipient.back":"뒤로",
+  "recipient.aiBubble":"'동생'으로 등록된 계좌를 찾았어요. 이 계좌는 <b>최근에 등록</b>되었어요.",
+  "recipient.recipientTitle":"수취인","recipient.nameLabel":"이름","recipient.nameVal":"이◯◯","recipient.badge":"최근 등록",
+  "recipient.acctLabel":"계좌","recipient.acctVal":"농협 352-****-5678",
+  "recipient.amountTitle":"보낼 금액","recipient.amountVal":"300,000원",
+  "recipient.sourceTitle":"출금 계좌","recipient.sourceLabel":"농협 입출금통장","recipient.sourceVal":"잔액 1,850,000원",
+  "recipient.nextBtn":"다음",
+  "riskAlert.h1":"한 번 더 확인할게요","riskAlert.back":"뒤로",
+  "riskAlert.warnTitle":"⚠️ 평소와 다른 패턴이 있어요",
+  "riskAlert.bullet1":"최근에 등록된 계좌예요","riskAlert.bullet2":"평소 이체 금액보다 조금 커요",
+  "riskAlert.aiBubble":"바로 보내드리기 전에, 몇 가지만 확인할게요.",
+  "riskAlert.continueBtn":"확인하고 계속하기","riskAlert.cancelBtn":"이체 취소할게요",
+  "followup.h1":"추가 확인","followup.back":"뒤로",
+  "followup.question":"혹시 전화나 문자로 송금을 요청받으셨나요?",
+  "followup.yesBtn":"네, 방금 연락받았어요","followup.noBtn":"아니요, 제가 직접 보내는 거예요",
+  "warning2.h1":"보이스피싱 예방 안내","warning2.back":"뒤로",
+  "warning2.dangerTitle":"🛑 보이스피싱일 가능성이 있어요",
+  "warning2.dangerText":"전화나 문자로 급하게 송금을 요청받으셨다면, 사기일 수 있어요. 보내기 전에 상대에게 직접 확인해보세요.",
+  "warning2.aiBubble":"원하시면 상담원과 바로 연결해드릴게요.",
+  "warning2.confirmedBtn":"직접 확인했어요, 계속 진행","warning2.counselorBtn":"상담원 연결해주세요","warning2.cancelBtn":"이체 취소할게요",
+  "finalApproval.h1":"최종 확인","finalApproval.back":"뒤로","finalApproval.aiBubble":"마지막으로 확인할게요.",
+  "finalApproval.recipientLabel":"받는 분","finalApproval.recipientVal":"이◯◯ (동생)",
+  "finalApproval.amountLabel":"보내는 금액","finalApproval.amountVal":"300,000원",
+  "finalApproval.acctLabel":"출금 계좌","finalApproval.acctVal":"농협 입출금통장",
+  "finalApproval.feeLabel":"수수료","finalApproval.feeVal":"0원",
+  "finalApproval.timeLabel":"처리 시각","finalApproval.timeVal":"즉시",
+  "finalApproval.confirmBtn":"최종 확인, 이체할게요","finalApproval.cancelBtn":"취소할게요",
+  "auth.h1":"본인 확인","auth.caption":"지문을 눌러 본인 확인을 완료해주세요","auth.captionSuccess":"확인됐어요. 처리 중이에요…",
+  "complete.h1":"완료","complete.title":"이체가 완료됐어요","complete.sub":"이◯◯님께 300,000원을 보냈어요.","complete.homeBtn":"홈으로",
+  "cancelled.h1":"이체 취소","cancelled.title":"이체를 취소했어요","cancelled.sub":"고객님을 보호하기 위한 결정이에요.<br>필요하시면 다시 시도해보세요.","cancelled.homeBtn":"홈으로",
+  "counselor.h1":"상담원 연결","counselor.title":"상담원을 연결하고 있어요","counselor.sub":"지금까지의 대화 내용을 상담원에게 전달할게요.","counselor.homeBtn":"홈으로"
+},
+
+senior: {
+  "home.h1":"NH AI 금융비서",
+  "home.greeting":"안녕하세요, <span class=\"accent\">김순자</span>님.<br>무엇을 도와드릴까요?",
+  "home.sub":"천천히 말씀해주셔도 괜찮아요. 아래 예시를 눌러보세요.",
+  "home.chip1":"아들한테 이체해줘",
+  "home.chip2":"적금 만기 상담",
+  "home.chip3":"농업자금 대출 문의",
+  "home.recentTitle":"최근 이용",
+  "home.recent1k":"7/2 이체", "home.recent1v":"본인 계좌 · 30,000원",
+  "home.recent2k":"6/28 조회", "home.recent2v":"거래내역 확인",
+  "home.inputPh":"예: 아들한테 100만원 보내줘",
+  "input.h1":"말씀해주세요", "input.back":"취소", "input.listening":"잘 듣고 있어요…",
+  "input.userBubble":"아들한테 100만 원 보내줘", "input.submitBtn":"이대로 요청하기",
+  "intent.h1":"의도 확인", "intent.back":"처음으로",
+  "intent.aiBubble":"<span class=\"eyebrow\">AI 이해 내용</span>'아들'에게 100만 원을 보내드리는 요청으로 이해했어요. 맞을까요?",
+  "intent.summaryTitle":"요청 요약", "intent.typeLabel":"업무 유형","intent.typeVal":"이체",
+  "intent.targetLabel":"대상","intent.targetVal":"아들","intent.amountLabel":"금액","intent.amountVal":"1,000,000원",
+  "intent.confirmBtn":"네, 맞아요", "intent.retryBtn":"아니에요, 다시 말할게요",
+  "recipient.h1":"수취인 · 금액 확인", "recipient.back":"뒤로",
+  "recipient.aiBubble":"'아들'로 등록된 계좌를 찾았어요. 다만 이 계좌는 <b>최근에 등록</b>되었어요.",
+  "recipient.recipientTitle":"수취인","recipient.nameLabel":"이름","recipient.nameVal":"이◯◯","recipient.badge":"최근 등록",
+  "recipient.acctLabel":"계좌","recipient.acctVal":"농협 352-****-1234",
+  "recipient.amountTitle":"보낼 금액","recipient.amountVal":"1,000,000원",
+  "recipient.sourceTitle":"출금 계좌","recipient.sourceLabel":"농협 입출금통장","recipient.sourceVal":"잔액 3,240,000원",
+  "recipient.nextBtn":"다음",
+  "riskAlert.h1":"한 번 더 확인할게요","riskAlert.back":"뒤로",
+  "riskAlert.warnTitle":"⚠️ 평소와 다른 패턴이 있어요",
+  "riskAlert.bullet1":"최근에 등록된 계좌예요","riskAlert.bullet2":"평소 이체 금액보다 많이 커요",
+  "riskAlert.aiBubble":"잠시만요. 바로 보내드리기 전에, 몇 가지만 여쭤볼게요.",
+  "riskAlert.continueBtn":"확인하고 계속하기","riskAlert.cancelBtn":"이체 취소할게요",
+  "followup.h1":"추가 확인","followup.back":"뒤로",
+  "followup.question":"혹시 전화나 문자로 송금을 요청받으셨나요?",
+  "followup.yesBtn":"네, 방금 전화로 급하게 요청받았어요","followup.noBtn":"아니요, 제가 직접 보내는 거예요",
+  "warning2.h1":"보이스피싱 예방 안내","warning2.back":"뒤로",
+  "warning2.dangerTitle":"🛑 보이스피싱일 가능성이 있어요",
+  "warning2.dangerText":"전화나 문자로 급하게 송금을 요청받으셨다면, 실제 가족이 아닌 사기일 수 있어요. 보내기 전에 가족에게 직접 전화해서 확인해보시는 걸 권해드려요.",
+  "warning2.aiBubble":"원하시면 상담원과 바로 이야기하실 수 있도록 연결해드릴게요.",
+  "warning2.confirmedBtn":"가족에게 직접 확인했어요, 계속 진행","warning2.counselorBtn":"상담원 연결해주세요","warning2.cancelBtn":"이체 취소할게요",
+  "finalApproval.h1":"최종 확인","finalApproval.back":"뒤로","finalApproval.aiBubble":"마지막으로 확인할게요. 이 내용이 맞으면 확인해주세요.",
+  "finalApproval.recipientLabel":"받는 분","finalApproval.recipientVal":"이◯◯ (아들)",
+  "finalApproval.amountLabel":"보내는 금액","finalApproval.amountVal":"1,000,000원",
+  "finalApproval.acctLabel":"출금 계좌","finalApproval.acctVal":"농협 입출금통장",
+  "finalApproval.feeLabel":"수수료","finalApproval.feeVal":"0원",
+  "finalApproval.timeLabel":"처리 시각","finalApproval.timeVal":"즉시",
+  "finalApproval.confirmBtn":"최종 확인, 이체할게요","finalApproval.cancelBtn":"취소할게요",
+  "auth.h1":"본인 확인","auth.caption":"지문을 눌러 본인 확인을 완료해주세요","auth.captionSuccess":"확인됐어요. 처리 중이에요…",
+  "complete.h1":"완료","complete.title":"이체가 완료됐어요","complete.sub":"이◯◯님께 1,000,000원을 보냈어요.<br>가족 확인까지 함께 해주셔서 안전하게 처리됐어요.","complete.homeBtn":"홈으로",
+  "cancelled.h1":"이체 취소","cancelled.title":"이체를 취소했어요","cancelled.sub":"고객님을 보호하기 위한 결정이에요.<br>필요하시면 지점이나 상담원과 다시 이야기해보세요.","cancelled.homeBtn":"홈으로",
+  "counselor.h1":"상담원 연결","counselor.title":"상담원을 연결하고 있어요","counselor.sub":"지금까지의 대화 내용을 상담원에게 전달할게요.","counselor.homeBtn":"홈으로"
+},
+
+teen: {
+  "home.h1":"NH AI 금융비서",
+  "home.greeting":"왔어? <span class=\"accent\">도윤</span>! 오늘 지갑 상태 볼까 👀🔥",
+  "home.sub":"탭 한 번이면 끝. 아니면 그냥 톡하듯 말해도 돼.",
+  "home.chip1":"재민이한테 쏘기 💸",
+  "home.chip2":"이번 달 용돈 얼마 남았지",
+  "home.chip3":"저금 스트릭 확인 🔥",
+  "home.recentTitle":"최근 기록",
+  "home.recent1k":"🔥 3일 연속 저금 성공!", "home.recent1v":"+5,000원",
+  "home.recent2k":"이번 주 용돈 62% 씀", "home.recent2v":"약간 위험 ⚠️",
+  "home.inputPh":"예: 재민이한테 5만원 쏴줘",
+  "input.h1":"말해봐", "input.back":"그만할래", "input.listening":"듣는 중... 🎧",
+  "input.userBubble":"재민이한테 5만원 쏴줘", "input.submitBtn":"이대로 보내줘",
+  "intent.h1":"이거 맞지?", "intent.back":"처음부터",
+  "intent.aiBubble":"<span class=\"eyebrow\">내가 이해한 거</span>'재민이'한테 5만 원 보내는 거 맞지? 😏",
+  "intent.summaryTitle":"요청 정리", "intent.typeLabel":"뭐하는거냐면","intent.typeVal":"송금",
+  "intent.targetLabel":"누구한테","intent.targetVal":"재민이","intent.amountLabel":"얼마","intent.amountVal":"50,000원",
+  "intent.confirmBtn":"어 맞아 ✅", "intent.retryBtn":"아니 다시 말할래",
+  "recipient.h1":"누구한테 얼마?", "recipient.back":"뒤로",
+  "recipient.aiBubble":"'재민이' 계좌 찾았어. 근데 이 계좌 <b>얼마 전에 등록</b>됐던데?",
+  "recipient.recipientTitle":"받는 사람","recipient.nameLabel":"이름","recipient.nameVal":"박재민","recipient.badge":"NEW 👀",
+  "recipient.acctLabel":"계좌","recipient.acctVal":"농협 352-****-9981",
+  "recipient.amountTitle":"보낼 금액","recipient.amountVal":"50,000원",
+  "recipient.sourceTitle":"어디서 나가냐면","recipient.sourceLabel":"농협 입출금통장","recipient.sourceVal":"잔액 128,000원",
+  "recipient.nextBtn":"다음 ➡️",
+  "riskAlert.h1":"잠깐만... 🤔","riskAlert.back":"뒤로",
+  "riskAlert.warnTitle":"🚨 평소랑 좀 다른데?",
+  "riskAlert.bullet1":"이 계좌 최근에 등록된 거야","riskAlert.bullet2":"평소보다 좀 큰 금액이야",
+  "riskAlert.aiBubble":"보내기 전에 몇 개만 물어볼게, 콜?",
+  "riskAlert.continueBtn":"괜찮아, 계속할게 ✅","riskAlert.cancelBtn":"아니 취소할래",
+  "followup.h1":"하나만 더","followup.back":"뒤로",
+  "followup.question":"혹시 톡이나 전화로 '급하게 보내달라'는 연락받았어?",
+  "followup.yesBtn":"어 방금 그런 연락 왔어","followup.noBtn":"아니 내가 그냥 보내는 거야",
+  "warning2.h1":"잠깐 스톱 🛑","warning2.back":"뒤로",
+  "warning2.dangerTitle":"🛑 이거 스캠일 수도 있어",
+  "warning2.dangerText":"급하게 보내달라는 연락, 진짜 친구 아니고 사기일 수도 있어. 보내기 전에 그 친구한테 직접 전화해서 확인해봐!",
+  "warning2.aiBubble":"원하면 상담원 바로 연결해줄게.",
+  "warning2.confirmedBtn":"직접 확인함, 계속 진행","warning2.counselorBtn":"상담원 연결해줘","warning2.cancelBtn":"아니 취소할래",
+  "finalApproval.h1":"마지막 확인","finalApproval.back":"뒤로","finalApproval.aiBubble":"이거 맞으면 컨펌 눌러줘.",
+  "finalApproval.recipientLabel":"받는 사람","finalApproval.recipientVal":"박재민 (베프)",
+  "finalApproval.amountLabel":"보내는 금액","finalApproval.amountVal":"50,000원",
+  "finalApproval.acctLabel":"어디서","finalApproval.acctVal":"농협 입출금통장",
+  "finalApproval.feeLabel":"수수료","finalApproval.feeVal":"0원",
+  "finalApproval.timeLabel":"언제","finalApproval.timeVal":"즉시",
+  "finalApproval.confirmBtn":"컨펌, 보내줘 🚀","finalApproval.cancelBtn":"아니 취소",
+  "auth.h1":"본인인증","auth.caption":"Face ID로 후딱 확인해줘 ⚡","auth.captionSuccess":"됐다! 처리 중... 🔄",
+  "complete.h1":"완료 🎉","complete.title":"보냈다!","complete.sub":"박재민한테 50,000원 쏴줬어.<br>스캠 아닌지 확인까지 했으니 안심 ✅","complete.homeBtn":"홈으로",
+  "cancelled.h1":"취소함","cancelled.title":"이체 취소했어","cancelled.sub":"너 지키려고 그런 거야 🛡️<br>필요하면 나중에 다시 해봐.","cancelled.homeBtn":"홈으로",
+  "counselor.h1":"상담원 연결 중","counselor.title":"상담원 연결하는 중...","counselor.sub":"지금까지 얘기한 내용 상담원한테 넘겨줄게.","counselor.homeBtn":"홈으로"
+},
+
+foreigner: {
+  "home.h1":"NH AI Assistant",
+  "home.greeting":"Hello, <span class=\"accent\">Alex</span>님.<br>How can I help?<span class=\"i18n-en\">무엇을 도와드릴까요?</span>",
+  "home.sub":"Tap an example, or type naturally.<span class=\"i18n-en\">예시를 누르거나 자유롭게 입력하세요.</span>",
+  "home.chip1":"Send money to family / 가족에게 송금",
+  "home.chip2":"Check exchange rate / 환율 확인",
+  "home.chip3":"Ask about deposit / 예금상품 문의",
+  "home.recentTitle":"Recent / 최근 이용",
+  "home.recent1k":"Jul 10 Transfer", "home.recent1v":"₩650,000",
+  "home.recent2k":"Jul 8 Check", "home.recent2v":"Exchange rate",
+  "home.inputPh":"e.g. Send $500 to my family",
+  "input.h1":"Please speak / 말씀해주세요", "input.back":"Cancel / 취소", "input.listening":"Listening... / 듣고 있어요",
+  "input.userBubble":"Send 500 dollars to my family", "input.submitBtn":"Send this request / 이대로 요청하기",
+  "intent.h1":"Confirm request / 의도 확인", "intent.back":"Start over / 처음으로",
+  "intent.aiBubble":"<span class=\"eyebrow\">AI understood</span>Sending ₩650,000 (≈$500) to your family. Is that right?<span class=\"i18n-en\">가족에게 65만원을 보내는 요청으로 이해했어요.</span>",
+  "intent.summaryTitle":"Summary / 요청 요약", "intent.typeLabel":"Type / 유형","intent.typeVal":"Transfer / 이체",
+  "intent.targetLabel":"To / 대상","intent.targetVal":"Family / 가족","intent.amountLabel":"Amount / 금액","intent.amountVal":"₩650,000 (≈$500)",
+  "intent.confirmBtn":"Yes, correct / 맞아요", "intent.retryBtn":"No, let me redo / 다시 말할게요",
+  "recipient.h1":"Recipient & Amount / 수취인 확인", "recipient.back":"Back / 뒤로",
+  "recipient.aiBubble":"Found the account registered as 'Family'. This account was <b>recently registered</b>.<span class=\"i18n-en\">'가족'으로 등록된 계좌를 찾았어요. 최근에 등록된 계좌예요.</span>",
+  "recipient.recipientTitle":"Recipient / 수취인","recipient.nameLabel":"Name / 이름","recipient.nameVal":"Maria K.","recipient.badge":"New / 최근 등록",
+  "recipient.acctLabel":"Account / 계좌","recipient.acctVal":"NH Bank 352-****-7712",
+  "recipient.amountTitle":"Amount / 보낼 금액","recipient.amountVal":"₩650,000",
+  "recipient.sourceTitle":"From / 출금 계좌","recipient.sourceLabel":"NH Checking / 농협 입출금통장","recipient.sourceVal":"Balance ₩2,100,000",
+  "recipient.nextBtn":"Next / 다음",
+  "riskAlert.h1":"One more check / 한 번 더 확인","riskAlert.back":"Back / 뒤로",
+  "riskAlert.warnTitle":"⚠️ This looks unusual / 평소와 다른 패턴",
+  "riskAlert.bullet1":"Recently registered account / 최근 등록된 계좌","riskAlert.bullet2":"Larger than your usual transfer / 평소보다 큰 금액",
+  "riskAlert.aiBubble":"Before sending, let me ask a couple of quick questions.<span class=\"i18n-en\">몇 가지만 확인할게요.</span>",
+  "riskAlert.continueBtn":"Confirmed, continue / 확인 후 계속","riskAlert.cancelBtn":"Cancel transfer / 이체 취소",
+  "followup.h1":"Quick question / 추가 확인","followup.back":"Back / 뒤로",
+  "followup.question":"Did someone contact you by phone or message asking for this transfer?<span class=\"i18n-en\">전화나 문자로 송금 요청을 받으셨나요?</span>",
+  "followup.yesBtn":"Yes, just now / 네, 방금요","followup.noBtn":"No, I'm sending this myself / 아니요, 직접 보내요",
+  "warning2.h1":"Fraud prevention / 사기 예방 안내","warning2.back":"Back / 뒤로",
+  "warning2.dangerTitle":"🛑 This may be a scam / 사기일 수 있어요",
+  "warning2.dangerText":"If someone urgently asked you to send money by phone or message, it may not really be your family — it could be fraud. Please call them directly to confirm before sending.<span class=\"i18n-en\">급하게 송금을 요청받으셨다면 사기일 수 있어요. 보내기 전 직접 확인해보세요.</span>",
+  "warning2.aiBubble":"I can connect you with a counselor right away.<span class=\"i18n-en\">상담원과 바로 연결해드릴게요.</span>",
+  "warning2.confirmedBtn":"I confirmed directly, continue / 직접 확인함","warning2.counselorBtn":"Connect to a counselor / 상담원 연결","warning2.cancelBtn":"Cancel transfer / 이체 취소",
+  "finalApproval.h1":"Final confirmation / 최종 확인","finalApproval.back":"Back / 뒤로","finalApproval.aiBubble":"One last check before sending.<span class=\"i18n-en\">마지막으로 확인할게요.</span>",
+  "finalApproval.recipientLabel":"Recipient / 받는 분","finalApproval.recipientVal":"Maria K. (Family)",
+  "finalApproval.amountLabel":"Amount / 금액","finalApproval.amountVal":"₩650,000",
+  "finalApproval.acctLabel":"From / 출금 계좌","finalApproval.acctVal":"NH Checking / 농협 입출금통장",
+  "finalApproval.feeLabel":"Fee / 수수료","finalApproval.feeVal":"₩0",
+  "finalApproval.timeLabel":"Timing / 처리 시각","finalApproval.timeVal":"Instant / 즉시",
+  "finalApproval.confirmBtn":"Confirm & send / 최종 확인, 이체","finalApproval.cancelBtn":"Cancel / 취소",
+  "auth.h1":"Identity check / 본인 확인","auth.caption":"Touch to verify your identity / 지문으로 본인 확인해주세요","auth.captionSuccess":"Verified. Processing... / 확인됐어요",
+  "complete.h1":"Done / 완료","complete.title":"Transfer complete / 이체 완료","complete.sub":"Sent ₩650,000 to Maria K.<br>Verified safely with an extra check.<span class=\"i18n-en\">안전하게 처리됐어요.</span>","complete.homeBtn":"Home / 홈으로",
+  "cancelled.h1":"Cancelled / 취소","cancelled.title":"Transfer cancelled / 이체를 취소했어요","cancelled.sub":"This was to protect you.<span class=\"i18n-en\">고객님을 보호하기 위한 결정이에요.</span> Please try again if needed.","cancelled.homeBtn":"Home / 홈으로",
+  "counselor.h1":"Connecting / 상담원 연결","counselor.title":"Connecting you to a counselor / 상담원 연결 중","counselor.sub":"We'll share this conversation with them.<span class=\"i18n-en\">대화 내용을 전달할게요.</span>","counselor.homeBtn":"Home / 홈으로"
+}
+
+};
+
+/* =========================================================
+   RENDER / STATE
+   ========================================================= */
+let currentPersona = 'general';
+
+function renderPersona(p){
+  currentPersona = p;
+  const phone = document.getElementById('phone');
+  phone.className = 'phone persona-' + p;
+
+  document.querySelectorAll('#personaSwitch .persona-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.p === p);
+  });
+
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    const key = el.getAttribute('data-key');
+    if(COPY[p] && COPY[p][key] !== undefined){
+      el.innerHTML = COPY[p][key];
+    }
+  });
+
+  const homeInput = document.getElementById('homeInput');
+  if(homeInput && COPY[p]['home.inputPh']) homeInput.placeholder = COPY[p]['home.inputPh'];
+
+  resetAuthVisual();
+  goTo('home');
+}
+
+document.querySelectorAll('#personaSwitch .persona-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> renderPersona(btn.dataset.p));
+});
+
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('screen-' + id);
+  if(target){
+    // 같은 화면을 다시 보여줄 때도(예: 페르소나 전환 시 홈으로 복귀) 애니메이션이
+    // 재생되도록 remove와 add 사이에 강제로 리플로우를 발생시킵니다.
+    void target.offsetWidth;
+    target.classList.add('active');
+  }
+}
+
+function startTransfer(){
+  goTo('input');
+}
+
+function sendExample(){
+  // 예시 칩을 탭하는 건 '말하기'가 아니라 '이미 입력한 문장을 보내는 것'이라
+  // 듣고 있어요 화면을 거치지 않고 바로 채팅 흐름(의도 확인)으로 넘어갑니다.
+  goTo('intent');
+}
+
+function resetAuthVisual(){
+  const fp = document.getElementById('fingerprintIcon');
+  if(fp){ fp.classList.remove('success'); fp.textContent = '🔒'; }
+  const cap = document.getElementById('authCaption');
+  if(cap){ cap.innerHTML = COPY[currentPersona]['auth.caption']; }
+}
+
+function resetDemo(){
+  resetAuthVisual();
+  goTo('home');
+}
+
+function doAuth(){
+  const fp = document.getElementById('fingerprintIcon');
+  const cap = document.getElementById('authCaption');
+  fp.textContent = '✓';
+  fp.classList.add('success');
+  cap.innerHTML = COPY[currentPersona]['auth.captionSuccess'];
+  setTimeout(() => { goTo('complete'); }, 700);
+}
+
+function jumpTo(screenId){
+  goTo(screenId);
+}
+
+renderPersona('general');
+</script>
+</body>
+</html>

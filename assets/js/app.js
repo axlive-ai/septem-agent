@@ -283,7 +283,7 @@ const NAV = [
         { id: "pt-common-exit", label: "종료/이탈/예외", type: "leaf" },
       ]},
       { id: "pt-finance", label: "금융비서 Agent", type: "group", children: [
-        { id: "pt-finance-master", label: "금융비서 Master", type: "leaf" },
+        { id: "pt-finance-master", label: "금융비서 Master", type: "leaf", href: "html/pt-finance-master.html" },
         { id: "pt-finance-product", label: "맞춤상품안내", type: "leaf" },
         { id: "pt-finance-calc", label: "AI금융계산기", type: "leaf" },
       ]},
@@ -397,6 +397,15 @@ function renderGroup(g, topId) {
 function renderItem(item) {
   // depth2: leaf (단순 페이지) / leaf3 (3depth: 사용자케이스/대화흐름/업무설계) 
   if (item.type === 'leaf') {
+    // href가 있는 leaf는 완전히 독립된 프로토타입 HTML(자체 CSS 변수·스크립트를
+    // 갖는 실행형 화면)이라 본문에 직접 주입하지 않고, 다른 문서들과 똑같이
+    // #content 안(iframe)에 띄워서 사이드바 옆에서 그대로 보이게 함
+    if (item.href) {
+      return `
+        <div class="nav-item-wrap">
+          <button class="nav-item-btn" data-leaf="${item.id}" onclick="selectPrototype('${item.id}')">${item.label}</button>
+        </div>`;
+    }
     return `
       <div class="nav-item-wrap">
         <button class="nav-item-btn" data-leaf="${item.id}" onclick="selectLeaf('${item.id}')">${item.label}</button>
@@ -537,6 +546,37 @@ function selectLeaf(id, customLabel) {
   window.scrollTo(0, 0);
 }
 
+// href를 가진 leaf(완전히 독립된 프로토타입 HTML)를 다른 문서들처럼
+// #content 안 iframe으로 띄워줌 — 새 탭/새 창 없이 사이드바 옆에서 그대로 보임
+function selectPrototype(id) {
+  currentLeafId = id;
+  document.querySelectorAll('.nav-top-btn').forEach(b => b.classList.remove('active'));
+  clearActiveLeaf();
+  revealInLNB(id);
+  const btn = document.querySelector(`[data-leaf="${id}"]`);
+  if (btn) {
+    btn.classList.add('active-leaf');
+    btn.scrollIntoView({ block: 'nearest' });
+  }
+
+  const path = findNode(NAV, id.split('__')[0]) || [];
+  const item = path[path.length - 1];
+  const label = item ? item.label : id;
+  const crumbParts = path.map(p => p.label);
+  const crumbHtml = `<div class="crumb">${crumbParts.map((c, i) => `<span>${c}</span>${i < crumbParts.length - 1 ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>' : ''}`).join('')}</div>`;
+
+  const content = document.getElementById('content');
+  const toc = document.getElementById('toc');
+  toc.innerHTML = '';
+  content.innerHTML = `
+    ${crumbHtml}
+    <div class="page-title">${label}</div>
+    <div class="proto-frame-wrap">
+      <iframe src="${item ? item.href : ''}" title="${label}" class="proto-frame"></iframe>
+    </div>`;
+  window.scrollTo(0, 0);
+}
+
 const TOP_DESC = {
   intro: "이 가이드 시스템의 목적과 사용법을 소개합니다.",
   method: "NH AI Agent UX 가이드 시스템이 따르는 설계 방법론을 설명합니다.",
@@ -580,7 +620,7 @@ function renderHome(topId) {
     (group.children || []).forEach(item => {
       const leafCount = item.children ? (typeof item.children[0] === 'string' ? item.children.length : countLeaves(item)) : 1;
       cardsHtml += `
-        <div class="nav-card" onclick="${item.type === 'leaf' ? `selectLeaf('${item.id}')` : `expandAndScroll('${top.id}','${group.id}','${item.id}')`}">
+        <div class="nav-card" onclick="${item.href ? `selectPrototype('${item.id}')` : (item.type === 'leaf' ? `selectLeaf('${item.id}')` : `expandAndScroll('${top.id}','${group.id}','${item.id}')`)}">
           <div class="nav-card-icon">${ICONS[top.id] || ''}</div>
           <div class="nav-card-title">${item.label}</div>
           <div class="nav-card-desc">${item.type === 'leaf' ? '문서 1건' : leafCount + '개 하위 문서'}</div>
@@ -806,6 +846,9 @@ function renderSearchResults(results, query) {
 }
 
 function selectSearchResult(id, kind) {
+  const path = findNode(NAV, id.split('__')[0]);
+  const node = path && path[path.length - 1];
+  if (node && node.href) { selectPrototype(id); return; }
   if (kind === 'page') selectPage(id);
   else selectLeaf(id);
   closeSearch();

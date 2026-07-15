@@ -365,6 +365,24 @@
   max-width: 680px;
 }
 
+/* 독립 실행형 프로토타입 HTML을 문서 화면과 같은 자리(#content)에서
+   iframe으로 보여주기 위한 래퍼 — 프로토타입 자체 CSS/JS와 완전히
+   격리돼서 사이드바 옆 본문 영역에 그대로 뜬다 */
+.proto-frame-wrap {
+  width: 100%;
+  height: 82vh;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+.proto-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
 .section-block { margin-bottom: 56px; }
 .section-block-title {
   font-size: 15px;
